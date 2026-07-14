@@ -60,8 +60,18 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Trava o scroll do catálogo enquanto a splash screen está em exibição */
-body.splash-active { overflow: hidden; }
+/* Trava o scroll da página enquanto a splash ou o modal estão abertos */
+body.splash-active,
+body.modal-open { overflow: hidden; }
+
+/* Foco visível (acessibilidade por teclado) em qualquer elemento interativo */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+}
 
 /* Grade sutil de fundo, característica do tema tech */
 body::before {
@@ -703,6 +713,10 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
     color: var(--muted);
 }
 
+/* Card oculto pelo filtro: os cards são pré-renderizados no HTML (SEO)
+   e o JS apenas alterna esta classe, sem recriá-los */
+.product-card.is-hidden { display: none; }
+
 /* =========================================================
    MODAL DE DETALHES
    ========================================================= */
@@ -737,21 +751,31 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Botão X: sticky dentro do modal rolável (fica sempre visível no canto
+   superior direito), fundo escuro sólido para ter contraste inclusive
+   sobre a área branca da galeria, e área de toque de 44x44px (mobile). */
 .modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    z-index: 2;
-    width: 42px;
-    height: 42px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+    margin-bottom: -44px; /* não empurra o conteúdo abaixo dele */
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(8, 10, 18, 0.88);
+    color: #fff;
+    font-size: 1.05rem;
     cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
     transition: background 0.2s ease, transform 0.2s ease;
 }
-.modal-close:hover { background: rgba(255, 255, 255, 0.14); transform: rotate(90deg); }
+.modal-close:hover { background: rgba(61, 109, 255, 0.85); transform: rotate(90deg); }
 
 .modal-body { display: grid; gap: 1.6rem; }
 
@@ -939,6 +963,29 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
     font-size: 0.85rem;
     text-align: center;
 }
+
+/* Linha legal do rodapé: CNPJ + link discreto para a política de garantia */
+.footer-legal { margin-top: 0.5rem; font-size: 0.78rem; opacity: 0.85; }
+.footer-legal a { text-decoration: underline; text-underline-offset: 3px; }
+.footer-legal a:hover { color: var(--blue); }
+
+/* Botão "Como chegar" (Google Maps) ao lado de cada endereço */
+.btn-map {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.4rem 0 0.3rem 1.55rem; /* alinhado com o texto do endereço */
+    padding: 0.32rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.btn-map i { color: var(--blue); }
+.btn-map:hover { color: var(--text); border-color: rgba(61, 109, 255, 0.55); background: rgba(61, 109, 255, 0.08); }
 
 /* =========================================================
    ANIMAÇÕES DE SCROLL (fade-in / slide-up via IntersectionObserver)
@@ -1311,8 +1358,26 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
     font-size: 1.05rem;
     font-weight: 500;
 }
-.tim-features li { display: flex; align-items: baseline; gap: 0.6rem; text-align: left; }
-.tim-features i { color: #8FC1FF; }
+/* Ícone com tamanho fixo + texto em um único bloco flexível: no wrap de
+   linha o texto alinha sob o próprio texto, nunca sob o check (mobile) */
+.tim-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    text-align: left;
+    max-width: 100%;
+}
+.tim-features i {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    margin-top: 3px; /* alinha o check com a primeira linha do texto */
+    color: #8FC1FF;
+}
+.tim-features li span { flex: 1; min-width: 0; }
 .tim-features strong { color: #FFE566; font-weight: 800; }
 
 /* CTA da TIM: botão grande com pulso discreto */

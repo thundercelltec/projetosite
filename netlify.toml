@@ -1,0 +1,7 @@
+# Configuração de build do Netlify.
+# Antes de publicar, o Netlify roda o script que pré-renderiza o catálogo
+# no index.html (SEO: produtos visíveis sem JavaScript).
+
+[build]
+  command = "node scripts/build-catalog.js"
+  publish = "."

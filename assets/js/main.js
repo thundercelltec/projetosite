@@ -35,8 +35,7 @@ const BADGE_CLASSES = {
 
 const state = {
     products: [],
-    filtered: [],
-    activeCategoria: '' // categoria atualmente aplicada (via <select> ou via splash screen)
+    activeCategoria: '' // categoria atualmente aplicada no filtro do catálogo
 };
 
 /* ---------- Utilitários ---------- */
@@ -46,23 +45,38 @@ function formatCurrency(value) {
 }
 
 function whatsappLink(productName) {
-    const message = `Olá! Tenho interesse no produto: ${productName}`;
+    const message = `Olá! Tenho interesse no ${productName}. Ele está disponível?`;
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
 /* ---------- Carregamento dos produtos ---------- */
 
+// Os dados vêm do <script id="productsData"> injetado no index.html pelo
+// build (scripts/build-catalog.js). Sem o build (desenvolvimento), cai
+// para o fetch do produtos.json.
 async function loadProducts() {
     const grid = document.getElementById('productsGrid');
-    try {
-        const response = await fetch('data/produtos.json');
-        if (!response.ok) throw new Error('Não foi possível carregar o catálogo.');
+    const inlineData = document.getElementById('productsData');
 
-        state.products = await response.json();
-        state.filtered = [...state.products];
+    try {
+        if (inlineData) {
+            state.products = JSON.parse(inlineData.textContent);
+        } else {
+            const response = await fetch('data/produtos.json');
+            if (!response.ok) throw new Error('Não foi possível carregar o catálogo.');
+            state.products = await response.json();
+        }
 
         populateCategoryFilter();
-        renderProducts(state.filtered);
+
+        // Os cards já vêm pré-renderizados no HTML pelo build (SEO: o Google
+        // vê o catálogo sem JS). O JS não os recria — apenas filtra.
+        // Sem o build, renderiza os cards uma única vez aqui.
+        if (!grid.querySelector('.product-card')) {
+            grid.innerHTML = state.products.map(createProductCard).join('');
+        }
+
+        applyFilters();
     } catch (error) {
         grid.innerHTML = `<div class="empty-state">${error.message}</div>`;
     }
@@ -81,16 +95,40 @@ function populateCategoryFilter() {
     });
 }
 
+// Filtra exibindo/ocultando os cards já presentes no DOM (pré-renderizados
+// pelo build ou renderizados uma única vez pelo loadProducts) — não recria nada.
 function applyFilters() {
     const termo = document.getElementById('searchInput').value.trim().toLowerCase();
+    const cards = document.querySelectorAll('#productsGrid .product-card');
+    let visiveis = 0;
 
-    state.filtered = state.products.filter((product) => {
-        const matchNome = product.nome.toLowerCase().includes(termo);
-        const matchCategoria = !state.activeCategoria || product.categoria === state.activeCategoria;
-        return matchNome && matchCategoria;
+    cards.forEach((card) => {
+        const matchNome = (card.dataset.nome || '').includes(termo);
+        const matchCategoria = !state.activeCategoria || card.dataset.categoria === state.activeCategoria;
+        const mostra = matchNome && matchCategoria;
+        card.classList.toggle('is-hidden', !mostra);
+        if (mostra) visiveis += 1;
     });
 
-    renderProducts(state.filtered);
+    document.getElementById('resultsInfo').textContent =
+        `${visiveis} produto${visiveis === 1 ? '' : 's'} encontrado${visiveis === 1 ? '' : 's'}`;
+
+    toggleEmptyState(visiveis === 0 && cards.length > 0);
+}
+
+// Cria/remove a mensagem de "nenhum resultado" conforme o filtro
+function toggleEmptyState(mostrar) {
+    const grid = document.getElementById('productsGrid');
+    let vazio = grid.querySelector('.empty-state');
+
+    if (mostrar && !vazio) {
+        vazio = document.createElement('div');
+        vazio.className = 'empty-state';
+        vazio.textContent = 'Nenhum produto encontrado com esse filtro.';
+        grid.appendChild(vazio);
+    } else if (!mostrar && vazio) {
+        vazio.remove();
+    }
 }
 
 // Define a categoria ativa e reflete a escolha no <select> manual quando ela
@@ -106,22 +144,10 @@ function applyCategoryFilter(categoria) {
     applyFilters();
 }
 
-/* ---------- Renderização do catálogo ---------- */
+/* ---------- Renderização do catálogo (fallback sem build) ---------- */
 
-function renderProducts(products) {
-    const grid = document.getElementById('productsGrid');
-    const resultsInfo = document.getElementById('resultsInfo');
-
-    resultsInfo.textContent = `${products.length} produto${products.length === 1 ? '' : 's'} encontrado${products.length === 1 ? '' : 's'}`;
-
-    if (!products.length) {
-        grid.innerHTML = '<div class="empty-state">Nenhum produto encontrado com esse filtro.</div>';
-        return;
-    }
-
-    grid.innerHTML = products.map(createProductCard).join('');
-}
-
+// IMPORTANTE: manter este markup em sincronia com o gerador do build
+// (scripts/build-catalog.js), que produz os mesmos cards no index.html.
 function createProductCard(product, index) {
     // Selo opcional (campo "selo" no produtos.json): Novo, Seminovo, Oferta, Promoção
     const badge = product.selo
@@ -135,7 +161,7 @@ function createProductCard(product, index) {
     const delay = Math.min(index * 80, 480);
 
     return `
-        <article class="product-card" style="--delay: ${delay}ms">
+        <article class="product-card" style="--delay: ${delay}ms" data-id="${product.id}" data-nome="${product.nome.toLowerCase()}" data-categoria="${product.categoria}">
             <div class="product-image">
                 ${badge}
                 <img src="${product.imagens[0]}" alt="${product.nome}" loading="lazy" />
@@ -271,6 +297,9 @@ function stopGalleryAutoplay() {
 
 /* ---------- Modal de detalhes ---------- */
 
+// Elemento que abriu o modal ("Ver Detalhes"): recebe o foco de volta ao fechar
+let modalOpenerEl = null;
+
 function openModal(id) {
     const product = state.products.find((p) => p.id === Number(id));
     if (!product) return;
@@ -315,8 +344,12 @@ function openModal(id) {
         galleryMain.addEventListener('mouseleave', startGalleryAutoplay);
     }
 
+    modalOpenerEl = document.activeElement; // normalmente o botão "Ver Detalhes"
+
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open'); // trava o scroll da página atrás do modal
+    document.getElementById('closeModal').focus();
     startGalleryAutoplay();
 }
 
@@ -324,7 +357,12 @@ function closeModal() {
     const modal = document.getElementById('productModal');
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
     stopGalleryAutoplay();
+
+    // Devolve o foco ao botão que abriu o modal (acessibilidade por teclado)
+    if (modalOpenerEl && document.contains(modalOpenerEl)) modalOpenerEl.focus();
+    modalOpenerEl = null;
 }
 
 /* ---------- Tela de boas-vindas (Splash Screen) ---------- */
@@ -433,10 +471,11 @@ function animateCounter(el) {
 
 function initCounters() {
     const counters = document.querySelectorAll('.stat-number');
-    if (!('IntersectionObserver' in window)) {
-        counters.forEach((el) => { el.textContent = el.dataset.count + (el.dataset.suffix || ''); });
-        return;
-    }
+
+    // O HTML já traz o valor final (SEO/robustez: se o JS não rodar, o
+    // número correto permanece). Sem IntersectionObserver, não animamos
+    // e o valor final do HTML fica como está.
+    if (!('IntersectionObserver' in window)) return;
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -447,7 +486,10 @@ function initCounters() {
         });
     }, { threshold: 0.4 });
 
-    counters.forEach((el) => observer.observe(el));
+    counters.forEach((el) => {
+        el.textContent = '0' + (el.dataset.suffix || ''); // zera só quando a animação vai rodar
+        observer.observe(el);
+    });
 }
 
 /* ---------- Links de WhatsApp com mensagem personalizada ---------- */
