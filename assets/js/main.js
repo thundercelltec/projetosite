@@ -33,9 +33,14 @@ const BADGE_CLASSES = {
     'Promoção': 'badge-promocao'
 };
 
+// Quantos produtos aparecem por "página" do catálogo — o botão "Ver mais"
+// libera mais este tanto a cada clique.
+const PRODUCTS_PER_PAGE = 6;
+
 const state = {
     products: [],
-    activeCategoria: '' // categoria atualmente aplicada no filtro do catálogo
+    activeCategoria: '', // categoria atualmente aplicada no filtro do catálogo
+    visibleLimit: PRODUCTS_PER_PAGE // quantos produtos filtrados são exibidos agora
 };
 
 /* ---------- Utilitários ---------- */
@@ -97,23 +102,33 @@ function populateCategoryFilter() {
 
 // Filtra exibindo/ocultando os cards já presentes no DOM (pré-renderizados
 // pelo build ou renderizados uma única vez pelo loadProducts) — não recria nada.
+// Dos cards que batem com o filtro, só os primeiros state.visibleLimit são
+// exibidos; o botão "Ver mais" aumenta esse limite.
 function applyFilters() {
     const termo = document.getElementById('searchInput').value.trim().toLowerCase();
     const cards = document.querySelectorAll('#productsGrid .product-card');
-    let visiveis = 0;
+    let encontrados = 0; // total que bate com o filtro
+    let visiveis = 0;    // quantos estão de fato na tela (limitados pelo "Ver mais")
 
     cards.forEach((card) => {
         const matchNome = (card.dataset.nome || '').includes(termo);
         const matchCategoria = !state.activeCategoria || card.dataset.categoria === state.activeCategoria;
-        const mostra = matchNome && matchCategoria;
-        card.classList.toggle('is-hidden', !mostra);
+        const bate = matchNome && matchCategoria;
+
+        const mostra = bate && encontrados < state.visibleLimit;
+        if (bate) encontrados += 1;
         if (mostra) visiveis += 1;
+        card.classList.toggle('is-hidden', !mostra);
     });
 
-    document.getElementById('resultsInfo').textContent =
-        `${visiveis} produto${visiveis === 1 ? '' : 's'} encontrado${visiveis === 1 ? '' : 's'}`;
+    document.getElementById('resultsInfo').textContent = encontrados > visiveis
+        ? `Exibindo ${visiveis} de ${encontrados} produtos`
+        : `${encontrados} produto${encontrados === 1 ? '' : 's'} encontrado${encontrados === 1 ? '' : 's'}`;
 
-    toggleEmptyState(visiveis === 0 && cards.length > 0);
+    // Botão "Ver mais" só aparece quando ainda há produtos ocultos pelo limite
+    document.getElementById('loadMoreWrap').hidden = encontrados <= visiveis;
+
+    toggleEmptyState(encontrados === 0 && cards.length > 0);
 }
 
 // Cria/remove a mensagem de "nenhum resultado" conforme o filtro
@@ -136,6 +151,7 @@ function toggleEmptyState(mostrar) {
 // quanto pela splash screen, para não duplicar a mesma lógica nos dois lugares.
 function applyCategoryFilter(categoria) {
     state.activeCategoria = categoria;
+    state.visibleLimit = PRODUCTS_PER_PAGE; // novo filtro recomeça da primeira "página"
 
     const select = document.getElementById('categoriaFilter');
     const optionExists = Array.from(select.options).some((option) => option.value === categoria);
@@ -157,6 +173,13 @@ function createProductCard(product, index) {
     // Estimativa de 12x no cartão, usando as mesmas taxas da tabela do modal
     const parcela12 = (product.preco * (1 + INSTALLMENT_RATES[12] / 100)) / 12;
 
+    // Produtos com variantes (ex: versões de memória) exibem o menor preço
+    // com o prefixo "A partir de" — o preço exato é escolhido no modal.
+    const temVariantes = Array.isArray(product.variantes) && product.variantes.length > 0;
+    const precoCard = temVariantes
+        ? `<span class="price-prefix">A partir de</span>${formatCurrency(product.preco)}`
+        : formatCurrency(product.preco);
+
     // Delay em cascata para a animação de entrada dos cards (limitado a 480ms)
     const delay = Math.min(index * 80, 480);
 
@@ -174,7 +197,7 @@ function createProductCard(product, index) {
                 <h3>${product.nome}</h3>
                 <p class="product-specs">${product.especificacoes.join(' • ')}</p>
                 <div class="product-price-box">
-                    <p class="product-price">${formatCurrency(product.preco)}</p>
+                    <p class="product-price">${precoCard}</p>
                     <p class="product-installment">ou 12x de ${formatCurrency(parcela12)} no cartão</p>
                 </div>
                 <div class="product-actions">
@@ -300,10 +323,14 @@ function stopGalleryAutoplay() {
 // Elemento que abriu o modal ("Ver Detalhes"): recebe o foco de volta ao fechar
 let modalOpenerEl = null;
 
+// Produto atualmente aberto no modal (usado pelo seletor de variantes)
+let modalProduct = null;
+
 function openModal(id) {
     const product = state.products.find((p) => p.id === Number(id));
     if (!product) return;
 
+    modalProduct = product;
     galleryImages = product.imagens;
     galleryIndex = 0;
 
@@ -313,6 +340,22 @@ function openModal(id) {
     const badge = product.selo
         ? `<span class="product-badge ${BADGE_CLASSES[product.selo] || 'badge-novo'}" style="position: static; margin-bottom: .7rem; display: inline-block;">${product.selo}</span>`
         : '';
+
+    // Seletor de variantes (ex: versões de memória do tablet). A troca de
+    // variante atualiza preço, tabela de parcelas e mensagem do WhatsApp.
+    const temVariantes = Array.isArray(product.variantes) && product.variantes.length > 0;
+    const variantesHtml = temVariantes ? `
+        <div class="variant-picker">
+            <p class="variant-label">Escolha a versão:</p>
+            <div class="variant-options">
+                ${product.variantes.map((v, i) => `
+                    <button type="button" class="variant-btn ${i === 0 ? 'active' : ''}" data-index="${i}">
+                        ${v.armazenamento} • ${v.ram} RAM
+                    </button>
+                `).join('')}
+            </div>
+        </div>
+    ` : '';
 
     modalBody.innerHTML = `
         ${buildGallery(galleryImages, product.nome)}
@@ -324,18 +367,22 @@ function openModal(id) {
             <ul>
                 ${product.especificacoes.map((spec) => `<li>${spec}</li>`).join('')}
             </ul>
-            <p class="modal-price">${formatCurrency(product.preco)}</p>
+            ${variantesHtml}
+            <p class="modal-price" id="modalPrice">${formatCurrency(product.preco)}</p>
             <div class="product-actions">
-                <a class="btn btn-whatsapp" href="${whatsappLink(product.nome)}" target="_blank" rel="noopener noreferrer">
+                <a class="btn btn-whatsapp" id="modalWhatsLink" href="${whatsappLink(product.nome)}" target="_blank" rel="noopener noreferrer">
                     <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
                 </a>
             </div>
         </div>
         <div class="modal-info modal-installments">
             <h3 class="installments-title">Simulação de Parcelamento no Cartão</h3>
-            ${buildInstallmentsTable(product.preco)}
+            <div id="modalInstallments">${buildInstallmentsTable(product.preco)}</div>
         </div>
     `;
+
+    // Já abre com a primeira variante aplicada (preço, parcelas e WhatsApp)
+    if (temVariantes) applyVariant(0);
 
     // Pausa o autoplay quando o mouse está sobre a imagem; retoma ao sair
     const galleryMain = modalBody.querySelector('.gallery-main');
@@ -353,12 +400,31 @@ function openModal(id) {
     startGalleryAutoplay();
 }
 
+// Aplica a variante escolhida: preço, tabela de parcelas e link do WhatsApp
+// (a mensagem passa a incluir a versão, ex: "Xiaomi Redmi Pad 2 (256GB / 8GB RAM)")
+function applyVariant(index) {
+    if (!modalProduct || !Array.isArray(modalProduct.variantes)) return;
+    const variante = modalProduct.variantes[index];
+    if (!variante) return;
+
+    document.querySelectorAll('.variant-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+    });
+
+    document.getElementById('modalPrice').textContent = formatCurrency(variante.preco);
+    document.getElementById('modalInstallments').innerHTML = buildInstallmentsTable(variante.preco);
+
+    const nomeComVariante = `${modalProduct.nome} (${variante.armazenamento} / ${variante.ram} RAM)`;
+    document.getElementById('modalWhatsLink').href = whatsappLink(nomeComVariante);
+}
+
 function closeModal() {
     const modal = document.getElementById('productModal');
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
     stopGalleryAutoplay();
+    modalProduct = null;
 
     // Devolve o foco ao botão que abriu o modal (acessibilidade por teclado)
     if (modalOpenerEl && document.contains(modalOpenerEl)) modalOpenerEl.focus();
@@ -398,6 +464,31 @@ function hideSplash() {
     splash.addEventListener('transitionend', () => {
         splash.classList.add('hidden');
     }, { once: true });
+}
+
+/* ---------- Barra de rolagem: visível apenas durante a rolagem ---------- */
+
+// Adiciona .is-scrolling enquanto a página (ou o modal) está rolando e
+// remove ~0,8s depois que a rolagem para — o CSS usa essa classe para
+// mostrar/esconder o polegar da barra (estilo overlay de celular).
+function initAutoHideScrollbars() {
+    let pageTimer = null;
+    window.addEventListener('scroll', () => {
+        document.documentElement.classList.add('is-scrolling');
+        clearTimeout(pageTimer);
+        pageTimer = setTimeout(() => document.documentElement.classList.remove('is-scrolling'), 800);
+    }, { passive: true });
+
+    // O modal de detalhes tem rolagem própria (overflow-y no .modal-content)
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        let modalTimer = null;
+        modalContent.addEventListener('scroll', () => {
+            modalContent.classList.add('is-scrolling');
+            clearTimeout(modalTimer);
+            modalTimer = setTimeout(() => modalContent.classList.remove('is-scrolling'), 800);
+        }, { passive: true });
+    }
 }
 
 /* ---------- Cabeçalho: efeito blur/sombra ao rolar ---------- */
@@ -538,9 +629,18 @@ function initAssistRotator() {
 /* ---------- Eventos ---------- */
 
 function bindEvents() {
-    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('searchInput').addEventListener('input', () => {
+        state.visibleLimit = PRODUCTS_PER_PAGE; // nova busca recomeça da primeira "página"
+        applyFilters();
+    });
     document.getElementById('categoriaFilter').addEventListener('change', (event) => {
         applyCategoryFilter(event.target.value);
+    });
+
+    // "Ver mais": libera mais uma leva de produtos do filtro atual
+    document.getElementById('loadMoreBtn').addEventListener('click', () => {
+        state.visibleLimit += PRODUCTS_PER_PAGE;
+        applyFilters();
     });
 
     document.getElementById('productsGrid').addEventListener('click', (event) => {
@@ -557,6 +657,13 @@ function bindEvents() {
     // é recriado a cada produto aberto. Toda navegação manual reinicia o
     // cronômetro do autoplay, para a foto escolhida não trocar cedo demais.
     document.getElementById('modalBody').addEventListener('click', (event) => {
+        // Seletor de variantes (produtos com mais de uma versão)
+        const variantBtn = event.target.closest('.variant-btn');
+        if (variantBtn) {
+            applyVariant(Number(variantBtn.dataset.index));
+            return;
+        }
+
         if (event.target.closest('.gallery-prev')) {
             showGalleryImage(galleryIndex - 1);
             startGalleryAutoplay();
@@ -584,6 +691,7 @@ function bindEvents() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initSplash();
+    initAutoHideScrollbars();
     initHeaderScroll();
     initMobileNav();
     initScrollReveal();

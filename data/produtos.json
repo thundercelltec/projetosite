@@ -90,7 +90,109 @@
     ],
     "imagens": [
       "assets/img/dell-vostro-1.jpg",
-      "assets/img/dell-vostro-2.jpg"
+      "assets/img/dell-vostro-2.jpg",
+      "assets/img/dell-vostro-3.jpg"
+    ]
+  },
+  {
+    "id": 6,
+    "nome": "Xiaomi Redmi Pad 2",
+    "marca": "Xiaomi",
+    "categoria": "Tablets",
+    "selo": "Novo",
+    "preco": 1500.00,
+    "descricao": "Tablet com tela grande de 11\", bateria de longa duração e duas versões de memória para escolher conforme o seu uso.",
+    "especificacoes": [
+      "Tela de 11\"",
+      "Bateria 9000mAh",
+      "Opções de 6GB ou 8GB de RAM",
+      "128GB ou 256GB de armazenamento"
+    ],
+    "variantes": [
+      { "armazenamento": "128GB", "ram": "6GB", "preco": 1500.00 },
+      { "armazenamento": "256GB", "ram": "8GB", "preco": 2000.00 }
+    ],
+    "imagens": [
+      "assets/img/xiaomi-redmi-pad-2-1.jpg",
+      "assets/img/xiaomi-redmi-pad-2-2.jpg"
+    ]
+  },
+  {
+    "id": 7,
+    "nome": "JBL Xtreme 4",
+    "marca": "JBL",
+    "categoria": "Áudio",
+    "preco": 1799.90,
+    "descricao": "Caixa de som portátil potente, com graves marcantes, à prova d'água e bateria para um dia inteiro de música.",
+    "especificacoes": [
+      "100W RMS de potência",
+      "Até 24 horas de música",
+      "À prova d'água",
+      "Bluetooth 5.3"
+    ],
+    "imagens": [
+      "assets/img/jbl-xtreme-4-1.jpg",
+      "assets/img/jbl-xtreme-4-2.jpg",
+      "assets/img/jbl-xtreme-4-3.jpg"
+    ]
+  },
+  {
+    "id": 8,
+    "nome": "Xiaomi Smart Band 9",
+    "marca": "Xiaomi",
+    "categoria": "Smartwatch",
+    "preco": 399.90,
+    "descricao": "Pulseira inteligente leve e resistente à água, com tela ampla para acompanhar treinos, sono e notificações.",
+    "especificacoes": [
+      "Tela de 1,62\"",
+      "Certificação 5 ATM (resistente à água)",
+      "Bateria 233mAh",
+      "Apenas 15,8g sem as alças",
+      "Bluetooth 5.4"
+    ],
+    "imagens": [
+      "assets/img/xiaomi-smart-band-9-1.jpg",
+      "assets/img/xiaomi-smart-band-9-2.jpg"
+    ]
+  },
+  {
+    "id": 9,
+    "nome": "Xiaomi Smart Band 10",
+    "marca": "Xiaomi",
+    "categoria": "Smartwatch",
+    "preco": 449.90,
+    "descricao": "A evolução da Smart Band 9 com NFC integrado: pague por aproximação direto do pulso, além de todos os recursos de saúde e treino.",
+    "especificacoes": [
+      "Com NFC (pagamento por aproximação)",
+      "Tela de 1,62\"",
+      "Certificação 5 ATM (resistente à água)",
+      "Bateria 233mAh",
+      "Apenas 15,8g sem as alças",
+      "Bluetooth 5.4"
+    ],
+    "imagens": [
+      "assets/img/xiaomi-smart-band-10-1.jpg",
+      "assets/img/xiaomi-smart-band-10-2.jpg"
+    ]
+  },
+  {
+    "id": 10,
+    "nome": "Alexa Echo Show 5 (3ª geração)",
+    "marca": "Amazon",
+    "categoria": "Casa Inteligente",
+    "preco": 749.90,
+    "descricao": "Tela inteligente compacta com Alexa integrada: controle a casa, veja notícias, faça chamadas de vídeo e ouça música por voz.",
+    "especificacoes": [
+      "Tela sensível ao toque de 5,5\"",
+      "Câmera de 2MP",
+      "Processador AZ2 Neural Edge",
+      "Bluetooth 5.0",
+      "Alexa integrada"
+    ],
+    "imagens": [
+      "assets/img/echo-show-5-1.jpg",
+      "assets/img/echo-show-5-2.jpg",
+      "assets/img/echo-show-5-3.jpg"
     ]
   }
 ]

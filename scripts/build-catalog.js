@@ -77,6 +77,13 @@ function createProductCard(product, index) {
     const delay = Math.min(index * 80, 480);
     const nome = escapeHtml(product.nome);
 
+    // Produtos com variantes exibem o menor preço com o prefixo "A partir de"
+    // (mesma regra do createProductCard do main.js)
+    const temVariantes = Array.isArray(product.variantes) && product.variantes.length > 0;
+    const precoCard = temVariantes
+        ? `<span class="price-prefix">A partir de</span>${formatCurrency(product.preco)}`
+        : formatCurrency(product.preco);
+
     return `
         <article class="product-card" style="--delay: ${delay}ms" data-id="${product.id}" data-nome="${escapeHtml(product.nome.toLowerCase())}" data-categoria="${escapeHtml(product.categoria)}">
             <div class="product-image">
@@ -91,7 +98,7 @@ function createProductCard(product, index) {
                 <h3>${nome}</h3>
                 <p class="product-specs">${product.especificacoes.map(escapeHtml).join(' • ')}</p>
                 <div class="product-price-box">
-                    <p class="product-price">${formatCurrency(product.preco)}</p>
+                    <p class="product-price">${precoCard}</p>
                     <p class="product-installment">ou 12x de ${formatCurrency(parcela12)} no cartão</p>
                 </div>
                 <div class="product-actions">
@@ -109,22 +116,39 @@ function createProductCard(product, index) {
 /* ---------- JSON-LD de Product (SEO) ---------- */
 
 function buildProductsJsonLd(produtos) {
-    const itens = produtos.map((p) => ({
-        '@context': 'https://schema.org',
-        '@type': 'Product',
-        name: p.nome,
-        brand: { '@type': 'Brand', name: p.marca },
-        description: p.descricao,
-        image: p.imagens.map((img) => `${SITE_URL}/${img}`),
-        offers: {
-            '@type': 'Offer',
-            price: p.preco.toFixed(2),
-            priceCurrency: 'BRL',
-            availability: 'https://schema.org/InStock',
-            url: `${SITE_URL}/#catalogo`,
-            seller: { '@type': 'Organization', name: 'Thunder Cell' }
-        }
-    }));
+    const itens = produtos.map((p) => {
+        // Produtos com variantes viram AggregateOffer (faixa de preço)
+        const temVariantes = Array.isArray(p.variantes) && p.variantes.length > 0;
+        const offers = temVariantes
+            ? {
+                '@type': 'AggregateOffer',
+                lowPrice: Math.min(...p.variantes.map((v) => v.preco)).toFixed(2),
+                highPrice: Math.max(...p.variantes.map((v) => v.preco)).toFixed(2),
+                offerCount: p.variantes.length,
+                priceCurrency: 'BRL',
+                availability: 'https://schema.org/InStock',
+                url: `${SITE_URL}/#catalogo`,
+                seller: { '@type': 'Organization', name: 'Thunder Cell' }
+            }
+            : {
+                '@type': 'Offer',
+                price: p.preco.toFixed(2),
+                priceCurrency: 'BRL',
+                availability: 'https://schema.org/InStock',
+                url: `${SITE_URL}/#catalogo`,
+                seller: { '@type': 'Organization', name: 'Thunder Cell' }
+            };
+
+        return {
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: p.nome,
+            brand: { '@type': 'Brand', name: p.marca },
+            description: p.descricao,
+            image: p.imagens.map((img) => `${SITE_URL}/${img}`),
+            offers
+        };
+    });
     return `<script type="application/ld+json">\n    ${JSON.stringify(itens, null, 4).replace(/\n/g, '\n    ')}\n    </script>`;
 }
 
