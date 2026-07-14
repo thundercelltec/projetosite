@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thunder Cell | Loja de Tecnologia — Celulares, Notebooks e Acessórios</title>
+    <meta name="description" content="Thunder Cell: celulares, tablets, notebooks e acessórios em Tangará-SC. Parcelamento em até 18x na PayJoy, simulador de parcelas e atendimento via WhatsApp." />
+
+    <!-- Fontes: Sora para títulos (tech premium), Inter para textos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+    <!-- ===== TELA DE BOAS-VINDAS (SPLASH SCREEN) =====
+         Camada em tela cheia exibida antes do catálogo. O visitante escolhe
+         uma categoria de interesse (ou "Ver Tudo") e o main.js cuida da
+         transição de saída, do filtro automático e da rolagem até o catálogo. -->
+    <section id="splashScreen" class="splash" aria-hidden="false" aria-label="Tela de boas-vindas">
+        <div class="splash-backdrop"></div>
+        <div class="splash-content">
+            <img src="assets/img/logo.png" alt="Logo Thunder Cell" class="splash-logo" />
+            <p class="eyebrow">Thunder Cell</p>
+            <h1 class="splash-title">O que você deseja explorar hoje?</h1>
+
+            <!-- Cada card carrega em data-categoria o valor usado para filtrar
+                 o catálogo (deve bater com o campo "categoria" do produtos.json).
+                 O botão "Ver Tudo" usa categoria vazia = sem filtro. -->
+            <div class="splash-options">
+                <button type="button" class="splash-card" data-categoria="Smartphones">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    <span>Celulares</span>
+                </button>
+                <button type="button" class="splash-card" data-categoria="Notebooks">
+                    <i class="fa-solid fa-laptop"></i>
+                    <span>Notebooks</span>
+                </button>
+                <button type="button" class="splash-card" data-categoria="Tablets">
+                    <i class="fa-solid fa-tablet-screen-button"></i>
+                    <span>Tablets</span>
+                </button>
+                <button type="button" class="splash-card" data-categoria="Acessórios">
+                    <i class="fa-solid fa-headphones-simple"></i>
+                    <span>Acessórios</span>
+                </button>
+                <button type="button" class="splash-card splash-card-all" data-categoria="">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Ver Tudo</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CABEÇALHO (sticky + blur ao rolar, controlado pelo main.js) ===== -->
+    <header id="siteHeader" class="topbar">
+        <div class="container topbar-inner">
+            <a href="#topo" class="brand">
+                <img src="assets/img/logo.png" alt="Logo Thunder Cell" class="brand-logo" />
+                <span class="brand-name">Thunder <em>Cell</em></span>
+            </a>
+
+            <nav id="mainNav" class="nav" aria-label="Navegação principal">
+                <a href="#topo" class="nav-link">Início</a>
+                <a href="#catalogo" class="nav-link">Catálogo</a>
+                <a href="#parcelamento" class="nav-link nav-link-featured">
+                    <i class="fa-regular fa-credit-card"></i> Parcelamento
+                </a>
+                <a href="#contato" class="nav-link">Contato</a>
+                <a href="https://wa.me/5549998404821" class="btn btn-whatsapp btn-nav" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+            </nav>
+
+            <!-- Botão hambúrguer: visível somente no mobile -->
+            <button id="navToggle" class="nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Botão flutuante de WhatsApp, sempre visível -->
+    <a class="whatsapp-float" href="https://wa.me/5549998404821" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <main id="topo">
+
+        <!-- ===== HERO / BANNER PRINCIPAL ===== -->
+        <section class="hero">
+            <!-- Camada decorativa: orbes em degradê + grade sutil -->
+            <div class="hero-bg" aria-hidden="true">
+                <div class="orb orb-blue"></div>
+                <div class="orb orb-purple"></div>
+            </div>
+
+            <div class="container hero-content">
+                <span class="hero-chip"><i class="fa-solid fa-bolt"></i> Loja de tecnologia em Tangará-SC</span>
+                <p class="hero-brand">Thunder Cell</p>
+                <h1>Tecnologia que conecta<br />você ao <span class="text-gradient">futuro</span>.</h1>
+                <p class="hero-copy">Celulares, tablets, notebooks, acessórios e muito mais — com parcelamento facilitado e atendimento direto no WhatsApp.</p>
+
+                <div class="hero-actions">
+                    <a href="#catalogo" class="btn btn-primary btn-lg">
+                        <i class="fa-solid fa-store"></i> Ver Produtos
+                    </a>
+                    <a href="#parcelamento" class="btn btn-ghost btn-lg">
+                        <i class="fa-regular fa-credit-card"></i> Comprar Parcelado
+                    </a>
+                </div>
+
+                <!-- Números animados quando entram na tela (main.js) -->
+                <div class="hero-stats reveal">
+                    <div class="stat">
+                        <span class="stat-number" data-count="18" data-suffix="x">0x</span>
+                        <span class="stat-label">Parcelas na PayJoy</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="12" data-suffix="x">0x</span>
+                        <span class="stat-label">Parcelas no cartão</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="2">0</span>
+                        <span class="stat-label">Unidades em Tangará-SC</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== DESTAQUE PAYJOY (posição estratégica: logo após o hero) ===== -->
+        <section id="parcelamento" class="section payjoy-section">
+            <div class="container">
+                <div class="payjoy-card reveal">
+                    <!-- Ícones flutuantes decorativos -->
+                    <div class="payjoy-icons" aria-hidden="true">
+                        <div class="payjoy-icon payjoy-icon-card"><i class="fa-solid fa-credit-card"></i></div>
+                        <div class="payjoy-icon payjoy-icon-phone"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    </div>
+
+                    <div class="payjoy-content">
+                        <span class="payjoy-badge"><i class="fa-solid fa-star"></i> Parcelamento PayJoy</span>
+                        <h2>Compre seu celular <span>parcelado!</span></h2>
+                        <ul class="payjoy-list">
+                            <li><i class="fa-solid fa-circle-check"></i> Aprovamos clientes de forma rápida.</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Parcelamento em até <strong>18x</strong>.</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Simule agora mesmo!</li>
+                        </ul>
+                        <a class="btn btn-payjoy" href="https://www.payjoy.com/br/pfsh-valueprop?utm_source=admin_br&utm_medium=admin_link&utm_campaign=admin_br_admin_link&utm_content=17930" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-solid fa-bolt"></i> SIMULAR NA PAYJOY
+                        </a>
+                        <p class="payjoy-note">Simulação gratuita &bull; Sujeito à análise de crédito</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CATÁLOGO ===== -->
+        <section id="catalogo" class="section">
+            <div class="container">
+                <div class="section-heading reveal">
+                    <p class="eyebrow">Catálogo</p>
+                    <h2>Produtos disponíveis</h2>
+                    <p class="section-sub">Escolha o seu, veja os detalhes e finalize direto pelo WhatsApp.</p>
+                </div>
+
+                <!-- Filtros em tempo real (preenchidos e controlados pelo main.js) -->
+                <div class="filters reveal">
+                    <label class="search-pill" for="searchInput">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input id="searchInput" type="text" placeholder="Buscar produto..." autocomplete="off" />
+                    </label>
+                    <select id="categoriaFilter" class="filter-select">
+                        <option value="">Todas as categorias</option>
+                    </select>
+                </div>
+
+                <p id="resultsInfo" class="results-info"></p>
+
+                <!-- Grid de produtos: injetado dinamicamente pelo main.js -->
+                <div id="productsGrid" class="product-grid"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== MODAL DE DETALHES (vazio, pronto para o JS preencher) ===== -->
+    <div id="productModal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal" type="button" aria-label="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- ===== RODAPÉ ===== -->
+    <footer id="contato" class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col footer-col-brand">
+                <a href="#topo" class="brand footer-brand">
+                    <img src="assets/img/logo.png" alt="Logo Thunder Cell" class="brand-logo" />
+                    <span class="brand-name">Thunder <em>Cell</em></span>
+                </a>
+                <p class="footer-tagline">Tecnologia que conecta você ao futuro. Celulares, notebooks e acessórios com atendimento de verdade.</p>
+                <div class="footer-social">
+                    <a href="https://wa.me/5549998404821" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/thundercelltec" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Links Rápidos</h3>
+                <ul class="footer-links">
+                    <li><a href="#topo">Início</a></li>
+                    <li><a href="#catalogo">Catálogo</a></li>
+                    <li><a href="#parcelamento">Parcelamento PayJoy</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Nossas Unidades</h3>
+                <p><i class="fa-solid fa-location-dot"></i> <strong>Matriz:</strong> Rua Francisco Nardi, 223, Sala 3, Centro — Tangará-SC, CEP 89642-000</p>
+                <p><i class="fa-solid fa-location-dot"></i> <strong>Filial:</strong> Rua Irmãos Picolli, 10, Centro — Tangará-SC, CEP 89642-000</p>
+            </div>
+
+            <div class="footer-col">
+                <h3>Atendimento</h3>
+                <p><i class="fa-regular fa-clock"></i> Segunda a Sexta: 8h às 12h / 13h às 18h</p>
+                <p><i class="fa-regular fa-clock"></i> Sábados: 8h30 às 12h</p>
+                <p><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/5549998404821" target="_blank" rel="noopener noreferrer">(49) 99840-4821</a></p>
+                <p><i class="fa-brands fa-instagram"></i> <a href="https://www.instagram.com/thundercelltec" target="_blank" rel="noopener noreferrer">@thundercelltec</a></p>
+            </div>
+        </div>
+
+        <div class="container footer-bottom">
+            <p>&copy; 2026 Thunder Cell. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

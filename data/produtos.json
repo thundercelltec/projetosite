@@ -1,0 +1,96 @@
+[
+  {
+    "id": 1,
+    "nome": "Xiaomi Redmi A7 Pro",
+    "marca": "Xiaomi",
+    "categoria": "Smartphones",
+    "selo": "Novo",
+    "preco": 1450.00,
+    "descricao": "Smartphone de entrada com armazenamento generoso, bateria de longa duração e tela ampla para o dia a dia.",
+    "especificacoes": [
+      "128GB de Armazenamento",
+      "8GB de RAM",
+      "Bateria 6000mAh",
+      "Tela 6.9\""
+    ],
+    "imagens": [
+      "assets/img/xiaomi-redmi-a7-pro-1.jpg",
+      "assets/img/xiaomi-redmi-a7-pro-2.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "nome": "Xiaomi Poco C71",
+    "marca": "Xiaomi",
+    "categoria": "Smartphones",
+    "preco": 1000.00,
+    "descricao": "Ótimo custo-benefício, com desempenho equilibrado e autonomia de bateria para o uso diário.",
+    "especificacoes": [
+      "128GB de Armazenamento",
+      "6GB de RAM",
+      "Bateria 5200mAh",
+      "Tela 6.88\""
+    ],
+    "imagens": [
+      "assets/img/xiaomi-poco-c71-1.jpg",
+      "assets/img/xiaomi-poco-c71-2.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "nome": "Samsung Galaxy A07",
+    "marca": "Samsung",
+    "categoria": "Smartphones",
+    "preco": 1250.00,
+    "descricao": "Modelo compacto da Samsung com bom desempenho, câmera versátil e visual moderno.",
+    "especificacoes": [
+      "128GB de Armazenamento",
+      "4GB de RAM",
+      "Bateria 5000mAh",
+      "Tela 6.7\""
+    ],
+    "imagens": [
+      "assets/img/samsung-a07-1.jpg",
+      "assets/img/samsung-a07-2.jpg"
+    ]
+  },
+  {
+    "id": 4,
+    "nome": "Samsung Galaxy A17 5G",
+    "marca": "Samsung",
+    "categoria": "Smartphones",
+    "selo": "Novo",
+    "preco": 1599.00,
+    "descricao": "Conectividade 5G, tela ampla e desempenho consistente para multitarefas e streaming.",
+    "especificacoes": [
+      "128GB de Armazenamento",
+      "Conectividade 5G",
+      "4GB de RAM",
+      "Bateria 5000mAh",
+      "Tela 6.7\""
+    ],
+    "imagens": [
+      "assets/img/samsung-a17-1.jpg",
+      "assets/img/samsung-a17-2.jpg"
+    ]
+  },
+  {
+    "id": 5,
+    "nome": "Notebook Dell Vostro",
+    "marca": "Dell",
+    "categoria": "Notebooks",
+    "preco": 2999.00,
+    "descricao": "Notebook profissional Dell com desempenho sólido para trabalho, estudos e multitarefas.",
+    "especificacoes": [
+      "Processador Intel Core i3-1215U",
+      "8GB de RAM",
+      "512GB SSD",
+      "Tela 15.6\"",
+      "Cor Carbon Black"
+    ],
+    "imagens": [
+      "assets/img/dell-vostro-1.jpg",
+      "assets/img/dell-vostro-2.jpg"
+    ]
+  }
+]
