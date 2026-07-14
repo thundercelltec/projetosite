@@ -18,6 +18,10 @@
     --blue: #3D6DFF;      /* azul elétrico */
     --purple: #8B5CF6;    /* roxo */
     --green: #25D366;     /* WhatsApp */
+    --gold: #E8B84B;      /* dourado premium (selos, garantias e destaques) */
+    --gold-soft: rgba(232, 184, 75, 0.12);
+    --tim-blue: #0049D6;  /* azul institucional TIM */
+    --tim-blue-deep: #001E62;
     --gradient: linear-gradient(135deg, #3D6DFF 0%, #8B5CF6 100%);
     --gradient-soft: linear-gradient(135deg, rgba(61, 109, 255, 0.16), rgba(139, 92, 246, 0.16));
 
@@ -984,7 +988,7 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
     pointer-events: none;
 }
 
-.splash-content { position: relative; z-index: 1; text-align: center; max-width: 780px; }
+.splash-content { position: relative; z-index: 1; text-align: center; max-width: 920px; }
 
 .splash-logo {
     width: 130px;
@@ -998,10 +1002,23 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
     50% { filter: drop-shadow(0 0 30px rgba(61, 109, 255, 0.75)) drop-shadow(0 0 48px rgba(139, 92, 246, 0.45)); }
 }
 
-.splash-title {
-    font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+/* Nome da marca com o maior peso visual da tela de boas-vindas */
+.splash-brand {
+    font-size: clamp(2.7rem, 9vw, 5.6rem);
     font-weight: 800;
-    margin: 0.6rem 0 2.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1.05;
+    margin-top: 0.4rem;
+    text-shadow: 0 0 70px rgba(61, 109, 255, 0.4);
+}
+
+/* A pergunta vira um subtítulo discreto abaixo da marca */
+.splash-title {
+    font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+    font-weight: 600;
+    color: var(--muted);
+    margin: 0.9rem 0 2.4rem;
 }
 
 .splash-options { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; }
@@ -1110,4 +1127,367 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
     }
     html { scroll-behavior: auto; }
     .reveal { opacity: 1; transform: none; }
+}
+
+/* =========================================================
+   HOME PAGE ENHANCEMENT — NOVAS SEÇÕES INSTITUCIONAIS
+   Hero reforçado, Assistência Técnica, TIM, Institucional,
+   Diferenciais, Estatísticas e CTA final.
+   ========================================================= */
+
+/* ===== HERO: "THUNDER CELL" como elemento de maior peso ===== */
+.hero h1.hero-title {
+    font-size: clamp(3rem, 10vw, 6.4rem);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1.04;
+    margin-bottom: 1.2rem;
+    text-shadow: 0 0 70px rgba(61, 109, 255, 0.35);
+}
+.hero-tagline { font-weight: 500; }
+
+/* =========================================================
+   SEÇÃO: ASSISTÊNCIA TÉCNICA ESPECIALIZADA
+   ========================================================= */
+
+/* Banner widescreen (largura quase total) com as frases rotativas */
+.assist-banner {
+    position: relative;
+    width: min(1500px, calc(100% - 2rem));
+    margin: 0 auto 3rem;
+    padding: clamp(2.2rem, 5vw, 3.4rem) 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(circle at 18% 0%, rgba(61, 109, 255, 0.20), transparent 55%),
+        radial-gradient(circle at 85% 100%, rgba(139, 92, 246, 0.16), transparent 55%),
+        var(--surface);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    text-align: center;
+}
+/* Linha de brilho decorativa no topo do banner */
+.assist-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 15%; right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(61, 109, 255, 0.7), transparent);
+}
+
+/* min-height fixa a altura pela frase mais longa, evitando "pulos" no layout */
+.assist-rotator-wrap { min-height: 1.5em; display: grid; place-items: center; }
+.assist-rotator {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 4.6vw, 3rem);
+    letter-spacing: -0.01em;
+    transition: opacity 0.35s ease, transform 0.35s var(--ease);
+}
+/* Classe aplicada pelo main.js durante a troca de frase (fade-out) */
+.assist-rotator.is-leaving { opacity: 0; transform: translateY(14px); }
+/* Frase final ("A Thunder Cell tem a solução!") em degradê azul → dourado */
+.assist-rotator.highlight {
+    background: linear-gradient(120deg, var(--blue) 0%, var(--purple) 55%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Grade de serviços da assistência (2 fileiras de 3 cards, centralizada) */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.1rem;
+    max-width: 880px;
+    margin: 0 auto;
+}
+.service-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.85rem;
+    text-align: center;
+    padding: 1.6rem 0.9rem;
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.3s var(--ease), border-color 0.3s ease, box-shadow 0.3s var(--ease), background 0.3s ease;
+}
+/* Hover: elevação + contorno com glow azul */
+.service-card:hover,
+.service-card:focus-visible {
+    transform: translateY(-7px) scale(1.03);
+    border-color: rgba(61, 109, 255, 0.6);
+    background: rgba(61, 109, 255, 0.07);
+    box-shadow: 0 16px 40px rgba(61, 109, 255, 0.22), 0 0 0 1px rgba(61, 109, 255, 0.25);
+    outline: none;
+}
+.service-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    font-size: 1.3rem;
+    color: var(--blue);
+    background: rgba(61, 109, 255, 0.10);
+    border: 1px solid rgba(61, 109, 255, 0.25);
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+.service-card:hover .service-icon {
+    background: var(--gradient);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(61, 109, 255, 0.4);
+}
+.service-name { font-weight: 700; font-size: 0.92rem; line-height: 1.3; }
+
+/* Card coringa "Outro problema?": destaque sutil em degradê */
+.service-card-cta { background: var(--gradient-soft); border-color: rgba(61, 109, 255, 0.4); }
+.service-card-cta .service-icon {
+    background: var(--gradient);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 8px 24px rgba(61, 109, 255, 0.35);
+}
+
+/* =========================================================
+   SEÇÃO: TIM NA THUNDER CELL
+   Cores da TIM (azuis + branco) integradas ao tema escuro
+   ========================================================= */
+.tim-panel {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    padding: clamp(2.4rem, 5vw, 4rem);
+    text-align: center;
+    background:
+        radial-gradient(circle at 88% 8%, rgba(255, 255, 255, 0.12), transparent 45%),
+        linear-gradient(140deg, var(--tim-blue-deep) 0%, #0033A8 48%, var(--tim-blue) 100%);
+    border: 1px solid rgba(90, 140, 255, 0.35);
+    box-shadow: 0 24px 64px rgba(0, 45, 156, 0.35);
+}
+/* Círculos decorativos ao fundo, no mesmo estilo do card PayJoy */
+.tim-panel::before,
+.tim-panel::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    pointer-events: none;
+}
+.tim-panel::before { width: 320px; height: 320px; top: -130px; left: -100px; }
+.tim-panel::after { width: 440px; height: 440px; bottom: -210px; right: -150px; }
+
+.tim-header { position: relative; }
+.tim-logo {
+    height: 64px;
+    width: auto;
+    margin: 0 auto 1.4rem;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.35));
+}
+.tim-panel h2 {
+    color: #fff;
+    font-size: clamp(1.8rem, 4vw, 2.7rem);
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+.tim-sub { color: rgba(255, 255, 255, 0.85); font-size: 1.05rem; }
+
+/* Lista enxuta de benefícios (mesmo estilo da lista do card PayJoy) */
+.tim-features {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1.8rem 0 2.2rem;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+.tim-features li { display: flex; align-items: baseline; gap: 0.6rem; text-align: left; }
+.tim-features i { color: #8FC1FF; }
+.tim-features strong { color: #FFE566; font-weight: 800; }
+
+/* CTA da TIM: botão grande com pulso discreto */
+.tim-cta { position: relative; }
+.btn-tim {
+    background: #fff;
+    color: #0033A8;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    padding: 1.15rem 2.6rem;
+    animation: timPulse 2.4s ease-in-out infinite;
+}
+.btn-tim:hover { transform: translateY(-4px) scale(1.04); }
+.btn-tim i { color: var(--green); }
+@keyframes timPulse {
+    0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28), 0 0 0 0 rgba(255, 255, 255, 0.35); }
+    50% { box-shadow: 0 14px 44px rgba(0, 0, 0, 0.35), 0 0 0 14px rgba(255, 255, 255, 0); }
+}
+
+/* =========================================================
+   SEÇÃO INSTITUCIONAL: TUDO O QUE VOCÊ PRECISA
+   Faixa deslizante (marquee) de largura total: visual limpo,
+   animação 100% em CSS (transform), pausa no hover.
+   ========================================================= */
+.everything-section { padding-bottom: 3.5rem; }
+.everything-section .section-heading { margin-bottom: 1.6rem; }
+
+.ticker {
+    position: relative;
+    overflow: hidden;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+    /* esmaece as bordas laterais da faixa */
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.ticker-track {
+    display: flex;
+    width: max-content;
+    animation: tickerScroll 38s linear infinite;
+}
+.ticker:hover .ticker-track { animation-play-state: paused; }
+
+/* padding-right = gap interno, para a emenda entre os dois grupos ser invisível */
+.ticker-group { display: flex; align-items: center; gap: 2.4rem; padding-right: 2.4rem; }
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text);
+}
+.ticker-item i { color: var(--blue); font-size: 0.95rem; }
+
+/* Desloca exatamente um grupo (50% da trilha duplicada) = loop perfeito */
+@keyframes tickerScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* =========================================================
+   SEÇÃO: DIFERENCIAIS (Por que escolher a Thunder Cell?)
+   ========================================================= */
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.2rem;
+}
+.why-card {
+    padding: 1.8rem 1.5rem;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s var(--ease), border-color 0.3s ease, box-shadow 0.3s var(--ease);
+}
+.why-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(61, 109, 255, 0.45);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45), 0 0 24px rgba(61, 109, 255, 0.15);
+}
+.why-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    font-size: 1.2rem;
+    margin-bottom: 1.05rem;
+}
+.why-icon-blue { color: var(--blue); background: rgba(61, 109, 255, 0.10); border: 1px solid rgba(61, 109, 255, 0.28); }
+.why-icon-gold { color: var(--gold); background: var(--gold-soft); border: 1px solid rgba(232, 184, 75, 0.32); }
+.why-card h3 { font-size: 1.02rem; margin-bottom: 0.35rem; }
+.why-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.55; }
+
+/* =========================================================
+   SEÇÃO: ESTATÍSTICAS (contadores animados)
+   ========================================================= */
+.metrics-section { padding-top: 1rem; }
+
+/* Faixa minimalista: números lado a lado com divisores finos, sem painel */
+.metrics-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.6rem, 6vw, 4.5rem);
+    text-align: center;
+}
+.metric { display: flex; flex-direction: column; gap: 0.35rem; }
+.metric-divider {
+    width: 1px;
+    height: 58px;
+    background: linear-gradient(to bottom, transparent, var(--border) 30%, var(--border) 70%, transparent);
+}
+/* .metric-number herda o degradê de .stat-number; aqui só aumenta a escala */
+.metric-number { font-size: clamp(2rem, 4.6vw, 2.9rem); }
+.metric-label {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* =========================================================
+   SEÇÃO: CHAMADA FINAL (CTA pré-footer)
+   ========================================================= */
+.final-cta-section { padding-top: 1rem; padding-bottom: 2rem; }
+.final-cta {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: clamp(2.8rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
+    border-radius: var(--radius-lg);
+    background:
+        radial-gradient(circle at 50% -30%, rgba(61, 109, 255, 0.28), transparent 60%),
+        radial-gradient(circle at 90% 110%, rgba(139, 92, 246, 0.18), transparent 55%),
+        var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+}
+.final-cta h2 {
+    font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+    font-weight: 800;
+    max-width: 760px;
+    margin: 0 auto 0.8rem;
+}
+.final-cta p { color: var(--muted); font-size: 1.05rem; margin-bottom: 2.2rem; }
+
+/* Glow pulsante do botão de conversão */
+.btn-glow { animation: ctaGlow 2.6s ease-in-out infinite; }
+@keyframes ctaGlow {
+    0%, 100% { box-shadow: 0 8px 28px rgba(37, 211, 102, 0.35); }
+    50% { box-shadow: 0 10px 48px rgba(37, 211, 102, 0.65), 0 0 44px rgba(37, 211, 102, 0.25); }
+}
+
+/* =========================================================
+   RESPONSIVO — novas seções (mobile first friendly)
+   ========================================================= */
+@media (max-width: 1080px) {
+    .why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+    .service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .why-grid { grid-template-columns: 1fr; }
+    .metrics-row { flex-direction: column; gap: 1.6rem; }
+    .metric-divider { width: 130px; height: 1px; }
+    .assist-banner { width: calc(100% - 1.5rem); }
+    .btn-tim { width: 100%; padding: 1.1rem 1.4rem; }
+    .final-cta .btn-glow { width: 100%; }
 }

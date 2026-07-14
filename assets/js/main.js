@@ -65,8 +65,6 @@ async function loadProducts() {
         renderProducts(state.filtered);
     } catch (error) {
         grid.innerHTML = `<div class="empty-state">${error.message}</div>`;
-    } finally {
-        resolveProductsReady(); // libera quem estiver aguardando o catálogo (ex: a splash screen)
     }
 }
 
@@ -331,20 +329,20 @@ function closeModal() {
 
 /* ---------- Tela de boas-vindas (Splash Screen) ---------- */
 
-// Resolvida quando loadProducts() termina (com sucesso ou erro). A splash
-// aguarda essa promise antes de aplicar a categoria escolhida, evitando uma
-// condição de corrida entre o clique do usuário e o fetch do produtos.json.
-let resolveProductsReady;
-const productsReady = new Promise((resolve) => { resolveProductsReady = resolve; });
-
+// Cada card da splash leva a uma área do site (data-target = âncora da
+// seção: catálogo, TIM, assistência ou PayJoy). O card "Ver Tudo" não
+// tem alvo: apenas fecha a splash e mostra a home desde o topo.
 function initSplash() {
     document.body.classList.add('splash-active'); // trava o scroll do catálogo por trás da splash
 
     document.querySelectorAll('.splash-card').forEach((card) => {
         card.addEventListener('click', () => {
-            const categoria = card.dataset.categoria || '';
+            const target = card.dataset.target || '';
             hideSplash();
-            selectSplashCategory(categoria);
+            if (target) {
+                const section = document.querySelector(target);
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+            }
         });
     });
 }
@@ -362,12 +360,6 @@ function hideSplash() {
     splash.addEventListener('transitionend', () => {
         splash.classList.add('hidden');
     }, { once: true });
-}
-
-async function selectSplashCategory(categoria) {
-    await productsReady; // garante que os produtos e o <select> de categorias já existem no DOM
-    applyCategoryFilter(categoria);
-    document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
 }
 
 /* ---------- Cabeçalho: efeito blur/sombra ao rolar ---------- */
@@ -431,7 +423,9 @@ function animateCounter(el) {
     function tick(now) {
         const progress = Math.min((now - start) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3); // ease-out cúbico
-        el.textContent = Math.round(target * eased) + suffix;
+        const value = Math.round(target * eased);
+        // data-format="milhar" exibe o número com separador de milhar (ex: 5.000)
+        el.textContent = (el.dataset.format === 'milhar' ? value.toLocaleString('pt-BR') : value) + suffix;
         if (progress < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
@@ -454,6 +448,49 @@ function initCounters() {
     }, { threshold: 0.4 });
 
     counters.forEach((el) => observer.observe(el));
+}
+
+/* ---------- Links de WhatsApp com mensagem personalizada ---------- */
+
+// Qualquer <a data-wa-message="..."> das novas seções (assistência, TIM,
+// CTA final) ganha automaticamente o href formatado do WhatsApp com a
+// mensagem já codificada. O href estático no HTML serve de fallback
+// (abre a conversa sem texto) caso o JS não carregue.
+function initWhatsAppMessageLinks() {
+    document.querySelectorAll('a[data-wa-message]').forEach((link) => {
+        link.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(link.dataset.waMessage)}`;
+    });
+}
+
+/* ---------- Banner rotativo da Assistência Técnica ---------- */
+
+// Frases exibidas em sequência no banner widescreen. A última é a
+// "resposta" e ganha destaque em degradê (classe .highlight no CSS).
+const ASSIST_PHRASES = ['Quebrou?', 'Molhou?', 'Parou de carregar?', 'A Thunder Cell tem a solução!'];
+const ASSIST_ROTATE_MS = 2600; // tempo de exibição de cada frase
+const ASSIST_FADE_MS = 350;    // deve acompanhar a transição de .assist-rotator no CSS
+
+function initAssistRotator() {
+    const el = document.getElementById('assistRotator');
+    if (!el) return;
+
+    // Com "reduzir movimento" ativo, exibe a frase final fixa, sem animação
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = ASSIST_PHRASES[ASSIST_PHRASES.length - 1];
+        el.classList.add('highlight');
+        return;
+    }
+
+    let index = 0;
+    setInterval(() => {
+        el.classList.add('is-leaving'); // fade-out da frase atual
+        setTimeout(() => {
+            index = (index + 1) % ASSIST_PHRASES.length;
+            el.textContent = ASSIST_PHRASES[index];
+            el.classList.toggle('highlight', index === ASSIST_PHRASES.length - 1);
+            el.classList.remove('is-leaving'); // fade-in da nova frase
+        }, ASSIST_FADE_MS);
+    }, ASSIST_ROTATE_MS);
 }
 
 /* ---------- Eventos ---------- */
@@ -509,6 +546,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileNav();
     initScrollReveal();
     initCounters();
+    initWhatsAppMessageLinks();
+    initAssistRotator();
     bindEvents();
     loadProducts();
 });
