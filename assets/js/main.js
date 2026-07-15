@@ -484,8 +484,10 @@ function initSplashLightning() {
     let height = 0;
 
     function resize() {
-        width = splash.clientWidth;
-        height = splash.clientHeight;
+        // O canvas é fixo no viewport (a splash pode rolar no celular),
+        // então o tamanho vem da janela, não do elemento da splash.
+        width = window.innerWidth;
+        height = window.innerHeight;
         canvas.width = width * dpr;
         canvas.height = height * dpr;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

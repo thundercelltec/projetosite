@@ -1082,9 +1082,15 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
     inset: 0;
     z-index: 3000;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1.5rem;
+    /* O conteúdo centraliza via margin:auto (no .splash-content) em vez de
+       align/justify-center: com centralização flex, o que passa da tela é
+       cortado sem acesso; com margin:auto, quando falta altura (celulares)
+       a splash simplesmente rola. */
+    overflow-y: auto;
+    overscroll-behavior: contain; /* a rolagem não "vaza" para a página atrás */
+    -webkit-overflow-scrolling: touch;
+    /* Respeita o notch/barra inferior do iPhone (env() vale 0 nos demais) */
+    padding: calc(2rem + env(safe-area-inset-top)) 1.5rem calc(2rem + env(safe-area-inset-bottom));
     background:
         radial-gradient(circle at 50% 25%, rgba(61, 109, 255, 0.16), transparent 55%),
         radial-gradient(circle at 50% 85%, rgba(139, 92, 246, 0.14), transparent 55%),
@@ -1096,7 +1102,9 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
 .splash.hidden { display: none; } /* só depois que a transição acima termina */
 
 .splash-backdrop {
-    position: absolute;
+    /* fixed (e não absolute): quando a splash rola no celular, a grade
+       continua parada cobrindo a tela em vez de subir com o conteúdo */
+    position: fixed;
     inset: 0;
     background-image:
         linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
@@ -1107,16 +1115,18 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
     pointer-events: none;
 }
 
-/* Canvas dos raios/faíscas: cobre a splash inteira, atrás do conteúdo */
+/* Canvas dos raios/faíscas: cobre a tela inteira, atrás do conteúdo.
+   Também fixed para ficar parado enquanto o conteúdo rola no celular. */
 .splash-lightning {
-    position: absolute;
+    position: fixed;
     inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
 }
 
-.splash-content { position: relative; z-index: 1; text-align: center; max-width: 920px; }
+/* margin:auto centraliza quando sobra espaço e permite rolar quando falta */
+.splash-content { position: relative; z-index: 1; text-align: center; max-width: 920px; margin: auto; }
 
 .splash-logo {
     width: 130px;
