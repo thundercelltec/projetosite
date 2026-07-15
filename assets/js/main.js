@@ -466,6 +466,141 @@ function hideSplash() {
     }, { once: true });
 }
 
+/* ---------- Fundo animado da splash: raios + faíscas (Thunder ⚡) ---------- */
+
+// Desenha no canvas da splash dois efeitos combinados: "pixels" de faísca
+// subindo lentamente e raios em zigue-zague que cortam a tela de tempos em
+// tempos, nas cores da marca. O loop se encerra sozinho quando a splash
+// recebe .hidden, e nada roda se o visitante prefere menos movimento.
+function initSplashLightning() {
+    const splash = document.getElementById('splashScreen');
+    const canvas = document.getElementById('splashLightning');
+    if (!splash || !canvas) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = canvas.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2); // 2x já é nítido; acima disso só pesa
+    let width = 0;
+    let height = 0;
+
+    function resize() {
+        width = splash.clientWidth;
+        height = splash.clientHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Faíscas: quadradinhos que sobem devagar, como poeira elétrica.
+    // A quantidade acompanha a área da tela (menos no celular, mais no desktop).
+    const sparks = [];
+    const totalSparks = Math.max(24, Math.min(70, Math.round((width * height) / 22000)));
+
+    function resetSpark(spark, anywhere) {
+        spark.x = Math.random() * width;
+        spark.y = anywhere ? Math.random() * height : height + 6;
+        spark.size = 1 + Math.random() * 2.4;
+        spark.speed = 0.15 + Math.random() * 0.5;
+        spark.drift = (Math.random() - 0.5) * 0.3;
+        spark.alpha = 0.1 + Math.random() * 0.5;
+        spark.pulse = Math.random() * Math.PI * 2;
+        spark.azul = Math.random() > 0.35; // mistura azul/roxo da marca
+        return spark;
+    }
+    for (let i = 0; i < totalSparks; i++) sparks.push(resetSpark({}, true));
+
+    // Raios: polilinha em zigue-zague da borda de cima até ~2/3 da tela,
+    // com galhos curtos saindo pelo caminho. Cada raio vive menos de 1s.
+    const bolts = [];
+    let nextBoltAt = performance.now() + 900;
+
+    function spawnBolt() {
+        const points = [{ x: width * (0.08 + Math.random() * 0.84), y: -10 }];
+        const branches = [];
+        let { x, y } = points[0];
+        const endY = height * (0.55 + Math.random() * 0.35);
+
+        while (y < endY) {
+            y += 14 + Math.random() * 26;
+            x += (Math.random() - 0.5) * 46;
+            points.push({ x, y });
+
+            if (Math.random() < 0.18 && points.length > 2) {
+                const branch = [{ x, y }];
+                let bx = x;
+                let by = y;
+                const dir = Math.random() > 0.5 ? 1 : -1;
+                const steps = 3 + Math.floor(Math.random() * 4);
+                for (let i = 0; i < steps; i++) {
+                    bx += dir * (10 + Math.random() * 22);
+                    by += 10 + Math.random() * 18;
+                    branch.push({ x: bx, y: by });
+                }
+                branches.push(branch);
+            }
+        }
+        bolts.push({ points, branches, born: performance.now(), life: 420 + Math.random() * 240 });
+    }
+
+    function strokePath(points, lineWidth, color) {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = color;
+        ctx.stroke();
+    }
+
+    function frame(now) {
+        if (splash.classList.contains('hidden')) {
+            window.removeEventListener('resize', resize);
+            return; // splash fechada: encerra o loop de vez
+        }
+
+        ctx.clearRect(0, 0, width, height);
+
+        for (const s of sparks) {
+            s.y -= s.speed;
+            s.x += s.drift;
+            s.pulse += 0.03;
+            if (s.y < -8) resetSpark(s, false);
+            const a = s.alpha * (0.6 + 0.4 * Math.sin(s.pulse));
+            ctx.fillStyle = s.azul ? `rgba(96, 140, 255, ${a})` : `rgba(160, 120, 255, ${a})`;
+            ctx.fillRect(s.x, s.y, s.size, s.size);
+        }
+
+        if (now >= nextBoltAt) {
+            spawnBolt();
+            if (Math.random() < 0.3) spawnBolt(); // de vez em quando caem dois juntos
+            nextBoltAt = now + 1400 + Math.random() * 2600;
+        }
+
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        for (let i = bolts.length - 1; i >= 0; i--) {
+            const bolt = bolts[i];
+            const t = (now - bolt.born) / bolt.life;
+            if (t >= 1) { bolts.splice(i, 1); continue; }
+
+            // Brilho decai conforme envelhece, com uma tremulação de relâmpago
+            const flicker = 0.85 + 0.15 * Math.sin(now * 0.09 + bolt.born);
+            const a = (1 - t) * flicker;
+
+            strokePath(bolt.points, 5, `rgba(61, 109, 255, ${a * 0.18})`);    // halo azul
+            strokePath(bolt.points, 2.4, `rgba(139, 92, 246, ${a * 0.4})`);   // meio roxo
+            strokePath(bolt.points, 1.1, `rgba(235, 242, 255, ${a * 0.85})`); // núcleo claro
+            for (const branch of bolt.branches) {
+                strokePath(branch, 1, `rgba(160, 190, 255, ${a * 0.5})`);
+            }
+        }
+
+        requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+}
+
 /* ---------- Barra de rolagem: visível apenas durante a rolagem ---------- */
 
 // Adiciona .is-scrolling enquanto a página (ou o modal) está rolando e
@@ -691,6 +826,7 @@ function bindEvents() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initSplash();
+    initSplashLightning();
     initAutoHideScrollbars();
     initHeaderScroll();
     initMobileNav();

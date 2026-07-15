@@ -365,6 +365,9 @@
          transição de saída, do filtro automático e da rolagem até o catálogo. -->
     <section id="splashScreen" class="splash" aria-hidden="false" aria-label="Tela de boas-vindas">
         <div class="splash-backdrop"></div>
+        <!-- Fundo animado da marca: raios e faíscas desenhados pelo main.js.
+             Fica entre a grade do backdrop e o conteúdo (que tem z-index 1). -->
+        <canvas id="splashLightning" class="splash-lightning" aria-hidden="true"></canvas>
         <div class="splash-content">
             <img src="assets/img/logo.png" alt="Logo da Thunder Cell, loja de tecnologia" class="splash-logo" width="331" height="400" />
 
@@ -858,9 +861,9 @@
                         <span class="service-icon"><i class="fa-solid fa-battery-three-quarters"></i></span>
                         <span class="service-name">Troca de Bateria</span>
                     </a>
-                    <a class="service-card" href="https://wa.me/5549998404821" data-wa-message="Olá! Gostaria de um orçamento para reparo de câmera." target="_blank" rel="noopener noreferrer">
-                        <span class="service-icon"><i class="fa-solid fa-camera"></i></span>
-                        <span class="service-name">Câmera</span>
+                    <a class="service-card" href="https://wa.me/5549998404821" data-wa-message="Olá! Gostaria de um orçamento para remoção de vírus." target="_blank" rel="noopener noreferrer">
+                        <span class="service-icon"><i class="fa-solid fa-shield-virus"></i></span>
+                        <span class="service-name">Remoção de Vírus</span>
                     </a>
                     <a class="service-card" href="https://wa.me/5549998404821" data-wa-message="Olá! Preciso de formatação/suporte de software." target="_blank" rel="noopener noreferrer">
                         <span class="service-icon"><i class="fa-solid fa-arrows-rotate"></i></span>
