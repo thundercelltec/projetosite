@@ -75,6 +75,48 @@
     ]
   },
   {
+    "id": 11,
+    "nome": "Xiaomi Redmi 15",
+    "marca": "Xiaomi",
+    "categoria": "Smartphones",
+    "selo": "Novo",
+    "preco": 1999.90,
+    "descricao": "Tela gigante de 6.9\" com 144Hz e bateria de 7000mAh para até dois dias de uso longe da tomada, com carregamento rápido de 33W.",
+    "especificacoes": [
+      "256GB de Armazenamento",
+      "16GB de RAM",
+      "Bateria 7000mAh",
+      "Tela 6.9\" 144Hz",
+      "Câmera 50MP",
+      "Carregamento rápido 33W"
+    ],
+    "imagens": [
+      "assets/img/xiaomi-redmi-15-1.png",
+      "assets/img/xiaomi-redmi-15-2.png",
+      "assets/img/xiaomi-redmi-15-3.png"
+    ]
+  },
+  {
+    "id": 12,
+    "nome": "Xiaomi Redmi Note 14",
+    "marca": "Xiaomi",
+    "categoria": "Smartphones",
+    "selo": "Novo",
+    "preco": 1999.90,
+    "descricao": "Câmera de 108MP e tela AMOLED de 6.67\" a 120Hz: fotos ricas em detalhes e visual premium, com bateria de 5500mAh para o dia todo.",
+    "especificacoes": [
+      "256GB de Armazenamento",
+      "8GB de RAM",
+      "Bateria 5500mAh",
+      "Tela AMOLED 6.67\" 120Hz",
+      "Câmera 108MP"
+    ],
+    "imagens": [
+      "assets/img/xiaomi-redmi-note-14-1.png",
+      "assets/img/xiaomi-redmi-note-14-2.png"
+    ]
+  },
+  {
     "id": 5,
     "nome": "Notebook Dell Vostro",
     "marca": "Dell",
