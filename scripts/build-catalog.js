@@ -56,6 +56,12 @@ function whatsappLink(productName) {
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
+// Mesma mensagem do whatsappRestockLink() do main.js — manter em sincronia
+function whatsappRestockLink(productName) {
+    const message = `Olá! Vi que o ${productName} está sem estoque. Podem me avisar quando ele chegar?`;
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
 // Substitui o conteúdo entre um par de marcadores, preservando os marcadores
 function injectBetween(html, startMarker, endMarker, content) {
     const start = html.indexOf(startMarker);
@@ -69,7 +75,12 @@ function injectBetween(html, startMarker, endMarker, content) {
 /* ---------- Geração dos cards (espelho do createProductCard do main.js) ---------- */
 
 function createProductCard(product, index) {
-    const badge = product.selo
+    // Produto sem estoque ("disponivel": false): continua no catálogo, mas com
+    // foto dessaturada, faixa "Sem Estoque" e botão de aviso de reposição
+    // (mesma regra do createProductCard do main.js).
+    const esgotado = product.disponivel === false;
+
+    const badge = !esgotado && product.selo
         ? `<span class="product-badge ${BADGE_CLASSES[product.selo] || 'badge-novo'}">${escapeHtml(product.selo)}</span>`
         : '';
 
@@ -84,10 +95,19 @@ function createProductCard(product, index) {
         ? `<span class="price-prefix">A partir de</span>${formatCurrency(product.preco)}`
         : formatCurrency(product.preco);
 
+    const botaoWhats = esgotado
+        ? `<a class="btn btn-small btn-notify btn-block" href="${whatsappRestockLink(product.nome)}" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-regular fa-bell"></i> Avise-me quando chegar
+                    </a>`
+        : `<a class="btn btn-small btn-whatsapp btn-block" href="${whatsappLink(product.nome)}" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
+                    </a>`;
+
     return `
-        <article class="product-card" style="--delay: ${delay}ms" data-id="${product.id}" data-nome="${escapeHtml(product.nome.toLowerCase())}" data-categoria="${escapeHtml(product.categoria)}">
+        <article class="product-card${esgotado ? ' product-card--esgotado' : ''}" style="--delay: ${delay}ms" data-id="${product.id}" data-nome="${escapeHtml(product.nome.toLowerCase())}" data-categoria="${escapeHtml(product.categoria)}">
             <div class="product-image">
                 ${badge}
+                ${esgotado ? '<span class="soldout-strip">Sem Estoque</span>' : ''}
                 <img src="${product.imagens[0]}" alt="${nome}" loading="lazy" />
             </div>
             <div class="product-body">
@@ -105,9 +125,7 @@ function createProductCard(product, index) {
                     <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="${product.id}">
                         <i class="fa-regular fa-eye"></i> Ver Detalhes
                     </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="${whatsappLink(product.nome)}" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
+                    ${botaoWhats}
                 </div>
             </div>
         </article>`;
@@ -119,6 +137,9 @@ function buildProductsJsonLd(produtos) {
     const itens = produtos.map((p) => {
         // Produtos com variantes viram AggregateOffer (faixa de preço)
         const temVariantes = Array.isArray(p.variantes) && p.variantes.length > 0;
+        const availability = p.disponivel === false
+            ? 'https://schema.org/OutOfStock'
+            : 'https://schema.org/InStock';
         const offers = temVariantes
             ? {
                 '@type': 'AggregateOffer',
@@ -126,7 +147,7 @@ function buildProductsJsonLd(produtos) {
                 highPrice: Math.max(...p.variantes.map((v) => v.preco)).toFixed(2),
                 offerCount: p.variantes.length,
                 priceCurrency: 'BRL',
-                availability: 'https://schema.org/InStock',
+                availability,
                 url: `${SITE_URL}/#catalogo`,
                 seller: { '@type': 'Organization', name: 'Thunder Cell' }
             }
@@ -134,7 +155,7 @@ function buildProductsJsonLd(produtos) {
                 '@type': 'Offer',
                 price: p.preco.toFixed(2),
                 priceCurrency: 'BRL',
-                availability: 'https://schema.org/InStock',
+                availability,
                 url: `${SITE_URL}/#catalogo`,
                 seller: { '@type': 'Organization', name: 'Thunder Cell' }
             };
@@ -156,6 +177,11 @@ function buildProductsJsonLd(produtos) {
 
 function main() {
     const produtos = JSON.parse(fs.readFileSync(PRODUTOS_PATH, 'utf8'));
+
+    // Produtos sem estoque vão para o fim do catálogo — quem está disponível
+    // aparece primeiro (mesma regra do loadProducts do main.js)
+    produtos.sort((a, b) => (a.disponivel === false) - (b.disponivel === false));
+
     let html = fs.readFileSync(INDEX_PATH, 'utf8');
 
     // 1. Cards pré-renderizados no grid do catálogo

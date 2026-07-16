@@ -50,8 +50,8 @@
       "Tela 6.7\""
     ],
     "imagens": [
-      "assets/img/samsung-a07-1.jpg",
-      "assets/img/samsung-a07-2.jpg"
+      "assets/img/samsung-a07-2.jpg",
+      "assets/img/samsung-a07-1.jpg"
     ]
   },
   {
@@ -102,6 +102,7 @@
     "marca": "Xiaomi",
     "categoria": "Smartphones",
     "selo": "Novo",
+    "disponivel": false,
     "preco": 1999.90,
     "descricao": "Câmera de 108MP e tela AMOLED de 6.67\" a 120Hz: fotos ricas em detalhes e visual premium, com bateria de 5500mAh para o dia todo.",
     "especificacoes": [

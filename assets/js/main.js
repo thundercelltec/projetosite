@@ -54,6 +54,13 @@ function whatsappLink(productName) {
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
+// Versão para produtos sem estoque ("disponivel": false no produtos.json):
+// em vez de comprar, o cliente pede para ser avisado da reposição.
+function whatsappRestockLink(productName) {
+    const message = `Olá! Vi que o ${productName} está sem estoque. Podem me avisar quando ele chegar?`;
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
 /* ---------- Carregamento dos produtos ---------- */
 
 // Os dados vêm do <script id="productsData"> injetado no index.html pelo
@@ -71,6 +78,10 @@ async function loadProducts() {
             if (!response.ok) throw new Error('Não foi possível carregar o catálogo.');
             state.products = await response.json();
         }
+
+        // Produtos sem estoque vão para o fim do catálogo — quem está
+        // disponível aparece primeiro (mesma regra do build-catalog.js)
+        state.products.sort((a, b) => (a.disponivel === false) - (b.disponivel === false));
 
         populateCategoryFilter();
 
@@ -165,8 +176,13 @@ function applyCategoryFilter(categoria) {
 // IMPORTANTE: manter este markup em sincronia com o gerador do build
 // (scripts/build-catalog.js), que produz os mesmos cards no index.html.
 function createProductCard(product, index) {
-    // Selo opcional (campo "selo" no produtos.json): Novo, Seminovo, Oferta, Promoção
-    const badge = product.selo
+    // Produto sem estoque ("disponivel": false): continua no catálogo, mas com
+    // foto dessaturada, faixa "Sem Estoque" e botão de aviso de reposição.
+    const esgotado = product.disponivel === false;
+
+    // Selo opcional (campo "selo" no produtos.json): Novo, Seminovo, Oferta,
+    // Promoção. Produtos esgotados não exibem selo — a faixa assume o destaque.
+    const badge = !esgotado && product.selo
         ? `<span class="product-badge ${BADGE_CLASSES[product.selo] || 'badge-novo'}">${product.selo}</span>`
         : '';
 
@@ -183,10 +199,20 @@ function createProductCard(product, index) {
     // Delay em cascata para a animação de entrada dos cards (limitado a 480ms)
     const delay = Math.min(index * 80, 480);
 
+    // Sem estoque: o botão verde de compra dá lugar ao "Avise-me quando chegar"
+    const botaoWhats = esgotado
+        ? `<a class="btn btn-small btn-notify btn-block" href="${whatsappRestockLink(product.nome)}" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-regular fa-bell"></i> Avise-me quando chegar
+                    </a>`
+        : `<a class="btn btn-small btn-whatsapp btn-block" href="${whatsappLink(product.nome)}" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
+                    </a>`;
+
     return `
-        <article class="product-card" style="--delay: ${delay}ms" data-id="${product.id}" data-nome="${product.nome.toLowerCase()}" data-categoria="${product.categoria}">
+        <article class="product-card${esgotado ? ' product-card--esgotado' : ''}" style="--delay: ${delay}ms" data-id="${product.id}" data-nome="${product.nome.toLowerCase()}" data-categoria="${product.categoria}">
             <div class="product-image">
                 ${badge}
+                ${esgotado ? '<span class="soldout-strip">Sem Estoque</span>' : ''}
                 <img src="${product.imagens[0]}" alt="${product.nome}" loading="lazy" />
             </div>
             <div class="product-body">
@@ -204,9 +230,7 @@ function createProductCard(product, index) {
                     <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="${product.id}">
                         <i class="fa-regular fa-eye"></i> Ver Detalhes
                     </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="${whatsappLink(product.nome)}" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
+                    ${botaoWhats}
                 </div>
             </div>
         </article>
@@ -337,9 +361,14 @@ function openModal(id) {
     const modal = document.getElementById('productModal');
     const modalBody = document.getElementById('modalBody');
 
-    const badge = product.selo
-        ? `<span class="product-badge ${BADGE_CLASSES[product.selo] || 'badge-novo'}" style="position: static; margin-bottom: .7rem; display: inline-block;">${product.selo}</span>`
-        : '';
+    // No modal, o selo de sem estoque tem prioridade sobre o selo normal
+    const esgotado = product.disponivel === false;
+    const badgeStyle = 'position: static; margin-bottom: .7rem; display: inline-block;';
+    const badge = esgotado
+        ? `<span class="product-badge badge-esgotado" style="${badgeStyle}">Sem Estoque</span>`
+        : product.selo
+            ? `<span class="product-badge ${BADGE_CLASSES[product.selo] || 'badge-novo'}" style="${badgeStyle}">${product.selo}</span>`
+            : '';
 
     // Seletor de variantes (ex: versões de memória do tablet). A troca de
     // variante atualiza preço, tabela de parcelas e mensagem do WhatsApp.
@@ -369,11 +398,23 @@ function openModal(id) {
             </ul>
             ${variantesHtml}
             <p class="modal-price" id="modalPrice">${formatCurrency(product.preco)}</p>
+            ${esgotado ? `
+            <div class="soldout-notice">
+                <i class="fa-solid fa-box-open"></i>
+                <span>Este produto está <strong>temporariamente sem estoque</strong>. Chame no WhatsApp e avisamos você assim que ele chegar!</span>
+            </div>
+            <div class="product-actions">
+                <a class="btn btn-notify" id="modalWhatsLink" href="${whatsappRestockLink(product.nome)}" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-regular fa-bell"></i> Avise-me quando chegar
+                </a>
+            </div>
+            ` : `
             <div class="product-actions">
                 <a class="btn btn-whatsapp" id="modalWhatsLink" href="${whatsappLink(product.nome)}" target="_blank" rel="noopener noreferrer">
                     <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
                 </a>
             </div>
+            `}
         </div>
         <div class="modal-info modal-installments">
             <h3 class="installments-title">Simulação de Parcelamento no Cartão</h3>

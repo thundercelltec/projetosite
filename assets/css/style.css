@@ -676,6 +676,75 @@ body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate
 .badge-seminovo { background: linear-gradient(135deg, #64748B, #475569); }
 .badge-oferta { background: linear-gradient(135deg, #F59E0B, #EF4444); }
 .badge-promocao { background: linear-gradient(135deg, #EC4899, #8B5CF6); }
+.badge-esgotado { background: linear-gradient(135deg, #475569, #1E293B); }
+
+/* =========================================================
+   PRODUTO SEM ESTOQUE ("disponivel": false no produtos.json)
+   O produto continua no catálogo — o cliente vê que a loja
+   trabalha com ele — mas a foto fica dessaturada, uma faixa
+   cruza a imagem e o botão de compra vira "Avise-me".
+   ========================================================= */
+.product-card--esgotado .product-image img {
+    filter: grayscale(0.9) opacity(0.72);
+}
+.product-card--esgotado:hover .product-image img { transform: none; }
+
+/* Faixa translúcida com blur cruzando a foto */
+.soldout-strip {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    transform: translateY(-50%);
+    padding: 0.55rem 1rem;
+    text-align: center;
+    background: rgba(10, 14, 24, 0.78);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+}
+
+/* Preço em tons de cinza (o gradiente colorido fica para os disponíveis) */
+.product-card--esgotado .product-price {
+    background: linear-gradient(135deg, #A7B0C4, #6B7690);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* Botão "Avise-me quando chegar": acento dourado, sem o verde de compra */
+.btn-notify {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    border: 1px solid rgba(232, 184, 75, 0.45);
+}
+.btn-notify:hover {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    box-shadow: 0 6px 24px rgba(232, 184, 75, 0.2);
+}
+.btn-notify i { color: var(--gold); }
+
+/* Aviso exibido no modal do produto esgotado */
+.soldout-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    margin-top: 0.9rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    background: var(--gold-soft);
+    border: 1px solid rgba(232, 184, 75, 0.35);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+.soldout-notice i { color: var(--gold); margin-top: 0.2rem; }
 
 .product-body {
     padding: 1.3rem 1.4rem 1.5rem;
