@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -d \"c:/Users/Thunder Cell/Desktop\"/* 2>/dev/null | head -40)",
+      "Read(//c/Users/Thunder Cell/Desktop/**)",
+      "Bash(find \"c:/Users/Thunder Cell/Desktop/LEILÃO\" -maxdepth 3 -not -path \"*/node_modules/*\" -not -path \"*/.git/*\" 2>/dev/null | head -60)",
+      "Read(//c/Users/Thunder Cell/Desktop/LEILÃO/**)",
+      "Bash(cd \"c:/Users/Thunder Cell/Desktop/LEILÃO\" && wc -l *.js *.css *.html && echo \"=== firebase-config.js ===\" && cat firebase-config.js && echo \"=== image-config.js ===\" && cat image-config.js)",
+      "Bash(cd \"c:/Users/Thunder Cell/Desktop/LEILÃO\" && cat README.md && echo \"=== netlify ===\" && cat netlify.toml)",
+      "Bash(cd \"c:/Users/Thunder Cell/Desktop/LEILÃO\" && sed -n '1,140p' admin.js)",
+      "Bash(cd \"c:/Users/Thunder Cell/Desktop/LEILÃO\" && grep -n \"cloudinary\\\\|uploadImage\\\\|FormData\\\\|fetch\\(\" admin.js | head -30 && echo \"=== fotos-utils ===\" && cat fotos-utils.js && echo \"=== rules from README ===\" && grep -n -A 30 '\"rules\"' README.md | head -60)",
+      "Bash(cd \"c:/Users/Thunder Cell/Desktop/LEILÃO\" && sed -n '140,330p' admin.js)",
+      "Bash(cd \"c:/Users/Thunder Cell/Desktop/LEILÃO\" && sed -n '1,80p' thunderadm.html)",
+      "Bash(perl -i -pe 's/\\\\.replace\\\\\\(\\\\/\\\\[.*?\\\\]\\\\/g, \"\"\\\\\\)/.replace\\(\\\\/[\\\\\\\\u0300-\\\\\\\\u036f]\\\\/g, \"\"\\)/ if $. == 259' assets/js/main.js)",
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(node scripts/build-catalog.js)",
+      "Bash(grep -o 'id=\"produtosFallback\">.\\\\{0,320\\\\}' index.html)",
+      "Bash(npx --yes playwright install chromium)",
+      "Bash(node scripts/gerar-importacao-firebase.js)",
+      "Bash(sed -i 's|<lastmod>2026-07-14</lastmod>|<lastmod>2026-08-20</lastmod>|g' sitemap.xml)",
+      "WebFetch(domain:cloudinary.com)",
+      "Bash(node url-test.mjs)",
+      "Bash(grep -n \"^// ---------\\\\|^const telaCarregando\\\\|^if \\(!auth\\)\\\\|^} else {\\\\|^  onAuthStateChanged\\\\|^\\\\$\\(\\\\\"formLogin\\\\\"\\)\\\\|^\\\\$\\(\\\\\"btnSair\\\\\"\\)\\\\|^let painelIniciado\\\\|^function iniciarPainel\" assets/js/admin.js)",
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/produtos.json?print=pretty\")",
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/.json\")"
+    ]
+  }
+}

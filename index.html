@@ -10,27 +10,22 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-RCVMPJS6LT');
     </script>
 
-    <title>Thunder Cell | Loja de Tecnologia — Celulares, Notebooks e Acessórios</title>
-    <meta name="description" content="Thunder Cell: celulares, tablets, notebooks, acessórios, assistência técnica especializada e planos TIM em Tangará-SC. Parcelamento em até 18x na PayJoy e atendimento via WhatsApp." />
+    <title>Thunder Cell | Celulares novos e seminovos com garantia — Tangará-SC</title>
+    <meta name="description" content="Catálogo da Thunder Cell: celulares novos com 1 ano de garantia e seminovos com 90 dias, todos testados e com IMEI verificado. Atendimento pelo WhatsApp em Tangará-SC." />
     <link rel="canonical" href="https://thundercell.netlify.app/" />
 
-    <!-- Ícone da guia do navegador + atalho na tela inicial do celular.
-         favicon.png (quadrado, fundo transparente) e apple-touch-icon.png
-         (fundo escuro) são gerados a partir da logo.png. -->
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />
-    <meta name="theme-color" content="#05060B" />
+    <meta name="theme-color" content="#FAFAFA" />
 
-    <!-- Open Graph: preview do link ao compartilhar no WhatsApp/Instagram.
-         ATENÇÃO: crie a imagem assets/img/og-cover.jpg em 1200x630px. -->
+    <!-- Open Graph: preview do link ao compartilhar no WhatsApp/Instagram -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://thundercell.netlify.app/" />
-    <meta property="og:title" content="Thunder Cell | Celulares, Notebooks e Assistência Técnica em Tangará-SC" />
-    <meta property="og:description" content="Celulares, tablets, notebooks e acessórios. Assistência técnica especializada, planos TIM e parcelamento em até 18x na PayJoy." />
+    <meta property="og:title" content="Thunder Cell | Celulares novos e seminovos com garantia" />
+    <meta property="og:description" content="Aparelhos testados um a um, com IMEI verificado e garantia: 1 ano nos novos, 90 dias nos seminovos. Tangará-SC." />
     <meta property="og:image" content="https://thundercell.netlify.app/assets/img/og-cover.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -38,7 +33,20 @@
     <meta property="og:site_name" content="Thunder Cell" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Dados estruturados (SEO local): loja física com as duas unidades -->
+    <!-- Duas famílias apenas: Poppins nos títulos, Inter no texto de apoio.
+         `display=swap` evita tela em branco enquanto a fonte baixa. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- Liga as animações de entrada. Fica inline e antes do CSS ser aplicado
+         ao corpo para não haver "flash" — e, sem JavaScript, a classe nunca
+         entra e todo o conteúdo aparece normalmente (ver `.js .reveal`). -->
+    <script>document.documentElement.classList.add('js');</script>
+
+    <!-- Dados estruturados (SEO local): as duas unidades da loja -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -93,1137 +101,587 @@
     }
     </script>
 
-    <!-- Dados estruturados dos produtos: gerados pelo scripts/build-catalog.js -->
+    <!-- Dados estruturados dos produtos: gerados por scripts/build-catalog.js -->
     <!-- BUILD:JSONLD-START -->
-    <script type="application/ld+json">
-    [
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Xiaomi Redmi A7 Pro",
-            "brand": {
-                "@type": "Brand",
-                "name": "Xiaomi"
-            },
-            "description": "Smartphone de entrada com armazenamento generoso, bateria de longa duração e tela ampla para o dia a dia.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/xiaomi-redmi-a7-pro-1.jpg",
-                "https://thundercell.netlify.app/assets/img/xiaomi-redmi-a7-pro-2.jpg"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "1450.00",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Xiaomi Poco C71",
-            "brand": {
-                "@type": "Brand",
-                "name": "Xiaomi"
-            },
-            "description": "Ótimo custo-benefício, com desempenho equilibrado e autonomia de bateria para o uso diário.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/xiaomi-poco-c71-1.jpg",
-                "https://thundercell.netlify.app/assets/img/xiaomi-poco-c71-2.jpg"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "1000.00",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Samsung Galaxy A07",
-            "brand": {
-                "@type": "Brand",
-                "name": "Samsung"
-            },
-            "description": "Modelo compacto da Samsung com bom desempenho, câmera versátil e visual moderno.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/samsung-a07-2.jpg",
-                "https://thundercell.netlify.app/assets/img/samsung-a07-1.jpg"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "1250.00",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Samsung Galaxy A17 5G",
-            "brand": {
-                "@type": "Brand",
-                "name": "Samsung"
-            },
-            "description": "Conectividade 5G, tela ampla e desempenho consistente para multitarefas e streaming.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/samsung-a17-1.jpg",
-                "https://thundercell.netlify.app/assets/img/samsung-a17-2.jpg"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "1599.00",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Xiaomi Redmi 15",
-            "brand": {
-                "@type": "Brand",
-                "name": "Xiaomi"
-            },
-            "description": "Tela gigante de 6.9\" com 144Hz e bateria de 7000mAh para até dois dias de uso longe da tomada, com carregamento rápido de 33W.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/xiaomi-redmi-15-1.png",
-                "https://thundercell.netlify.app/assets/img/xiaomi-redmi-15-2.png",
-                "https://thundercell.netlify.app/assets/img/xiaomi-redmi-15-3.png"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "1999.90",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Notebook Dell Vostro",
-            "brand": {
-                "@type": "Brand",
-                "name": "Dell"
-            },
-            "description": "Notebook profissional Dell com desempenho sólido para trabalho, estudos e multitarefas.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/dell-vostro-1.jpg",
-                "https://thundercell.netlify.app/assets/img/dell-vostro-2.jpg",
-                "https://thundercell.netlify.app/assets/img/dell-vostro-3.jpg"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "2999.00",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Xiaomi Redmi Pad 2",
-            "brand": {
-                "@type": "Brand",
-                "name": "Xiaomi"
-            },
-            "description": "Tablet com tela grande de 11\", bateria de longa duração e duas versões de memória para escolher conforme o seu uso.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/xiaomi-redmi-pad-2-1.jpg",
-                "https://thundercell.netlify.app/assets/img/xiaomi-redmi-pad-2-2.jpg"
-            ],
-            "offers": {
-                "@type": "AggregateOffer",
-                "lowPrice": "1500.00",
-                "highPrice": "2000.00",
-                "offerCount": 2,
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "JBL Xtreme 4",
-            "brand": {
-                "@type": "Brand",
-                "name": "JBL"
-            },
-            "description": "Caixa de som portátil potente, com graves marcantes, à prova d'água e bateria para um dia inteiro de música.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/jbl-xtreme-4-1.jpg",
-                "https://thundercell.netlify.app/assets/img/jbl-xtreme-4-2.jpg",
-                "https://thundercell.netlify.app/assets/img/jbl-xtreme-4-3.jpg"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "1799.90",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Xiaomi Smart Band 9",
-            "brand": {
-                "@type": "Brand",
-                "name": "Xiaomi"
-            },
-            "description": "Pulseira inteligente leve e resistente à água, com tela ampla para acompanhar treinos, sono e notificações.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/xiaomi-smart-band-9-1.jpg",
-                "https://thundercell.netlify.app/assets/img/xiaomi-smart-band-9-2.jpg"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "399.90",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Xiaomi Smart Band 10",
-            "brand": {
-                "@type": "Brand",
-                "name": "Xiaomi"
-            },
-            "description": "A evolução da Smart Band 9 com NFC integrado: pague por aproximação direto do pulso, além de todos os recursos de saúde e treino.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/xiaomi-smart-band-10-1.jpg",
-                "https://thundercell.netlify.app/assets/img/xiaomi-smart-band-10-2.jpg"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "449.90",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Alexa Echo Show 5 (3ª geração)",
-            "brand": {
-                "@type": "Brand",
-                "name": "Amazon"
-            },
-            "description": "Tela inteligente compacta com Alexa integrada: controle a casa, veja notícias, faça chamadas de vídeo e ouça música por voz.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/echo-show-5-1.jpg",
-                "https://thundercell.netlify.app/assets/img/echo-show-5-2.jpg",
-                "https://thundercell.netlify.app/assets/img/echo-show-5-3.jpg"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "749.90",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/InStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "Xiaomi Redmi Note 14",
-            "brand": {
-                "@type": "Brand",
-                "name": "Xiaomi"
-            },
-            "description": "Câmera de 108MP e tela AMOLED de 6.67\" a 120Hz: fotos ricas em detalhes e visual premium, com bateria de 5500mAh para o dia todo.",
-            "image": [
-                "https://thundercell.netlify.app/assets/img/xiaomi-redmi-note-14-1.png",
-                "https://thundercell.netlify.app/assets/img/xiaomi-redmi-note-14-2.png"
-            ],
-            "offers": {
-                "@type": "Offer",
-                "price": "1999.90",
-                "priceCurrency": "BRL",
-                "availability": "https://schema.org/OutOfStock",
-                "url": "https://thundercell.netlify.app/#catalogo",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "Thunder Cell"
-                }
-            }
-        }
-    ]
-    </script>
-                    <!-- BUILD:JSONLD-END -->
 
-    <!-- Fontes: Sora para títulos (tech premium), Inter para textos -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-
-    <link rel="stylesheet" href="assets/css/style.css" />
+<!-- BUILD:JSONLD-END -->
 </head>
 <body>
 
-    <!-- ===== TELA DE BOAS-VINDAS (SPLASH SCREEN) =====
-         Camada em tela cheia exibida antes do catálogo. O visitante escolhe
-         uma categoria de interesse (ou "Ver Tudo") e o main.js cuida da
-         transição de saída, do filtro automático e da rolagem até o catálogo. -->
-    <section id="splashScreen" class="splash" aria-hidden="false" aria-label="Tela de boas-vindas">
-        <div class="splash-backdrop"></div>
-        <!-- Fundo animado da marca: raios e faíscas desenhados pelo main.js.
-             Fica entre a grade do backdrop e o conteúdo (que tem z-index 1). -->
-        <canvas id="splashLightning" class="splash-lightning" aria-hidden="true"></canvas>
-        <div class="splash-content">
-            <img src="assets/img/logo.png" alt="Logo da Thunder Cell, loja de tecnologia" class="splash-logo" width="331" height="400" />
+<a class="skip-link" href="#catalogo">Pular para o catálogo</a>
 
-            <!-- Nome da marca com o maior peso visual da tela de boas-vindas -->
-            <h1 class="splash-brand">Thunder <span class="text-gradient">Cell</span></h1>
-            <p class="splash-title">O que você deseja explorar hoje?</p>
+<!-- =====================================================================
+     Biblioteca de ícones em SVG (contorno).
+     Ficam inline para não depender de nenhuma CDN de fonte de ícones:
+     menos requisições, menos peso e o ícone nunca "pisca" antes de carregar.
+     Uso: <svg class="icon"><use href="#i-nome"></use></svg>
+     ===================================================================== -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <defs>
+        <!-- Todos os ícones herdam o traço; a cor vem do CSS (currentColor) -->
+        <g id="stroke-defaults"></g>
+    </defs>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-search-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m13.5 8.5-5 5M8.5 8.5l5 5M21 21l-4.3-4.3"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 15.1 8.8l6.9 1-5 4.9 1.2 6.8-6.2-3.2-6.2 3.2L7 14.7l-5-4.9 6.9-1L12 2.5Z"/></symbol>
+    <symbol id="i-battery" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M6 11v2M10 11v2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-5.5 10.2-7.4 11.8a1 1 0 0 1-1.2 0C9.5 20.2 4 15 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 22 2l-9 19-2-8-8-2Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.6"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></symbol>
+    <!-- IMEI verificado: aparelho com o "confere" dentro da tela -->
+    <symbol id="i-imei" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="m9 11.5 2 2 4-4"/></symbol>
+    <symbol id="i-headset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10M18.4 6.6a9 9 0 1 1-12.8 0"/></symbol>
+    <symbol id="i-virus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/><path d="M10 10l4 4M14 10l-4 4"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.7-6L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.7 6L3 16M3 21v-5h5"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.7 9.7 0 0 0-6.7 2.7L3 8M3 3v5h5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></symbol>
+    <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="m15.5 12.9 1.5 9.1-5-3-5 3 1.5-9.1"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 7 2.5-4h13L21 7M4 11v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M3 7h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0V7Z"/></symbol>
+    <symbol id="i-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 17V5a1 1 0 0 0-1-1H2v12a1 1 0 0 0 1 1h1"/><path d="M14 9h4l3 3v4a1 1 0 0 1-1 1h-1"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="17.5" r="2"/></symbol>
+    <symbol id="i-signal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 19.1a10 10 0 0 1 0-14.2M19.1 4.9a10 10 0 0 1 0 14.2M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><circle cx="12" cy="12" r="2"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M7 12h10M11 18h2"/></symbol>
+    <!-- Marcas: preenchidas, porque o traço descaracterizaria o logotipo -->
+    <symbol id="i-whatsapp" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.47s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35Z"/><path d="M12.04 2C6.6 2 2.18 6.42 2.18 11.86c0 1.74.46 3.44 1.32 4.94L2 22l5.34-1.4a9.83 9.83 0 0 0 4.7 1.2h.01c5.44 0 9.86-4.42 9.86-9.86A9.8 9.8 0 0 0 19 4.86 9.8 9.8 0 0 0 12.04 2Zm0 18.05c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.17.83.85-3.09-.2-.32a8.18 8.18 0 0 1-1.25-4.37c0-4.52 3.68-8.2 8.2-8.2 2.19 0 4.25.86 5.8 2.41a8.15 8.15 0 0 1 2.4 5.8c0 4.52-3.68 8.28-8.08 8.28Z"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
+</svg>
 
-            <!-- Cada card leva a uma área do site (data-target = âncora da seção).
-                 O botão "Ver Tudo" não tem alvo: apenas fecha a splash. -->
-            <div class="splash-options">
-                <button type="button" class="splash-card" data-target="#catalogo">
-                    <i class="fa-solid fa-store"></i>
-                    <span>Catálogo de <br> Produtos</span>
-                </button>
-                <button type="button" class="splash-card" data-target="#tim">
-                    <i class="fa-solid fa-sim-card"></i>
-                    <span>Atendimento <br> Operadora TIM</span>
-                </button>
-                <button type="button" class="splash-card" data-target="#assistencia">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <span>Assistência <br> Técnica</span>
-                </button>
-                <button type="button" class="splash-card" data-target="#parcelamento">
-                    <i class="fa-regular fa-credit-card"></i>
-                    <span>Venda Parcelada <br> PayJoy</span>
-                </button>
-                <button type="button" class="splash-card splash-card-all" data-target="">
-                    <i class="fa-solid fa-bolt"></i>
-                    <span>Ver Tudo</span>
-                </button>
+<!-- =====================================================================
+     CABEÇALHO
+     ===================================================================== -->
+<header class="header" id="header">
+    <div class="container header__inner">
+        <a class="brand" href="#topo" aria-label="Thunder Cell — início">
+            <img class="brand__logo" src="assets/img/logo.png" alt="" width="331" height="400" />
+            <span class="brand__name">Thunder <em>Cell</em></span>
+        </a>
+
+        <nav class="nav" aria-label="Navegação principal">
+            <ul class="nav__list">
+                <li><a class="nav__link" href="#topo">Início</a></li>
+                <li><a class="nav__link" href="#catalogo">Catálogo</a></li>
+                <li><a class="nav__link" href="#garantia">Garantia</a></li>
+                <li><a class="nav__link" href="#sobre">Sobre</a></li>
+                <li><a class="nav__link" href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+
+        <!-- CTA fixo: acompanha o header sticky, então nunca sai da tela -->
+        <a class="btn btn--primary btn--sm header__cta" data-wa href="https://wa.me/5549998404821">
+            <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+            Fale no WhatsApp
+        </a>
+
+        <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navMobile" aria-label="Abrir menu">
+            <svg class="icon icon--menu" aria-hidden="true"><use href="#i-menu"></use></svg>
+            <svg class="icon icon--close" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+    </div>
+
+    <div class="nav-mobile" id="navMobile">
+        <a href="#topo">Início</a>
+        <a href="#catalogo">Catálogo</a>
+        <a href="#garantia">Garantia</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+        <a class="btn btn--primary btn--block" data-wa href="https://wa.me/5549998404821">
+            <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+            Fale no WhatsApp
+        </a>
+    </div>
+</header>
+
+<main id="topo">
+
+    <!-- =================================================================
+         HERO
+         ================================================================= -->
+    <section class="hero">
+        <span class="blob blob--accent blob--a" aria-hidden="true"></span>
+        <span class="blob blob--ink blob--b" aria-hidden="true"></span>
+
+        <div class="container hero__inner">
+            <div class="hero__text reveal">
+                <span class="hero__eyebrow">
+                    <svg class="icon" aria-hidden="true"><use href="#i-bolt"></use></svg>
+                    Thunder Cell · Tangará-SC
+                </span>
+
+                <h1 class="hero__title">Aparelhos revisados, com <span>garantia</span> de verdade</h1>
+
+                <p class="hero__copy">
+                    Cada aparelho passa por testes de bateria, tela, câmeras e conectividade,
+                    e tem o IMEI verificado antes de entrar no catálogo. Novos com 1 ano de
+                    garantia, seminovos com 90 dias.
+                </p>
+
+                <div class="hero__actions">
+                    <a class="btn btn--primary btn--lg" href="#catalogo">
+                        <svg class="icon" aria-hidden="true"><use href="#i-store"></use></svg>
+                        Ver catálogo
+                    </a>
+                    <a class="btn btn--ghost btn--lg" data-wa href="https://wa.me/5549998404821">
+                        <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+                        Falar com a loja
+                    </a>
+                </div>
+
+                <div class="hero__proof">
+                    <div class="hero__proof-item">
+                        <span class="hero__proof-num" data-garantia="Novo">1 ano</span>
+                        <span class="hero__proof-label">de garantia nos novos</span>
+                    </div>
+                    <div class="hero__proof-item">
+                        <span class="hero__proof-num" data-garantia="Seminovo">90 dias</span>
+                        <span class="hero__proof-label">de garantia nos seminovos</span>
+                    </div>
+                    <div class="hero__proof-item">
+                        <span class="hero__proof-num">2</span>
+                        <span class="hero__proof-label">unidades em Tangará-SC</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trio de aparelhos: o do centro maior e à frente -->
+            <div class="hero__gallery reveal" style="--delay: 120ms" aria-hidden="true">
+                <img class="hero__phone hero__phone--side hero__phone--left" src="assets/img/samsung-a17-1.jpg" alt="" width="400" height="500" fetchpriority="high" />
+                <img class="hero__phone hero__phone--center" src="assets/img/xiaomi-redmi-15-1.png" alt="" width="400" height="500" fetchpriority="high" />
+                <img class="hero__phone hero__phone--side hero__phone--right" src="assets/img/xiaomi-redmi-note-14-1.png" alt="" width="400" height="500" fetchpriority="high" />
             </div>
         </div>
     </section>
 
-    <!-- ===== CABEÇALHO (sticky + blur ao rolar, controlado pelo main.js) ===== -->
-    <header id="siteHeader" class="topbar">
-        <div class="container topbar-inner">
-            <a href="#topo" class="brand">
-                <img src="assets/img/logo.png" alt="Logo da Thunder Cell" class="brand-logo" width="331" height="400" />
-                <span class="brand-name">Thunder <em>Cell</em></span>
-            </a>
-
-            <nav id="mainNav" class="nav" aria-label="Navegação principal">
-                <a href="#topo" class="nav-link">Início</a>
-                <a href="#catalogo" class="nav-link">Catálogo</a>
-                <a href="#assistencia" class="nav-link">Assistência</a>
-                <a href="#tim" class="nav-link">TIM</a>
-                <a href="#parcelamento" class="nav-link nav-link-featured">
-                    <i class="fa-regular fa-credit-card"></i> Parcelamento
-                </a>
-                <a href="#contato" class="nav-link">Contato</a>
-                <a href="https://wa.me/5549998404821" class="btn btn-whatsapp btn-nav" data-wa-message="Olá! Vim pelo site e gostaria de atendimento." target="_blank" rel="noopener noreferrer">
-                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
-                </a>
-            </nav>
-
-            <!-- Botão hambúrguer: visível somente no mobile -->
-            <button id="navToggle" class="nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Botão flutuante de WhatsApp, sempre visível -->
-    <a class="whatsapp-float" href="https://wa.me/5549998404821" data-wa-message="Olá! Vim pelo site e gostaria de atendimento." target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
-
-    <main id="topo">
-
-        <!-- ===== HERO / BANNER PRINCIPAL ===== -->
-        <section class="hero">
-            <!-- Camada decorativa: orbes em degradê + grade sutil -->
-            <div class="hero-bg" aria-hidden="true">
-                <div class="orb orb-blue"></div>
-                <div class="orb orb-purple"></div>
-            </div>
-
-            <div class="container hero-content">
-                <span class="hero-chip"><i class="fa-solid fa-bolt"></i> Loja de tecnologia em Tangará-SC</span>
-
-                <!-- Nome da marca como o elemento de maior peso visual da tela -->
-                <h1 class="hero-title">Thunder <span class="text-gradient">Cell</span></h1>
-
-                <p class="hero-copy hero-tagline">Tudo para o seu smartphone em um só lugar.<br />Tecnologia, assistência técnica e conectividade.</p>
-
-                <div class="hero-actions">
-                    <a href="#catalogo" class="btn btn-primary btn-lg">
-                        <i class="fa-solid fa-store"></i> Ver Produtos
-                    </a>
-                    <a href="#parcelamento" class="btn btn-ghost btn-lg">
-                        <i class="fa-regular fa-credit-card"></i> Comprar Parcelado
-                    </a>
-                </div>
-
-                <!-- Números animados ao entrar na tela (main.js). O HTML traz o
-                     valor FINAL: se o JS falhar (ou para bots), o número correto
-                     permanece; o JS zera e anima só quando vai rodar de verdade. -->
-                <div class="hero-stats reveal">
-                    <div class="stat">
-                        <span class="stat-number" data-count="18" data-suffix="x">18x</span>
-                        <span class="stat-label">Parcelas na PayJoy</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number" data-count="12" data-suffix="x">12x</span>
-                        <span class="stat-label">Parcelas no cartão</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number" data-count="2">2</span>
-                        <span class="stat-label">Unidades em Tangará-SC</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== DESTAQUE PAYJOY (posição estratégica: logo após o hero) ===== -->
-        <section id="parcelamento" class="section payjoy-section">
-            <div class="container">
-                <div class="payjoy-card reveal">
-                    <!-- Ícones flutuantes decorativos -->
-                    <div class="payjoy-icons" aria-hidden="true">
-                        <div class="payjoy-icon payjoy-icon-card"><i class="fa-solid fa-credit-card"></i></div>
-                        <div class="payjoy-icon payjoy-icon-phone"><i class="fa-solid fa-mobile-screen-button"></i></div>
-                    </div>
-
-                    <div class="payjoy-content">
-                        <span class="payjoy-badge"><i class="fa-solid fa-star"></i> Parcelamento PayJoy</span>
-                        <h2>Compre seu celular <span>parcelado!</span></h2>
-                        <ul class="payjoy-list">
-                            <li><i class="fa-solid fa-circle-check"></i> Aprovamos clientes de forma rápida.</li>
-                            <li><i class="fa-solid fa-circle-check"></i> Parcelamento em até <strong>18x</strong>.</li>
-                            <li><i class="fa-solid fa-circle-check"></i> Simule agora mesmo!</li>
-                        </ul>
-                        <a class="btn btn-payjoy" href="https://www.payjoy.com/br/pfsh-valueprop?utm_source=admin_br&utm_medium=admin_link&utm_campaign=admin_br_admin_link&utm_content=17930" target="_blank" rel="noopener noreferrer">
-                            <i class="fa-solid fa-bolt"></i> SIMULAR NA PAYJOY
-                        </a>
-                        <p class="payjoy-note">Simulação gratuita &bull; Sujeito à análise de crédito</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== CATÁLOGO ===== -->
-        <section id="catalogo" class="section">
-            <div class="container">
-                <div class="section-heading reveal">
-                    <p class="eyebrow">Catálogo</p>
-                    <h2>Produtos disponíveis</h2>
-                    <p class="section-sub">Escolha o seu, veja os detalhes e finalize direto pelo WhatsApp.</p>
-                </div>
-
-                <!-- Filtros em tempo real (preenchidos e controlados pelo main.js) -->
-                <div class="filters reveal">
-                    <label class="search-pill" for="searchInput">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input id="searchInput" type="text" placeholder="Buscar produto..." autocomplete="off" />
-                    </label>
-                    <select id="categoriaFilter" class="filter-select">
-                        <option value="">Todas as categorias</option>
-                    </select>
-                </div>
-
-                <p id="resultsInfo" class="results-info"></p>
-
-                <!-- Grid de produtos: os cards são PRÉ-RENDERIZADOS aqui pelo
-                     scripts/build-catalog.js (SEO: o Google vê o catálogo sem JS).
-                     O main.js apenas filtra/exibe/oculta os cards existentes. -->
-                <!-- O main.js exibe 6 produtos por vez; "Ver mais" libera o
-                     restante. Sem JS, todos os cards ficam visíveis (SEO). -->
-                <div id="productsGrid" class="product-grid">
-                    <!-- BUILD:PRODUCTS-START -->
-
-        <article class="product-card" style="--delay: 0ms" data-id="1" data-nome="xiaomi redmi a7 pro" data-categoria="Smartphones">
-            <div class="product-image">
-                <span class="product-badge badge-novo">Novo</span>
-                
-                <img src="assets/img/xiaomi-redmi-a7-pro-1.jpg" alt="Xiaomi Redmi A7 Pro" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Xiaomi</span>
-                    <span class="product-category">Smartphones</span>
-                </div>
-                <h3>Xiaomi Redmi A7 Pro</h3>
-                <p class="product-specs">128GB de Armazenamento • 8GB de RAM • Bateria 6000mAh • Tela 6.9&quot;</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 1.450,00</p>
-                    <p class="product-installment">ou 12x de R$ 137,35 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="1">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Xiaomi%20Redmi%20A7%20Pro.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 80ms" data-id="2" data-nome="xiaomi poco c71" data-categoria="Smartphones">
-            <div class="product-image">
-                
-                
-                <img src="assets/img/xiaomi-poco-c71-1.jpg" alt="Xiaomi Poco C71" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Xiaomi</span>
-                    <span class="product-category">Smartphones</span>
-                </div>
-                <h3>Xiaomi Poco C71</h3>
-                <p class="product-specs">128GB de Armazenamento • 6GB de RAM • Bateria 5200mAh • Tela 6.88&quot;</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 1.000,00</p>
-                    <p class="product-installment">ou 12x de R$ 94,73 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="2">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Xiaomi%20Poco%20C71.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 160ms" data-id="3" data-nome="samsung galaxy a07" data-categoria="Smartphones">
-            <div class="product-image">
-                
-                
-                <img src="assets/img/samsung-a07-2.jpg" alt="Samsung Galaxy A07" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Samsung</span>
-                    <span class="product-category">Smartphones</span>
-                </div>
-                <h3>Samsung Galaxy A07</h3>
-                <p class="product-specs">128GB de Armazenamento • 4GB de RAM • Bateria 5000mAh • Tela 6.7&quot;</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 1.250,00</p>
-                    <p class="product-installment">ou 12x de R$ 118,41 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="3">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Samsung%20Galaxy%20A07.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 240ms" data-id="4" data-nome="samsung galaxy a17 5g" data-categoria="Smartphones">
-            <div class="product-image">
-                <span class="product-badge badge-novo">Novo</span>
-                
-                <img src="assets/img/samsung-a17-1.jpg" alt="Samsung Galaxy A17 5G" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Samsung</span>
-                    <span class="product-category">Smartphones</span>
-                </div>
-                <h3>Samsung Galaxy A17 5G</h3>
-                <p class="product-specs">128GB de Armazenamento • Conectividade 5G • 4GB de RAM • Bateria 5000mAh • Tela 6.7&quot;</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 1.599,00</p>
-                    <p class="product-installment">ou 12x de R$ 151,47 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="4">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Samsung%20Galaxy%20A17%205G.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 320ms" data-id="11" data-nome="xiaomi redmi 15" data-categoria="Smartphones">
-            <div class="product-image">
-                <span class="product-badge badge-novo">Novo</span>
-                
-                <img src="assets/img/xiaomi-redmi-15-1.png" alt="Xiaomi Redmi 15" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Xiaomi</span>
-                    <span class="product-category">Smartphones</span>
-                </div>
-                <h3>Xiaomi Redmi 15</h3>
-                <p class="product-specs">256GB de Armazenamento • 16GB de RAM • Bateria 7000mAh • Tela 6.9&quot; 144Hz • Câmera 50MP • Carregamento rápido 33W</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 1.999,90</p>
-                    <p class="product-installment">ou 12x de R$ 189,44 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="11">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Xiaomi%20Redmi%2015.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 400ms" data-id="5" data-nome="notebook dell vostro" data-categoria="Notebooks">
-            <div class="product-image">
-                
-                
-                <img src="assets/img/dell-vostro-1.jpg" alt="Notebook Dell Vostro" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Dell</span>
-                    <span class="product-category">Notebooks</span>
-                </div>
-                <h3>Notebook Dell Vostro</h3>
-                <p class="product-specs">Processador Intel Core i3-1215U • 8GB de RAM • 512GB SSD • Tela 15.6&quot; • Cor Carbon Black</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 2.999,00</p>
-                    <p class="product-installment">ou 12x de R$ 284,08 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="5">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Notebook%20Dell%20Vostro.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 480ms" data-id="6" data-nome="xiaomi redmi pad 2" data-categoria="Tablets">
-            <div class="product-image">
-                <span class="product-badge badge-novo">Novo</span>
-                
-                <img src="assets/img/xiaomi-redmi-pad-2-1.jpg" alt="Xiaomi Redmi Pad 2" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Xiaomi</span>
-                    <span class="product-category">Tablets</span>
-                </div>
-                <h3>Xiaomi Redmi Pad 2</h3>
-                <p class="product-specs">Tela de 11&quot; • Bateria 9000mAh • Opções de 6GB ou 8GB de RAM • 128GB ou 256GB de armazenamento</p>
-                <div class="product-price-box">
-                    <p class="product-price"><span class="price-prefix">A partir de</span>R$ 1.500,00</p>
-                    <p class="product-installment">ou 12x de R$ 142,09 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="6">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Xiaomi%20Redmi%20Pad%202.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 480ms" data-id="7" data-nome="jbl xtreme 4" data-categoria="Áudio">
-            <div class="product-image">
-                
-                
-                <img src="assets/img/jbl-xtreme-4-1.jpg" alt="JBL Xtreme 4" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">JBL</span>
-                    <span class="product-category">Áudio</span>
-                </div>
-                <h3>JBL Xtreme 4</h3>
-                <p class="product-specs">100W RMS de potência • Até 24 horas de música • À prova d'água • Bluetooth 5.3</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 1.799,90</p>
-                    <p class="product-installment">ou 12x de R$ 170,50 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="7">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20JBL%20Xtreme%204.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 480ms" data-id="8" data-nome="xiaomi smart band 9" data-categoria="Smartwatch">
-            <div class="product-image">
-                
-                
-                <img src="assets/img/xiaomi-smart-band-9-1.jpg" alt="Xiaomi Smart Band 9" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Xiaomi</span>
-                    <span class="product-category">Smartwatch</span>
-                </div>
-                <h3>Xiaomi Smart Band 9</h3>
-                <p class="product-specs">Tela de 1,62&quot; • Certificação 5 ATM (resistente à água) • Bateria 233mAh • Apenas 15,8g sem as alças • Bluetooth 5.4</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 399,90</p>
-                    <p class="product-installment">ou 12x de R$ 37,88 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="8">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Xiaomi%20Smart%20Band%209.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 480ms" data-id="9" data-nome="xiaomi smart band 10" data-categoria="Smartwatch">
-            <div class="product-image">
-                
-                
-                <img src="assets/img/xiaomi-smart-band-10-1.jpg" alt="Xiaomi Smart Band 10" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Xiaomi</span>
-                    <span class="product-category">Smartwatch</span>
-                </div>
-                <h3>Xiaomi Smart Band 10</h3>
-                <p class="product-specs">Com NFC (pagamento por aproximação) • Tela de 1,62&quot; • Certificação 5 ATM (resistente à água) • Bateria 233mAh • Apenas 15,8g sem as alças • Bluetooth 5.4</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 449,90</p>
-                    <p class="product-installment">ou 12x de R$ 42,62 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="9">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Xiaomi%20Smart%20Band%2010.%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card" style="--delay: 480ms" data-id="10" data-nome="alexa echo show 5 (3ª geração)" data-categoria="Casa Inteligente">
-            <div class="product-image">
-                
-                
-                <img src="assets/img/echo-show-5-1.jpg" alt="Alexa Echo Show 5 (3ª geração)" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Amazon</span>
-                    <span class="product-category">Casa Inteligente</span>
-                </div>
-                <h3>Alexa Echo Show 5 (3ª geração)</h3>
-                <p class="product-specs">Tela sensível ao toque de 5,5&quot; • Câmera de 2MP • Processador AZ2 Neural Edge • Bluetooth 5.0 • Alexa integrada</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 749,90</p>
-                    <p class="product-installment">ou 12x de R$ 71,03 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="10">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-whatsapp btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Alexa%20Echo%20Show%205%20(3%C2%AA%20gera%C3%A7%C3%A3o).%20Ele%20est%C3%A1%20dispon%C3%ADvel%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Comprar pelo WhatsApp
-                    </a>
-                </div>
-            </div>
-        </article>
-
-        <article class="product-card product-card--esgotado" style="--delay: 480ms" data-id="12" data-nome="xiaomi redmi note 14" data-categoria="Smartphones">
-            <div class="product-image">
-                
-                <span class="soldout-strip">Sem Estoque</span>
-                <img src="assets/img/xiaomi-redmi-note-14-1.png" alt="Xiaomi Redmi Note 14" loading="lazy" />
-            </div>
-            <div class="product-body">
-                <div class="product-meta">
-                    <span class="product-brand">Xiaomi</span>
-                    <span class="product-category">Smartphones</span>
-                </div>
-                <h3>Xiaomi Redmi Note 14</h3>
-                <p class="product-specs">256GB de Armazenamento • 8GB de RAM • Bateria 5500mAh • Tela AMOLED 6.67&quot; 120Hz • Câmera 108MP</p>
-                <div class="product-price-box">
-                    <p class="product-price">R$ 1.999,90</p>
-                    <p class="product-installment">ou 12x de R$ 189,44 no cartão</p>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-small btn-outline btn-block open-modal" type="button" data-id="12">
-                        <i class="fa-regular fa-eye"></i> Ver Detalhes
-                    </button>
-                    <a class="btn btn-small btn-notify btn-block" href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Vi%20que%20o%20Xiaomi%20Redmi%20Note%2014%20est%C3%A1%20sem%20estoque.%20Podem%20me%20avisar%20quando%20ele%20chegar%3F" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-regular fa-bell"></i> Avise-me quando chegar
-                    </a>
-                </div>
-            </div>
-        </article>
-                    <!-- BUILD:PRODUCTS-END -->
-                </div>
-
-                <!-- Botão "Ver mais": exibido pelo main.js quando há mais
-                     produtos filtrados do que os atualmente na tela -->
-                <div class="load-more-wrap" id="loadMoreWrap" hidden>
-                    <button id="loadMoreBtn" class="btn btn-ghost btn-lg" type="button">
-                        <i class="fa-solid fa-circle-plus"></i> Ver mais produtos
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- =========================================================
-             NOVAS SEÇÕES INSTITUCIONAIS (Home Page Enhancement)
-             Todos os links de contato usam data-wa-message: o main.js
-             gera o href do WhatsApp com a mensagem já codificada.
-             ========================================================= -->
-
-        <!-- ===== ASSISTÊNCIA TÉCNICA ESPECIALIZADA ===== -->
-        <section id="assistencia" class="section assist-section">
-            <div class="container">
-                <div class="section-heading reveal">
-                    <p class="eyebrow">Assistência Técnica</p>
-                    <h2>Assistência Técnica Especializada</h2>
-                    <p class="section-sub">Seu celular apresentou algum problema? A Thunder Cell resolve.</p>
-                </div>
-            </div>
-
-            <!-- Banner widescreen com frases rotativas (troca animada via main.js) -->
-            <div class="assist-banner reveal">
-                <p class="assist-rotator-wrap">
-                    <span id="assistRotator" class="assist-rotator" aria-live="polite">Quebrou?</span>
+    <!-- =================================================================
+         CATÁLOGO
+         ================================================================= -->
+    <section class="section section--tint" id="catalogo">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-head__eyebrow">Catálogo</span>
+                <h2 class="section-head__title">Aparelhos disponíveis agora</h2>
+                <div class="rule-diamond" aria-hidden="true"><span></span></div>
+                <p class="section-head__sub">
+                    Escolha o seu, confira os detalhes e finalize direto pelo WhatsApp.
+                    O estoque é atualizado pela loja em tempo real.
                 </p>
             </div>
 
-            <div class="container">
-                <!-- Grade enxuta: 5 serviços principais + card coringa para
-                     qualquer outro problema (2 fileiras de 3, todos abrem o WhatsApp) -->
-                <div class="service-grid reveal">
-                    <a class="service-card" href="https://wa.me/5549998404821" data-wa-message="Olá! Gostaria de um orçamento para troca de tela." target="_blank" rel="noopener noreferrer">
-                        <span class="service-icon"><i class="fa-solid fa-mobile-screen"></i></span>
-                        <span class="service-name">Troca de Tela</span>
-                    </a>
-                    <a class="service-card" href="https://wa.me/5549998404821" data-wa-message="Olá! Gostaria de um orçamento para troca do conector de carga." target="_blank" rel="noopener noreferrer">
-                        <span class="service-icon"><i class="fa-solid fa-plug"></i></span>
-                        <span class="service-name">Conector de Carga</span>
-                    </a>
-                    <a class="service-card" href="https://wa.me/5549998404821" data-wa-message="Olá! Gostaria de um orçamento para troca de bateria." target="_blank" rel="noopener noreferrer">
-                        <span class="service-icon"><i class="fa-solid fa-battery-three-quarters"></i></span>
-                        <span class="service-name">Troca de Bateria</span>
-                    </a>
-                    <a class="service-card" href="https://wa.me/5549998404821" data-wa-message="Olá! Gostaria de um orçamento para remoção de vírus." target="_blank" rel="noopener noreferrer">
-                        <span class="service-icon"><i class="fa-solid fa-shield-virus"></i></span>
-                        <span class="service-name">Remoção de Vírus</span>
-                    </a>
-                    <a class="service-card" href="https://wa.me/5549998404821" data-wa-message="Olá! Preciso de formatação/suporte de software." target="_blank" rel="noopener noreferrer">
-                        <span class="service-icon"><i class="fa-solid fa-arrows-rotate"></i></span>
-                        <span class="service-name">Formatação &amp; Software</span>
-                    </a>
-                    <a class="service-card service-card-cta" href="https://wa.me/5549998404821" data-wa-message="Olá! Tenho um problema com meu aparelho e gostaria de ajuda." target="_blank" rel="noopener noreferrer">
-                        <span class="service-icon"><i class="fa-solid fa-comment-dots"></i></span>
-                        <span class="service-name">Outro problema? <br> Fale com a gente</span>
-                    </a>
-                </div>
+            <!-- Abas: separam o catálogo por tipo de aparelho. Em "Todos", a
+                 grade sai dividida em dois grupos com título próprio. -->
+            <div class="tabs reveal" id="tabs" role="tablist" aria-label="Tipo de aparelho">
+                <button class="tab is-active" type="button" role="tab" aria-selected="true" data-tipo="">
+                    Todos
+                </button>
+                <button class="tab" type="button" role="tab" aria-selected="false" data-tipo="novo">
+                    <svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg>
+                    Novos
+                </button>
+                <button class="tab" type="button" role="tab" aria-selected="false" data-tipo="usado">
+                    <svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>
+                    Seminovos
+                </button>
             </div>
-        </section>
 
-        <!-- ===== TIM NA THUNDER CELL (parceria oficial) ===== -->
-        <section id="tim" class="section tim-section">
-            <div class="container">
-                <div class="tim-panel reveal">
-                    <div class="tim-header">
-                        <!-- tim-branca.png: versão da logo sem fundo (texto branco),
-                             gerada a partir da tim.png original para uso em fundo escuro -->
-                        <img src="assets/img/tim-branca.png" alt="Logo da operadora TIM" class="tim-logo" width="1200" height="630" loading="lazy" />
-                        <h2>TIM na Thunder Cell</h2>
-                        <p class="tim-sub">Conecte-se com os melhores planos e serviços da TIM.</p>
+            <!-- Filtros: modelo, faixa de preço e estado de conservação -->
+            <form class="filters reveal" id="filtros" role="search" autocomplete="off">
+                <div class="field">
+                    <label class="field__label" for="busca">Buscar modelo</label>
+                    <div class="input-wrap">
+                        <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+                        <input class="input" type="search" id="busca" name="busca" placeholder="Ex.: iPhone 15 Pro, Redmi, Galaxy…" />
                     </div>
+                </div>
 
-                    <!-- Lista enxuta de benefícios. O texto fica dentro de um <span>
-                         único: como a <li> é flex, sem o span cada trecho de texto
-                         viraria um item flex separado e o gap abriria "vãos" no mobile. -->
-                    <ul class="tim-features">
-                        <li><i class="fa-solid fa-circle-check"></i><span>Planos a partir de <strong>R$ 39,90</strong> com <strong>27GB</strong> de internet</span></li>
-                        <li><i class="fa-solid fa-circle-check"></i><span>WhatsApp e chamadas <strong>ilimitadas</strong></span></li>
-                        <li><i class="fa-solid fa-circle-check"></i><span>Portabilidade, chip físico e <strong>eSIM</strong> na hora</span></li>
+                <div class="field">
+                    <label class="field__label" for="faixa-preco">Faixa de preço</label>
+                    <select class="select" id="faixa-preco" name="faixa-preco">
+                        <option value="">Qualquer valor</option>
+                        <option value="0-1000">Até R$ 1.000</option>
+                        <option value="1000-2000">R$ 1.000 a R$ 2.000</option>
+                        <option value="2000-3500">R$ 2.000 a R$ 3.500</option>
+                        <option value="3500-">Acima de R$ 3.500</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="field__label" for="condicao">Estado de conservação</label>
+                    <select class="select" id="condicao" name="condicao">
+                        <option value="">Todos</option>
+                        <option value="Excelente">Excelente</option>
+                        <option value="Muito boa">Muito boa</option>
+                        <option value="Boa">Boa</option>
+                    </select>
+                </div>
+
+                <div class="filters__footer">
+                    <p class="results-info" id="resultsInfo" aria-live="polite"></p>
+                    <button class="btn-clear" type="reset" id="limparFiltros">
+                        <svg class="icon" aria-hidden="true"><use href="#i-rotate"></use></svg>
+                        Limpar filtros
+                    </button>
+                </div>
+            </form>
+
+            <!-- Avisa quando o catálogo veio da cópia local em vez do banco -->
+            <p class="catalog-notice" id="catalogNotice">
+                <svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg>
+                <span></span>
+            </p>
+
+            <!-- Os grupos abaixo são pré-renderizados no deploy (SEO / sem JS) e
+                 substituídos pelo main.js assim que os dados do banco chegam. -->
+            <div id="productsArea">
+                <!-- BUILD:PRODUCTS-START -->
+<div class="empty-state">
+    <svg class="icon" aria-hidden="true"><use href="#i-box"></use></svg>
+    <h3>Estoque em atualização</h3>
+    <p>Estamos cadastrando os aparelhos disponíveis. Chame no WhatsApp que a gente te conta o que tem em loja.</p>
+  </div>
+<!-- BUILD:PRODUCTS-END -->
+            </div>
+        </div>
+    </section>
+
+    <!-- =================================================================
+         GARANTIA E INFORMAÇÕES
+         ================================================================= -->
+    <section class="section" id="garantia">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-head__eyebrow">Antes de fechar</span>
+                <h2 class="section-head__title">Garantia e informações</h2>
+                <div class="rule-diamond" aria-hidden="true"><span></span></div>
+                <p class="section-head__sub">
+                    Compre com mais segurança e confira as condições importantes antes
+                    de finalizar seu pedido.
+                </p>
+            </div>
+
+            <div class="info-grid">
+                <!-- O prazo muda conforme o aparelho: o bloco mostra os dois lado
+                     a lado para não restar dúvida na hora da compra. -->
+                <article class="info-card reveal">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+                    <h3 class="info-card__title">Garantia por escrito</h3>
+                    <ul class="prazo-list">
+                        <li>
+                            <span class="prazo-list__tag prazo-list__tag--novo">Novo</span>
+                            <strong data-garantia="Novo">1 ano</strong>
+                        </li>
+                        <li>
+                            <span class="prazo-list__tag">Seminovo</span>
+                            <strong data-garantia="Seminovo">90 dias</strong>
+                        </li>
                     </ul>
+                    <p class="info-card__text">Cobertura sobre defeitos de funcionamento do aparelho.</p>
+                </article>
 
-                    <div class="tim-cta">
-                        <a class="btn btn-tim" href="https://wa.me/5549998404821" data-wa-message="Olá! Quero saber mais sobre os planos TIM." target="_blank" rel="noopener noreferrer">
-                            <i class="fa-brands fa-whatsapp"></i> Quero falar com um atendente
-                        </a>
+                <article class="info-card reveal" style="--delay: 80ms">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg></span>
+                    <h3 class="info-card__title">Aparelhos testados</h3>
+                    <p class="info-card__text">Bateria, tela, câmeras, alto-falantes e conectividade conferidos um a um antes da venda.</p>
+                </article>
+
+                <article class="info-card reveal" style="--delay: 160ms">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-imei"></use></svg></span>
+                    <h3 class="info-card__title">IMEI verificado</h3>
+                    <p class="info-card__text">Todo aparelho passa por consulta de IMEI antes da venda — sem bloqueio e sem restrição.</p>
+                </article>
+
+                <article class="info-card reveal" style="--delay: 240ms">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-headset"></use></svg></span>
+                    <h3 class="info-card__title">Suporte no atendimento</h3>
+                    <p class="info-card__text">Antes e depois da compra: tire dúvidas pelo WhatsApp ou passe em uma das lojas.</p>
+                </article>
+            </div>
+
+            <p style="text-align:center; margin-top:1.6rem;">
+                <a class="btn btn--outline" href="garantia.html">
+                    <svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>
+                    Ler a política completa
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <!-- =================================================================
+         SOBRE A LOJA
+         ================================================================= -->
+    <section class="section section--tint about" id="sobre">
+        <span class="blob blob--accent blob--a" aria-hidden="true"></span>
+
+        <div class="container about__inner">
+            <div class="reveal">
+                <div class="about__brandline">
+                    <img src="assets/img/logo.png" alt="" width="331" height="400" loading="lazy" />
+                    <span>Thunder Cell</span>
+                    <hr />
+                </div>
+
+                <h2 class="about__title">Sobre a Thunder Cell</h2>
+
+                <p class="about__text">
+                    Somos uma loja de Tangará-SC especializada em venda e assistência técnica
+                    de celulares. Trabalhamos com aparelhos novos e seminovos revisados,
+                    sempre com IMEI verificado e garantia por escrito.
+                </p>
+                <p class="about__text">
+                    Nossa proposta é simples: você sabe exatamente o que está levando —
+                    estado real do aparelho, condição da bateria e o que acompanha a compra.
+                    Sem surpresa depois.
+                </p>
+
+                <a class="btn btn--primary" data-wa href="https://wa.me/5549998404821">
+                    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+                    Falar com um atendente
+                </a>
+            </div>
+
+            <div class="feature-list reveal" style="--delay: 100ms">
+                <div class="feature">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-truck"></use></svg></span>
+                    <div>
+                        <h3 class="feature__title">Entrega rápida</h3>
+                        <p class="feature__text">Retirada na hora em uma das unidades ou entrega combinada na região.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-headset"></use></svg></span>
+                    <div>
+                        <h3 class="feature__title">Atendimento confiável</h3>
+                        <p class="feature__text">Loja física, CNPJ ativo e histórico de clientes na cidade desde o começo.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-money"></use></svg></span>
+                    <div>
+                        <h3 class="feature__title">Formas de pagamento</h3>
+                        <p class="feature__text">Pix, dinheiro, cartão em até 12x e parcelamento em até 18x pela PayJoy.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-box"></use></svg></span>
+                    <div>
+                        <h3 class="feature__title">O que acompanha</h3>
+                        <p class="feature__text">Aparelho, cabo e o termo de garantia. Itens extras são informados no anúncio.</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- ===== INSTITUCIONAL: TUDO O QUE FAZEMOS =====
-             Faixa deslizante (marquee): visual limpo, uma linha só.
-             O conteúdo é duplicado para o loop ser contínuo. -->
-        <section id="solucoes" class="section everything-section">
-            <div class="container">
-                <div class="section-heading reveal">
-                    <p class="eyebrow">Nossa Loja</p>
-                    <h2>Tudo o que você precisa em um só lugar</h2>
-                </div>
+    <!-- =================================================================
+         ASSISTÊNCIA TÉCNICA
+         ================================================================= -->
+    <section class="section" id="assistencia">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-head__eyebrow">Assistência técnica</span>
+                <h2 class="section-head__title">Quebrou? A gente resolve</h2>
+                <div class="rule-diamond" aria-hidden="true"><span></span></div>
+                <p class="section-head__sub">
+                    Técnicos especializados, peças de qualidade e garantia sobre o serviço executado.
+                </p>
             </div>
 
-            <div class="ticker reveal" aria-label="Produtos e serviços da Thunder Cell">
-                <div class="ticker-track">
-                    <div class="ticker-group">
-                        <span class="ticker-item"><i class="fa-solid fa-mobile-screen-button"></i> Smartphones</span>
-                        <span class="ticker-item"><i class="fa-solid fa-tablet-screen-button"></i> Tablets</span>
-                        <span class="ticker-item"><i class="fa-solid fa-laptop"></i> Notebooks</span>
-                        <span class="ticker-item"><i class="fa-solid fa-stopwatch"></i> Smartwatch</span>
-                        <span class="ticker-item"><i class="fa-solid fa-screwdriver-wrench"></i> Assistência Técnica</span>
-                        <span class="ticker-item"><i class="fa-solid fa-tower-cell"></i> TIM</span>
-                        <span class="ticker-item"><i class="fa-solid fa-plug-circle-bolt"></i> Acessórios</span>
-                        <span class="ticker-item"><i class="fa-solid fa-layer-group"></i> Películas</span>
-                        <span class="ticker-item"><i class="fa-solid fa-shield-halved"></i> Capinhas</span>
-                        <span class="ticker-item"><i class="fa-solid fa-headphones"></i> Fones de Ouvido</span>
-                        <span class="ticker-item"><i class="fa-solid fa-battery-full"></i> Power Banks</span>
-                    </div>
-                    <div class="ticker-group" aria-hidden="true">
-                        <span class="ticker-item"><i class="fa-solid fa-mobile-screen-button"></i> Smartphones</span>
-                        <span class="ticker-item"><i class="fa-solid fa-tablet-screen-button"></i> Tablets</span>
-                        <span class="ticker-item"><i class="fa-solid fa-laptop"></i> Notebooks</span>
-                        <span class="ticker-item"><i class="fa-solid fa-stopwatch"></i> Smartwatch</span>
-                        <span class="ticker-item"><i class="fa-solid fa-screwdriver-wrench"></i> Assistência Técnica</span>
-                        <span class="ticker-item"><i class="fa-solid fa-tower-cell"></i> TIM</span>
-                        <span class="ticker-item"><i class="fa-solid fa-plug-circle-bolt"></i> Acessórios</span>
-                        <span class="ticker-item"><i class="fa-solid fa-layer-group"></i> Películas</span>
-                        <span class="ticker-item"><i class="fa-solid fa-shield-halved"></i> Capinhas</span>
-                        <span class="ticker-item"><i class="fa-solid fa-headphones"></i> Fones de Ouvido</span>
-                        <span class="ticker-item"><i class="fa-solid fa-battery-full"></i> Power Banks</span>
-                    </div>
-                </div>
+            <div class="service-grid reveal">
+                <a class="service-card" data-wa data-wa-message="Olá! Gostaria de um orçamento para troca de tela." href="https://wa.me/5549998404821">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-phone"></use></svg></span>
+                    Troca de tela
+                </a>
+                <a class="service-card" data-wa data-wa-message="Olá! Gostaria de um orçamento para troca do conector de carga." href="https://wa.me/5549998404821">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-power"></use></svg></span>
+                    Conector de carga
+                </a>
+                <a class="service-card" data-wa data-wa-message="Olá! Gostaria de um orçamento para troca de bateria." href="https://wa.me/5549998404821">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-battery"></use></svg></span>
+                    Troca de bateria
+                </a>
+                <a class="service-card" data-wa data-wa-message="Olá! Gostaria de um orçamento para remoção de vírus." href="https://wa.me/5549998404821">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-virus"></use></svg></span>
+                    Remoção de vírus
+                </a>
+                <a class="service-card" data-wa data-wa-message="Olá! Preciso de formatação ou suporte de software." href="https://wa.me/5549998404821">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg></span>
+                    Formatação &amp; software
+                </a>
+                <a class="service-card service-card--cta" data-wa data-wa-message="Olá! Tenho um problema com meu aparelho e gostaria de ajuda." href="https://wa.me/5549998404821">
+                    <span class="icon-circle"><svg class="icon" aria-hidden="true"><use href="#i-chat"></use></svg></span>
+                    Outro problema?<br />Fale com a gente
+                </a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- ===== DIFERENCIAIS ===== -->
-        <section id="diferenciais" class="section why-section">
-            <div class="container">
-                <div class="section-heading reveal">
-                    <p class="eyebrow">Diferenciais</p>
-                    <h2>Por que escolher a Thunder Cell?</h2>
-                    <p class="section-sub">Mais do que uma loja: um time que cuida do seu aparelho como se fosse nosso.</p>
-                </div>
-
-                <!-- Apenas 4 diferenciais-chave, para um visual mais limpo -->
-                <div class="why-grid reveal">
-                    <div class="why-card">
-                        <span class="why-icon why-icon-blue"><i class="fa-solid fa-bolt"></i></span>
-                        <h3>Atendimento rápido</h3>
-                        <p>Agilidade no diagnóstico e na resposta, do balcão ao WhatsApp.</p>
-                    </div>
-                    <div class="why-card">
-                        <span class="why-icon why-icon-blue"><i class="fa-solid fa-user-gear"></i></span>
-                        <h3>Técnicos especializados</h3>
-                        <p>Equipe treinada para resolver do reparo simples ao mais complexo.</p>
-                    </div>
-                    <div class="why-card">
-                        <span class="why-icon why-icon-gold"><i class="fa-solid fa-award"></i></span>
-                        <h3>Garantia nos serviços</h3>
-                        <p>Todo serviço sai com garantia para a sua tranquilidade.</p>
-                    </div>
-                    <div class="why-card">
-                        <span class="why-icon why-icon-gold"><i class="fa-solid fa-medal"></i></span>
-                        <h3>Confiança e credibilidade</h3>
-                        <p>História construída com clientes que voltam e indicam.</p>
-                    </div>
-                </div>
+    <!-- =================================================================
+         PARCELAMENTO E TIM
+         ================================================================= -->
+    <section class="section section--tint" id="parcelamento">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-head__eyebrow">Mais na Thunder Cell</span>
+                <h2 class="section-head__title">Pague do seu jeito e fique conectado</h2>
+                <div class="rule-diamond" aria-hidden="true"><span></span></div>
             </div>
-        </section>
 
-        <!-- ===== ESTATÍSTICAS (contadores animados) =====
-             Faixa minimalista com 3 números. Para alterar os valores,
-             edite o data-count E o texto visível (que é o valor final
-             exibido caso o JS não rode). data-suffix adiciona "+" ou "%"
-             e data-format="milhar" exibe separador de milhar (5.000). -->
-        <section id="numeros" class="section metrics-section">
-            <div class="container">
-                <div class="metrics-row reveal">
-                    <div class="metric">
-                        <span class="stat-number metric-number" data-count="1500" data-suffix="+" data-format="milhar">1.500+</span>
-                        <span class="metric-label">Clientes atendidos</span>
-                    </div>
-                    <div class="metric-divider" aria-hidden="true"></div>
-                    <div class="metric">
-                        <span class="stat-number metric-number" data-count="1000" data-suffix="+" data-format="milhar">1.000+</span>
-                        <span class="metric-label">Aparelhos consertados</span>
-                    </div>
-                    <div class="metric-divider" aria-hidden="true"></div>
-                    <div class="metric">
-                        <span class="stat-number metric-number" data-count="100" data-suffix="%">100%</span>
-                        <span class="metric-label">Avaliações positivas</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== CHAMADA FINAL (CTA pré-footer) ===== -->
-        <section class="section final-cta-section">
-            <div class="container">
-                <div class="final-cta reveal">
-                    <div class="final-cta-bg" aria-hidden="true"></div>
-                    <h2>Precisa de um celular novo ou de <span class="text-gradient">assistência técnica</span>?</h2>
-                    <p>Fale com nossa equipe e encontre a melhor solução para você.</p>
-                    <a class="btn btn-whatsapp btn-lg btn-glow" href="https://wa.me/5549998404821" data-wa-message="Olá! Vim pelo site e gostaria de atendimento." target="_blank" rel="noopener noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> Falar com a equipe agora
+            <div class="panel-grid">
+                <article class="panel reveal">
+                    <span class="icon-circle" style="margin:0 0 1rem"><svg class="icon" aria-hidden="true"><use href="#i-card"></use></svg></span>
+                    <h3 class="panel__title">Parcelamento PayJoy</h3>
+                    <p class="panel__sub">Compre seu celular parcelado, mesmo sem cartão de crédito.</p>
+                    <ul class="check-list">
+                        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg><span>Aprovação rápida, feita ali na loja</span></li>
+                        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg><span>Parcelamento em até <strong>18x</strong></span></li>
+                        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg><span>Simulação gratuita, sem compromisso</span></li>
+                    </ul>
+                    <a class="btn btn--primary btn--block" href="https://www.payjoy.com/br/pfsh-valueprop?utm_source=admin_br&amp;utm_medium=admin_link&amp;utm_campaign=admin_br_admin_link&amp;utm_content=17930" target="_blank" rel="noopener noreferrer">
+                        <svg class="icon" aria-hidden="true"><use href="#i-bolt"></use></svg>
+                        Simular na PayJoy
                     </a>
-                </div>
-            </div>
-        </section>
-    </main>
+                    <p class="panel__note">Simulação gratuita · Sujeito à análise de crédito</p>
+                </article>
 
-    <!-- ===== MODAL DE DETALHES (vazio, pronto para o JS preencher) ===== -->
-    <div id="productModal" class="modal" aria-hidden="true">
-        <div class="modal-content">
-            <button class="modal-close" id="closeModal" type="button" aria-label="Fechar">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div id="modalBody" class="modal-body"></div>
+                <article class="panel reveal" style="--delay: 100ms">
+                    <img class="panel__logo" src="assets/img/tim.png" alt="TIM" width="1200" height="630" loading="lazy" />
+                    <h3 class="panel__title">TIM na Thunder Cell</h3>
+                    <p class="panel__sub">Planos, portabilidade e chip na hora, direto com a gente.</p>
+                    <ul class="check-list">
+                        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg><span>Planos a partir de <strong>R$ 39,90</strong> com <strong>27GB</strong></span></li>
+                        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg><span>WhatsApp e chamadas <strong>ilimitadas</strong></span></li>
+                        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg><span>Portabilidade, chip físico e <strong>eSIM</strong> na hora</span></li>
+                    </ul>
+                    <a class="btn btn--whatsapp btn--block" data-wa data-wa-message="Olá! Quero saber mais sobre os planos TIM." href="https://wa.me/5549998404821">
+                        <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+                        Falar sobre planos TIM
+                    </a>
+                    <p class="panel__note">Atendimento nas duas unidades de Tangará-SC</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- =====================================================================
+     RODAPÉ
+     ===================================================================== -->
+<footer class="footer" id="contato">
+    <div class="container footer__grid">
+        <div>
+            <a class="brand" href="#topo">
+                <img class="brand__logo" src="assets/img/logo.png" alt="" width="331" height="400" loading="lazy" />
+                <span class="brand__name">Thunder <em>Cell</em></span>
+            </a>
+            <p class="footer__tagline">
+                Celulares novos e seminovos revisados, testados e com garantia.
+                Venda e assistência técnica em Tangará-SC.
+            </p>
+            <div class="social">
+                <a data-wa href="https://wa.me/5549998404821" aria-label="WhatsApp">
+                    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+                </a>
+                <a href="https://www.instagram.com/thundercelltec" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <svg class="icon" aria-hidden="true"><use href="#i-instagram"></use></svg>
+                </a>
+            </div>
+        </div>
+
+        <nav aria-label="Links rápidos">
+            <h3 class="footer__title">Links rápidos</h3>
+            <ul class="footer__links">
+                <li><a href="#topo">Início</a></li>
+                <li><a href="#catalogo">Catálogo</a></li>
+                <li><a href="#garantia">Garantia</a></li>
+                <li><a href="#sobre">Sobre a loja</a></li>
+                <li><a href="#assistencia">Assistência técnica</a></li>
+                <li><a href="garantia.html">Política de garantia e trocas</a></li>
+            </ul>
+        </nav>
+
+        <div>
+            <h3 class="footer__title">Nossas unidades</h3>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg>
+                <span><strong>Matriz:</strong> Rua Francisco Nardi, 10, Sala 3, Centro — Tangará-SC, CEP 89642-000</span>
+            </p>
+            <a class="footer__map" href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Francisco+Nardi+10+Centro+Tangar%C3%A1+SC+89642-000" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" aria-hidden="true"><use href="#i-route"></use></svg> Como chegar
+            </a>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg>
+                <span><strong>Filial:</strong> Rua Irmãos Picolli, 280, Centro — Tangará-SC, CEP 89642-000</span>
+            </p>
+            <a class="footer__map" href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Irm%C3%A3os+Picolli+280+Centro+Tangar%C3%A1+SC+89642-000" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" aria-hidden="true"><use href="#i-route"></use></svg> Como chegar
+            </a>
+        </div>
+
+        <div>
+            <h3 class="footer__title">Atendimento</h3>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg>
+                <span>Segunda a sexta: 8h às 12h · 13h às 18h</span>
+            </p>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg>
+                <span>Sábados: 8h30 às 12h</span>
+            </p>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+                <span><a data-wa href="https://wa.me/5549998404821">(49) 99840-4821</a></span>
+            </p>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-instagram"></use></svg>
+                <span><a href="https://www.instagram.com/thundercelltec" target="_blank" rel="noopener noreferrer">@thundercelltec</a></span>
+            </p>
         </div>
     </div>
 
-    <!-- ===== RODAPÉ ===== -->
-    <footer id="contato" class="footer">
-        <div class="container footer-grid">
-            <div class="footer-col footer-col-brand">
-                <a href="#topo" class="brand footer-brand">
-                    <img src="assets/img/logo.png" alt="Logo da Thunder Cell" class="brand-logo" width="331" height="400" loading="lazy" />
-                    <span class="brand-name">Thunder <em>Cell</em></span>
-                </a>
-                <p class="footer-tagline">Tecnologia que conecta você ao futuro. Celulares, notebooks e acessórios com atendimento de verdade.</p>
-                <div class="footer-social">
-                    <a href="https://wa.me/5549998404821" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="https://www.instagram.com/thundercelltec" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                </div>
-            </div>
+    <div class="container footer__bottom">
+        <p>&copy; 2026 Thunder Cell. Todos os direitos reservados.</p>
+        <p>
+            THUNDERCELL COMÉRCIO DE CELULARES LTDA. &bull; CNPJ: 52.315.101/0001-55 &bull;
+            <a href="garantia.html">Política de Garantia e Trocas</a>
+        </p>
+    </div>
+</footer>
 
-            <div class="footer-col">
-                <h3>Links Rápidos</h3>
-                <ul class="footer-links">
-                    <li><a href="#topo">Início</a></li>
-                    <li><a href="#catalogo">Catálogo</a></li>
-                    <li><a href="#assistencia">Assistência Técnica</a></li>
-                    <li><a href="#tim">TIM na Thunder Cell</a></li>
-                    <li><a href="#parcelamento">Parcelamento PayJoy</a></li>
-                    <li><a href="#contato">Contato</a></li>
-                </ul>
-            </div>
+<!-- Botão flutuante de WhatsApp, presente em todas as páginas -->
+<a class="wa-float" data-wa href="https://wa.me/5549998404821" aria-label="Falar no WhatsApp">
+    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+</a>
 
-            <div class="footer-col">
-                <h3>Nossas Unidades</h3>
-                <p><i class="fa-solid fa-location-dot"></i> <strong>Matriz:</strong> Rua Francisco Nardi, 10, Sala 3, Centro — Tangará-SC, CEP 89642-000</p>
-                <a class="btn-map" href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Francisco+Nardi+10+Centro+Tangar%C3%A1+SC+89642-000" target="_blank" rel="noopener noreferrer">
-                    <i class="fa-solid fa-diamond-turn-right"></i> Como chegar
-                </a>
-                <p><i class="fa-solid fa-location-dot"></i> <strong>Filial:</strong> Rua Irmãos Picolli, 280, Centro — Tangará-SC, CEP 89642-000</p>
-                <a class="btn-map" href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Irm%C3%A3os+Picolli+280+Centro+Tangar%C3%A1+SC+89642-000" target="_blank" rel="noopener noreferrer">
-                    <i class="fa-solid fa-diamond-turn-right"></i> Como chegar
-                </a>
-            </div>
+<!-- Modal de detalhes do produto (preenchido pelo main.js) -->
+<div class="modal" id="modalProduto" role="dialog" aria-modal="true" aria-labelledby="modalTitulo" hidden>
+    <div class="modal__panel">
+        <button class="modal__close" type="button" id="modalFechar" aria-label="Fechar">
+            <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+        <div id="modalConteudo"></div>
+    </div>
+</div>
 
-            <div class="footer-col">
-                <h3>Atendimento</h3>
-                <p><i class="fa-regular fa-clock"></i> Segunda a Sexta: 8h às 12h / 13h às 18h</p>
-                <p><i class="fa-regular fa-clock"></i> Sábados: 8h30 às 12h</p>
-                <p><i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/5549998404821" target="_blank" rel="noopener noreferrer">(49) 99840-4821</a></p>
-                <p><i class="fa-brands fa-instagram"></i> <a href="https://www.instagram.com/thundercelltec" target="_blank" rel="noopener noreferrer">@thundercelltec</a></p>
-            </div>
-        </div>
+<!-- Catálogo de reserva: injetado no deploy por scripts/build-catalog.js.
+     Serve de primeira pintura e de rede de segurança caso o banco não
+     responda (internet ruim, Firebase fora do ar, config pendente). -->
+<!-- BUILD:DATA-START -->
+<script type="application/json" id="produtosFallback">[]</script>
+<!-- BUILD:DATA-END -->
 
-        <div class="container footer-bottom">
-            <p>&copy; 2026 Thunder Cell. Todos os direitos reservados.</p>
-            <!-- Substitua [CNPJ] pelo CNPJ real da empresa -->
-            <p class="footer-legal">
-                THUNDERCELL COMÉRCIO DE CELULARES LTDA. &bull; CNPJ: 52.315.101/0001-55 &bull;
-                <a href="garantia.html">Política de Garantia e Trocas</a>
-            </p>
-        </div>
-    </footer>
+<script type="module" src="assets/js/main.js"></script>
 
-    <!-- Dados dos produtos em JSON, injetados pelo scripts/build-catalog.js.
-         Com eles o main.js não precisa de fetch para abrir o modal/filtrar. -->
-    <!-- BUILD:DATA-START -->
-    <script type="application/json" id="productsData">[{"id":1,"nome":"Xiaomi Redmi A7 Pro","marca":"Xiaomi","categoria":"Smartphones","selo":"Novo","preco":1450,"descricao":"Smartphone de entrada com armazenamento generoso, bateria de longa duração e tela ampla para o dia a dia.","especificacoes":["128GB de Armazenamento","8GB de RAM","Bateria 6000mAh","Tela 6.9\""],"imagens":["assets/img/xiaomi-redmi-a7-pro-1.jpg","assets/img/xiaomi-redmi-a7-pro-2.jpg"]},{"id":2,"nome":"Xiaomi Poco C71","marca":"Xiaomi","categoria":"Smartphones","preco":1000,"descricao":"Ótimo custo-benefício, com desempenho equilibrado e autonomia de bateria para o uso diário.","especificacoes":["128GB de Armazenamento","6GB de RAM","Bateria 5200mAh","Tela 6.88\""],"imagens":["assets/img/xiaomi-poco-c71-1.jpg","assets/img/xiaomi-poco-c71-2.jpg"]},{"id":3,"nome":"Samsung Galaxy A07","marca":"Samsung","categoria":"Smartphones","preco":1250,"descricao":"Modelo compacto da Samsung com bom desempenho, câmera versátil e visual moderno.","especificacoes":["128GB de Armazenamento","4GB de RAM","Bateria 5000mAh","Tela 6.7\""],"imagens":["assets/img/samsung-a07-2.jpg","assets/img/samsung-a07-1.jpg"]},{"id":4,"nome":"Samsung Galaxy A17 5G","marca":"Samsung","categoria":"Smartphones","selo":"Novo","preco":1599,"descricao":"Conectividade 5G, tela ampla e desempenho consistente para multitarefas e streaming.","especificacoes":["128GB de Armazenamento","Conectividade 5G","4GB de RAM","Bateria 5000mAh","Tela 6.7\""],"imagens":["assets/img/samsung-a17-1.jpg","assets/img/samsung-a17-2.jpg"]},{"id":11,"nome":"Xiaomi Redmi 15","marca":"Xiaomi","categoria":"Smartphones","selo":"Novo","preco":1999.9,"descricao":"Tela gigante de 6.9\" com 144Hz e bateria de 7000mAh para até dois dias de uso longe da tomada, com carregamento rápido de 33W.","especificacoes":["256GB de Armazenamento","16GB de RAM","Bateria 7000mAh","Tela 6.9\" 144Hz","Câmera 50MP","Carregamento rápido 33W"],"imagens":["assets/img/xiaomi-redmi-15-1.png","assets/img/xiaomi-redmi-15-2.png","assets/img/xiaomi-redmi-15-3.png"]},{"id":5,"nome":"Notebook Dell Vostro","marca":"Dell","categoria":"Notebooks","preco":2999,"descricao":"Notebook profissional Dell com desempenho sólido para trabalho, estudos e multitarefas.","especificacoes":["Processador Intel Core i3-1215U","8GB de RAM","512GB SSD","Tela 15.6\"","Cor Carbon Black"],"imagens":["assets/img/dell-vostro-1.jpg","assets/img/dell-vostro-2.jpg","assets/img/dell-vostro-3.jpg"]},{"id":6,"nome":"Xiaomi Redmi Pad 2","marca":"Xiaomi","categoria":"Tablets","selo":"Novo","preco":1500,"descricao":"Tablet com tela grande de 11\", bateria de longa duração e duas versões de memória para escolher conforme o seu uso.","especificacoes":["Tela de 11\"","Bateria 9000mAh","Opções de 6GB ou 8GB de RAM","128GB ou 256GB de armazenamento"],"variantes":[{"armazenamento":"128GB","ram":"6GB","preco":1500},{"armazenamento":"256GB","ram":"8GB","preco":2000}],"imagens":["assets/img/xiaomi-redmi-pad-2-1.jpg","assets/img/xiaomi-redmi-pad-2-2.jpg"]},{"id":7,"nome":"JBL Xtreme 4","marca":"JBL","categoria":"Áudio","preco":1799.9,"descricao":"Caixa de som portátil potente, com graves marcantes, à prova d'água e bateria para um dia inteiro de música.","especificacoes":["100W RMS de potência","Até 24 horas de música","À prova d'água","Bluetooth 5.3"],"imagens":["assets/img/jbl-xtreme-4-1.jpg","assets/img/jbl-xtreme-4-2.jpg","assets/img/jbl-xtreme-4-3.jpg"]},{"id":8,"nome":"Xiaomi Smart Band 9","marca":"Xiaomi","categoria":"Smartwatch","preco":399.9,"descricao":"Pulseira inteligente leve e resistente à água, com tela ampla para acompanhar treinos, sono e notificações.","especificacoes":["Tela de 1,62\"","Certificação 5 ATM (resistente à água)","Bateria 233mAh","Apenas 15,8g sem as alças","Bluetooth 5.4"],"imagens":["assets/img/xiaomi-smart-band-9-1.jpg","assets/img/xiaomi-smart-band-9-2.jpg"]},{"id":9,"nome":"Xiaomi Smart Band 10","marca":"Xiaomi","categoria":"Smartwatch","preco":449.9,"descricao":"A evolução da Smart Band 9 com NFC integrado: pague por aproximação direto do pulso, além de todos os recursos de saúde e treino.","especificacoes":["Com NFC (pagamento por aproximação)","Tela de 1,62\"","Certificação 5 ATM (resistente à água)","Bateria 233mAh","Apenas 15,8g sem as alças","Bluetooth 5.4"],"imagens":["assets/img/xiaomi-smart-band-10-1.jpg","assets/img/xiaomi-smart-band-10-2.jpg"]},{"id":10,"nome":"Alexa Echo Show 5 (3ª geração)","marca":"Amazon","categoria":"Casa Inteligente","preco":749.9,"descricao":"Tela inteligente compacta com Alexa integrada: controle a casa, veja notícias, faça chamadas de vídeo e ouça música por voz.","especificacoes":["Tela sensível ao toque de 5,5\"","Câmera de 2MP","Processador AZ2 Neural Edge","Bluetooth 5.0","Alexa integrada"],"imagens":["assets/img/echo-show-5-1.jpg","assets/img/echo-show-5-2.jpg","assets/img/echo-show-5-3.jpg"]},{"id":12,"nome":"Xiaomi Redmi Note 14","marca":"Xiaomi","categoria":"Smartphones","selo":"Novo","disponivel":false,"preco":1999.9,"descricao":"Câmera de 108MP e tela AMOLED de 6.67\" a 120Hz: fotos ricas em detalhes e visual premium, com bateria de 5500mAh para o dia todo.","especificacoes":["256GB de Armazenamento","8GB de RAM","Bateria 5500mAh","Tela AMOLED 6.67\" 120Hz","Câmera 108MP"],"imagens":["assets/img/xiaomi-redmi-note-14-1.png","assets/img/xiaomi-redmi-note-14-2.png"]}]</script>
-                    <!-- BUILD:DATA-END -->
-
-    <script src="assets/js/main.js"></script>
 </body>
 </html>

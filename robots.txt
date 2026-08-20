@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
+# Painel administrativo: não deve aparecer em buscador.
+# (o admin.html também traz <meta name="robots" content="noindex, nofollow">)
+Disallow: /admin
+Disallow: /admin.html
+
 Sitemap: https://thundercell.netlify.app/sitemap.xml

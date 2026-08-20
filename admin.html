@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Painel administrativo · Thunder Cell</title>
+
+<!-- Painel interno: fora do índice dos buscadores -->
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#FFFFFF" />
+
+<link rel="icon" type="image/png" href="assets/img/favicon.png" />
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="assets/css/admin.css" />
+</head>
+<body class="admin">
+
+<!-- Ícones em SVG (mesmo padrão do site público) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6"/><path d="M18.4 2.6a2 2 0 0 1 2.8 2.8L12 14.6l-4 1 1-4Z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.7 6.2A9.9 9.9 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-3 3.7M6.6 6.6A17 17 0 0 0 2 12s3.5 6 10 6a9.6 9.6 0 0 0 4.3-1M3 3l18 18M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 15.1 8.8l6.9 1-5 4.9 1.2 6.8-6.2-3.2-6.2 3.2L7 14.7l-5-4.9 6.9-1L12 2.5Z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.6"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></symbol>
+</svg>
+
+<!-- =====================================================================
+     Verificando sessão — evita "piscar" o login para quem já está logado
+     ===================================================================== -->
+<div class="auth-screen" id="telaCarregando">
+    <div class="auth-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <p style="color:var(--muted)">Verificando sessão…</p>
+    </div>
+</div>
+
+<!-- =====================================================================
+     Login
+     ===================================================================== -->
+<div class="auth-screen" id="telaLogin" hidden>
+    <div class="auth-card">
+        <img class="auth-card__logo" src="assets/img/logo.png" alt="Thunder Cell" width="331" height="400" />
+        <h1>Painel administrativo</h1>
+        <p class="auth-card__sub">
+            Acesso restrito à equipe da loja. O login é o do Firebase Authentication —
+            criado no Console, não neste código.
+        </p>
+
+        <form id="formLogin">
+            <div class="campo">
+                <label for="email">E-mail</label>
+                <input class="input" type="email" id="email" autocomplete="username" required />
+            </div>
+            <div class="campo">
+                <label for="senha">Senha</label>
+                <input class="input" type="password" id="senha" autocomplete="current-password" required />
+            </div>
+            <p class="campo__erro" id="loginErro" hidden></p>
+            <button class="btn btn--primary btn--block" type="submit" id="btnLogin">Entrar</button>
+        </form>
+
+        <a class="auth-card__voltar" href="index.html">← Voltar para o site</a>
+    </div>
+</div>
+
+<!-- =====================================================================
+     Painel
+     ===================================================================== -->
+<div id="painel" hidden>
+
+    <header class="admin-header">
+        <div class="container admin-header__inner">
+            <a class="brand" href="index.html">
+                <img class="brand__logo" src="assets/img/logo.png" alt="" width="331" height="400" />
+                <span class="brand__name">Thunder <em>Cell</em></span>
+            </a>
+            <span class="admin-header__badge">Admin</span>
+
+            <div class="admin-header__acoes">
+                <a class="btn btn--ghost btn--sm" href="index.html" target="_blank" rel="noopener">
+                    <svg class="icon" aria-hidden="true"><use href="#i-external"></use></svg>
+                    <span class="btn__texto">Ver site</span>
+                </a>
+                <button class="btn btn--ghost btn--sm" type="button" id="btnSair">
+                    <svg class="icon" aria-hidden="true"><use href="#i-logout"></use></svg>
+                    <span class="btn__texto">Sair</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container admin-main">
+
+        <!-- Avisos de setup pendente (Firebase / Cloudinary) -->
+        <div id="avisos"></div>
+
+        <div class="toolbar">
+            <div class="field">
+                <div class="input-wrap">
+                    <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+                    <input class="input" type="search" id="buscaAdmin" placeholder="Buscar por modelo…" autocomplete="off" />
+                </div>
+            </div>
+
+            <button class="btn btn--primary fab" type="button" id="btnNovo">
+                <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
+                Novo produto
+            </button>
+
+            <div class="toolbar__stats" id="stats"></div>
+        </div>
+
+        <div class="produto-lista" id="lista">
+            <div class="skeleton-item">
+                <div class="skeleton-item__foto shimmer"></div>
+                <div class="skeleton-item__linhas">
+                    <div class="shimmer shimmer--title"></div>
+                    <div class="shimmer shimmer--price"></div>
+                </div>
+            </div>
+            <div class="skeleton-item">
+                <div class="skeleton-item__foto shimmer"></div>
+                <div class="skeleton-item__linhas">
+                    <div class="shimmer shimmer--title"></div>
+                    <div class="shimmer shimmer--price"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- =====================================================================
+     Formulário de cadastro / edição
+     ===================================================================== -->
+<div class="sheet" id="sheetForm" role="dialog" aria-modal="true" aria-labelledby="formTitulo" hidden>
+    <div class="sheet__panel">
+        <div class="sheet__head">
+            <h2 id="formTitulo">Novo produto</h2>
+            <button class="btn-icon" type="button" id="btnFecharForm" aria-label="Fechar" style="margin:0">
+                <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+            </button>
+        </div>
+
+        <form id="formProduto" novalidate>
+            <div class="sheet__body">
+
+                <div class="campo" id="campoModelo">
+                    <label for="fModelo">Modelo <span style="color:var(--accent)">*</span></label>
+                    <input class="input" type="text" id="fModelo" placeholder="Ex.: iPhone 15 Pro" autocomplete="off" required />
+                    <p class="campo__erro" hidden></p>
+                </div>
+
+                <div class="form-grid form-grid--2">
+                    <div class="campo">
+                        <label for="fCapacidade">Capacidade</label>
+                        <!-- Input com datalist: aceita os valores comuns em um toque,
+                             mas não trava quem precisa digitar algo diferente. -->
+                        <input class="input" type="text" id="fCapacidade" list="capacidades" placeholder="Ex.: 256GB" autocomplete="off" />
+                        <datalist id="capacidades">
+                            <option value="32GB"></option>
+                            <option value="64GB"></option>
+                            <option value="128GB"></option>
+                            <option value="256GB"></option>
+                            <option value="512GB"></option>
+                            <option value="1TB"></option>
+                        </datalist>
+                    </div>
+
+                    <div class="campo" id="campoPreco">
+                        <label for="fPreco">Preço <span style="color:var(--accent)">*</span></label>
+                        <div class="input-prefixo">
+                            <input class="input" type="text" id="fPreco" inputmode="decimal" placeholder="0,00" required />
+                        </div>
+                        <p class="campo__erro" hidden></p>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="fParcelamento">Texto de parcelamento</label>
+                    <input class="input" type="text" id="fParcelamento" placeholder="Em até 12x com juros da máquina" autocomplete="off" />
+                    <p class="campo__dica">Opcional. Em branco, o site usa o texto padrão do site-config.js.</p>
+                </div>
+
+                <div class="form-grid form-grid--2">
+                    <div class="campo">
+                        <label for="fBateria">Bateria (%)</label>
+                        <input class="input" type="number" id="fBateria" min="0" max="100" step="1" inputmode="numeric" placeholder="Ex.: 88" />
+                        <p class="campo__dica">Deixe em branco para não exibir.</p>
+                    </div>
+
+                    <div class="campo">
+                        <label for="fCondicao">Condição</label>
+                        <select class="select" id="fCondicao">
+                            <option value="">Não informar</option>
+                            <option value="Boa">Boa</option>
+                            <option value="Muito boa">Muito boa</option>
+                            <option value="Excelente">Excelente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-grid form-grid--2">
+                    <div class="campo">
+                        <label for="fStatus">Status</label>
+                        <select class="select" id="fStatus">
+                            <option value="Seminovo">Seminovo</option>
+                            <option value="Novo">Novo</option>
+                        </select>
+                        <p class="campo__dica">Aparece no selo do card.</p>
+                    </div>
+
+                    <div class="campo">
+                        <label for="fCategoria">Seção no site</label>
+                        <select class="select" id="fCategoria">
+                            <option value="novo">Aparelhos novos</option>
+                            <option value="usado">Aparelhos seminovos</option>
+                        </select>
+                        <p class="campo__dica">Segue o status automaticamente. Mude só se precisar.</p>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="fDescricao">Descrição</label>
+                    <textarea class="textarea" id="fDescricao" rows="3" placeholder="Uma ou duas frases sobre o aparelho (aparece no card e no detalhe)."></textarea>
+                </div>
+
+                <!-- Fotos -->
+                <div class="campo" id="campoFotos">
+                    <label>Fotos <span style="color:var(--accent)">*</span></label>
+                    <p class="campo__dica">
+                        A primeira foto é a capa do card. Arraste para cá, ou toque para
+                        escolher da galeria/câmera.
+                    </p>
+
+                    <div class="dropzone" id="dropzone" tabindex="0" role="button">
+                        <svg class="icon" aria-hidden="true"><use href="#i-upload"></use></svg>
+                        <span><strong>Toque para enviar</strong> ou arraste as fotos aqui</span>
+                        <span style="font-size:0.76rem">JPG, PNG ou WebP · até 10 MB cada</span>
+                    </div>
+                    <input type="file" id="inputFotos" accept="image/*" multiple hidden />
+
+                    <div class="fotos-grid" id="fotosGrid"></div>
+                    <p class="campo__erro" hidden></p>
+                </div>
+
+                <!-- Interruptores -->
+                <label class="switch-row" for="fDestaque">
+                    <span class="switch-row__texto">
+                        <span class="switch-row__titulo">Destaque</span>
+                        <span class="switch-row__dica">Aparece no topo do catálogo com selo laranja sólido.</span>
+                    </span>
+                    <span class="switch">
+                        <input type="checkbox" id="fDestaque" />
+                        <span class="switch__trilho"></span>
+                    </span>
+                </label>
+
+                <label class="switch-row" for="fAtivo">
+                    <span class="switch-row__texto">
+                        <span class="switch-row__titulo">Ativo</span>
+                        <span class="switch-row__dica">Desligado, o produto some do site público (mas continua aqui).</span>
+                    </span>
+                    <span class="switch">
+                        <input type="checkbox" id="fAtivo" checked />
+                        <span class="switch__trilho"></span>
+                    </span>
+                </label>
+
+                <div class="campo">
+                    <label for="fObservacoes">Observações internas</label>
+                    <textarea class="textarea" id="fObservacoes" rows="2" placeholder="Só para a loja: de onde veio, quanto custou, detalhes do aparelho…"></textarea>
+                    <p class="campo__dica">Nunca aparece no site público.</p>
+                </div>
+
+            </div>
+
+            <div class="sheet__foot">
+                <button class="btn btn--ghost" type="button" id="btnCancelar">Cancelar</button>
+                <button class="btn btn--primary" type="submit" id="btnSalvar">Salvar produto</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     Confirmação de exclusão
+     ===================================================================== -->
+<div class="confirm" id="confirmar" role="dialog" aria-modal="true" hidden>
+    <div class="confirm__card">
+        <h3 id="confirmarTitulo">Excluir produto?</h3>
+        <p id="confirmarTexto"></p>
+        <div class="confirm__acoes">
+            <button class="btn btn--ghost" type="button" id="confirmarNao">Cancelar</button>
+            <button class="btn btn--perigo" type="button" id="confirmarSim">Excluir</button>
+        </div>
+    </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script type="module" src="assets/js/admin.js"></script>
+
+</body>
+</html>

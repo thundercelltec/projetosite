@@ -1,7 +1,24 @@
 # Configuração de build do Netlify.
-# Antes de publicar, o Netlify roda o script que pré-renderiza o catálogo
-# no index.html (SEO: produtos visíveis sem JavaScript).
+#
+# Antes de publicar, o Netlify roda o script que pré-renderiza o catálogo no
+# index.html. Ele busca os produtos no Firebase (leitura pública) e, se o
+# Firebase não estiver configurado ou não responder, cai no data/produtos.json.
+# Isso garante que o Google e os previews de link enxerguem os aparelhos sem
+# depender de JavaScript — no navegador, o site continua lendo o banco ao vivo.
 
 [build]
   command = "node scripts/build-catalog.js"
   publish = "."
+
+# O painel administrativo nunca deve ser indexado.
+# A Netlify serve admin.html tanto em /admin quanto em /admin.html, então o
+# cabeçalho precisa cobrir os dois caminhos.
+[[headers]]
+  for = "/admin"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/admin.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

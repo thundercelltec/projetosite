@@ -1,0 +1,248 @@
+{
+  "produtos": {
+    "legado-1": {
+      "modelo": "Xiaomi Redmi A7 Pro",
+      "capacidade": "128GB",
+      "preco": 1450,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Novo",
+      "categoria": "novo",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/xiaomi-redmi-a7-pro-1.jpg",
+        "assets/img/xiaomi-redmi-a7-pro-2.jpg"
+      ],
+      "descricao": "Smartphone de entrada com armazenamento generoso, bateria de longa duração e tela ampla para o dia a dia.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 12,
+      "atualizadoEm": 0
+    },
+    "legado-2": {
+      "modelo": "Xiaomi Poco C71",
+      "capacidade": "128GB",
+      "preco": 1000,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Seminovo",
+      "categoria": "usado",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/xiaomi-poco-c71-1.jpg",
+        "assets/img/xiaomi-poco-c71-2.jpg"
+      ],
+      "descricao": "Ótimo custo-benefício, com desempenho equilibrado e autonomia de bateria para o uso diário.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 11,
+      "atualizadoEm": 0
+    },
+    "legado-3": {
+      "modelo": "Samsung Galaxy A07",
+      "capacidade": "128GB",
+      "preco": 1250,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Seminovo",
+      "categoria": "usado",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/samsung-a07-2.jpg",
+        "assets/img/samsung-a07-1.jpg"
+      ],
+      "descricao": "Modelo compacto da Samsung com bom desempenho, câmera versátil e visual moderno.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 10,
+      "atualizadoEm": 0
+    },
+    "legado-4": {
+      "modelo": "Samsung Galaxy A17 5G",
+      "capacidade": "128GB",
+      "preco": 1599,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Novo",
+      "categoria": "novo",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/samsung-a17-1.jpg",
+        "assets/img/samsung-a17-2.jpg"
+      ],
+      "descricao": "Conectividade 5G, tela ampla e desempenho consistente para multitarefas e streaming.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 9,
+      "atualizadoEm": 0
+    },
+    "legado-11": {
+      "modelo": "Xiaomi Redmi 15",
+      "capacidade": "256GB",
+      "preco": 1999.9,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Novo",
+      "categoria": "novo",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/xiaomi-redmi-15-1.png",
+        "assets/img/xiaomi-redmi-15-2.png",
+        "assets/img/xiaomi-redmi-15-3.png"
+      ],
+      "descricao": "Tela gigante de 6.9\" com 144Hz e bateria de 7000mAh para até dois dias de uso longe da tomada, com carregamento rápido de 33W.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 8,
+      "atualizadoEm": 0
+    },
+    "legado-12": {
+      "modelo": "Xiaomi Redmi Note 14",
+      "capacidade": "256GB",
+      "preco": 1999.9,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Novo",
+      "categoria": "novo",
+      "destaque": false,
+      "ativo": false,
+      "fotos": [
+        "assets/img/xiaomi-redmi-note-14-1.png",
+        "assets/img/xiaomi-redmi-note-14-2.png"
+      ],
+      "descricao": "Câmera de 108MP e tela AMOLED de 6.67\" a 120Hz: fotos ricas em detalhes e visual premium, com bateria de 5500mAh para o dia todo.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 7,
+      "atualizadoEm": 0
+    },
+    "legado-5": {
+      "modelo": "Notebook Dell Vostro",
+      "capacidade": "",
+      "preco": 2999,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Seminovo",
+      "categoria": "usado",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/dell-vostro-1.jpg",
+        "assets/img/dell-vostro-2.jpg",
+        "assets/img/dell-vostro-3.jpg"
+      ],
+      "descricao": "Notebook profissional Dell com desempenho sólido para trabalho, estudos e multitarefas.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 6,
+      "atualizadoEm": 0
+    },
+    "legado-6": {
+      "modelo": "Xiaomi Redmi Pad 2",
+      "capacidade": "128GB",
+      "preco": 1500,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Novo",
+      "categoria": "novo",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/xiaomi-redmi-pad-2-1.jpg",
+        "assets/img/xiaomi-redmi-pad-2-2.jpg"
+      ],
+      "descricao": "Tablet com tela grande de 11\", bateria de longa duração e duas versões de memória para escolher conforme o seu uso.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 5,
+      "atualizadoEm": 0
+    },
+    "legado-7": {
+      "modelo": "JBL Xtreme 4",
+      "capacidade": "",
+      "preco": 1799.9,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Seminovo",
+      "categoria": "usado",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/jbl-xtreme-4-1.jpg",
+        "assets/img/jbl-xtreme-4-2.jpg",
+        "assets/img/jbl-xtreme-4-3.jpg"
+      ],
+      "descricao": "Caixa de som portátil potente, com graves marcantes, à prova d'água e bateria para um dia inteiro de música.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 4,
+      "atualizadoEm": 0
+    },
+    "legado-8": {
+      "modelo": "Xiaomi Smart Band 9",
+      "capacidade": "",
+      "preco": 399.9,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Seminovo",
+      "categoria": "usado",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/xiaomi-smart-band-9-1.jpg",
+        "assets/img/xiaomi-smart-band-9-2.jpg"
+      ],
+      "descricao": "Pulseira inteligente leve e resistente à água, com tela ampla para acompanhar treinos, sono e notificações.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 3,
+      "atualizadoEm": 0
+    },
+    "legado-9": {
+      "modelo": "Xiaomi Smart Band 10",
+      "capacidade": "",
+      "preco": 449.9,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Seminovo",
+      "categoria": "usado",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/xiaomi-smart-band-10-1.jpg",
+        "assets/img/xiaomi-smart-band-10-2.jpg"
+      ],
+      "descricao": "A evolução da Smart Band 9 com NFC integrado: pague por aproximação direto do pulso, além de todos os recursos de saúde e treino.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 2,
+      "atualizadoEm": 0
+    },
+    "legado-10": {
+      "modelo": "Alexa Echo Show 5 (3ª geração)",
+      "capacidade": "",
+      "preco": 749.9,
+      "parcelamento": "",
+      "bateria": null,
+      "condicao": "",
+      "status": "Seminovo",
+      "categoria": "usado",
+      "destaque": false,
+      "ativo": true,
+      "fotos": [
+        "assets/img/echo-show-5-1.jpg",
+        "assets/img/echo-show-5-2.jpg",
+        "assets/img/echo-show-5-3.jpg"
+      ],
+      "descricao": "Tela inteligente compacta com Alexa integrada: controle a casa, veja notícias, faça chamadas de vídeo e ouça música por voz.",
+      "observacoes": "Importado do catálogo antigo — conferir bateria e condição.",
+      "criadoEm": 1,
+      "atualizadoEm": 0
+    }
+  }
+}
