@@ -33,6 +33,8 @@ export const firebaseConfig = {
 // Caminhos (nós) usados dentro do Realtime Database. Não precisa mexer aqui.
 export const DB_PATHS = {
   produtos: "produtos",
+  // Fotos do banner da página inicial (array de URLs do Cloudinary).
+  heroFotos: "config/heroFotos",
 };
 
 /**

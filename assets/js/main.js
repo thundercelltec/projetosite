@@ -13,6 +13,7 @@
 
 import { siteConfig, linkWhatsapp, mensagemInteresse, garantiaDoStatus } from "./site-config.js";
 import { firebaseConfig, DB_PATHS, firebaseConfigurado } from "./firebase-config.js";
+import { otimizarUrl } from "./image-config.js";
 import { listarProdutos, formatarPrecoCurto, escapeHtml } from "./produtos-utils.js";
 // O mesmo módulo que o build usa para pré-renderizar o catálogo — card do
 // navegador e card do HTML estático nunca saem diferentes.
@@ -372,6 +373,39 @@ function iniciarModal() {
 // Fonte de dados
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Banner inicial (hero)
+// ---------------------------------------------------------------------------
+const heroGallery = document.getElementById("heroGallery");
+
+/**
+ * Desenha as fotos do topo. Sem foto cadastrada, mostra um espaço discreto —
+ * nunca imagem quebrada nem um bloco desalinhado.
+ */
+function renderizarHero(fotos) {
+  if (!heroGallery) return;
+
+  const validas = (Array.isArray(fotos) ? fotos : [])
+    .filter((url) => typeof url === "string" && url.trim() !== "")
+    .slice(0, 3);
+
+  if (validas.length === 0) {
+    heroGallery.innerHTML = `<p class="hero__gallery-vazio">
+        <svg class="icon" aria-hidden="true"><use href="#i-image"></use></svg>
+        <span>Fotos do banner em breve</span>
+      </p>`;
+    return;
+  }
+
+  heroGallery.innerHTML = validas
+    .map(
+      (url, i) =>
+        `<img class="hero__phone" src="${escapeHtml(otimizarUrl(url, 600))}" alt="" width="400" height="533"
+              ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" />`
+    )
+    .join("");
+}
+
 /** Cartões-fantasma exibidos enquanto o catálogo do banco não chega. */
 function mostrarSkeletons(quantidade = 3) {
   const cartoes = Array.from(
@@ -462,6 +496,24 @@ async function carregarCatalogo() {
         }
       }
     );
+
+    // Fotos do banner. Falha aqui não atrapalha o catálogo: o HTML já traz o
+    // banner pré-renderizado do último deploy, e o hero tem estado vazio.
+    onValue(
+      ref(db, DB_PATHS.heroFotos),
+      (snap) => renderizarHero(snap.val()),
+      (erro) => {
+        // Enquanto o nó `config` não estiver liberado nas regras do banco,
+        // esta leitura volta como permission_denied. É esperado e não quebra
+        // nada — o aviso abaixo diz exatamente o que fazer.
+        const semPermissao = String(erro?.code || erro).includes("permission_denied");
+        console.warn(
+          semPermissao
+            ? "Banner não carregado: falta liberar o nó `config` nas regras do Realtime Database (veja o README, seção 4)."
+            : `Banner não carregado: ${erro}`
+        );
+      }
+    );
   } catch (erro) {
     clearTimeout(prazo);
     console.error("Não foi possível carregar o Firebase:", erro);
@@ -474,6 +526,9 @@ async function carregarCatalogo() {
 // ---------------------------------------------------------------------------
 aplicarConfig();
 iniciarCabecalho();
+// Se o build não pré-renderizou nenhuma foto de banner, já mostra o estado
+// vazio — assim o hero nunca fica com um buraco no lugar das imagens.
+if (heroGallery && heroGallery.children.length === 0) renderizarHero([]);
 iniciarReveal();
 iniciarAbas();
 iniciarFiltros();

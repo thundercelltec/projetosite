@@ -68,8 +68,9 @@ Falta você fazer **dois passos no Console** (não dá para fazer pelo código):
    **Vamos começar** → aba **Sign-in method** → ative **E-mail/senha**.
    Depois, aba **Users** → **Adicionar usuário** com o e-mail e a senha da loja.
    Sem isso, ninguém entra no `/admin`.
-2. **Publicar as regras do banco** — veja a seção 4. **Isso é urgente:** hoje o
-   banco ainda está com as regras de teste, ou seja, aberto.
+2. **Acrescentar o nó `config` às regras do banco** — veja a seção 4. As regras
+   de `produtos` já estão publicadas; falta só liberar o `config`, que é onde o
+   Banner inicial guarda as fotos do topo do site.
 
 > **Por que estas chaves estão no repositório?** Porque o site é estático: a
 > Netlify publica exatamente o que está versionado, e o navegador precisa delas
@@ -128,10 +129,11 @@ recortá-las, reenvie a foto pelo painel.
 
 ## 4. Regras de segurança do banco
 
-> 🔴 **Faça isto antes de qualquer outra coisa.** Testei o banco e a leitura da
-> raiz responde normalmente, o que indica que ele ainda está com as **regras de
-> teste** — nesse estado, qualquer pessoa na internet pode ler *e apagar* seus
-> produtos. As regras abaixo resolvem.
+> 🟠 **Atualize as regras: falta liberar o nó `config`.** Testei o banco e as
+> regras de produtos já estão publicadas (a raiz responde 401 e `produtos`
+> responde 200 — perfeito). Mas o **Banner inicial** grava em
+> `config/heroFotos`, e hoje esse caminho está bloqueado: salvar o banner falha
+> com "Permission denied" e o site não consegue ler as fotos do topo.
 
 No Console do Firebase: **Realtime Database** → aba **Regras** → cole isto e
 clique em **Publicar**.
@@ -143,6 +145,10 @@ clique em **Publicar**.
       ".read": true,
       ".write": "auth != null"
     },
+    "config": {
+      ".read": true,
+      ".write": "auth != null"
+    },
     ".read": false,
     ".write": false
   }
@@ -151,13 +157,13 @@ clique em **Publicar**.
 
 O que isso faz:
 
-- **Leitura pública** de `produtos` — é assim que o site (e o script de build)
-  monta o catálogo sem ninguém precisar logar.
+- **Leitura pública** de `produtos` e `config` — é assim que o site (e o script
+  de build) monta o catálogo e o banner sem ninguém precisar logar.
 - **Escrita só para quem está autenticado** — sem login do Firebase, qualquer
   tentativa de gravar é recusada pelo servidor. O login do painel controla só a
   interface; a barreira de verdade é esta regra.
 - **Raiz fechada** (`".read": false` / `".write": false`) — nada além de
-  `produtos` fica exposto, hoje ou no futuro.
+  `produtos` e `config` fica exposto, hoje ou no futuro.
 
 ### Versão opcional, mais rígida
 
@@ -183,6 +189,10 @@ painel), use esta versão no lugar:
         "categoria": { ".validate": "newData.val() == 'novo' || newData.val() == 'usado'" },
         "fotos":     { ".validate": "newData.hasChildren()" }
       }
+    },
+    "config": {
+      ".read": true,
+      ".write": "auth != null"
     },
     ".read": false,
     ".write": false
@@ -306,6 +316,21 @@ Endereço: `https://thundercell.netlify.app/admin`
 Dica: salve o painel na tela inicial do celular (menu do navegador → "Adicionar
 à tela de início") para abrir como se fosse um app.
 
+### Banner inicial
+
+A aba **Banner inicial** controla as três fotos do topo da página inicial.
+
+- Toque num quadro vazio para enviar a foto (galeria ou câmera).
+- As setas `‹ ›` reordenam; a lixeira remove.
+- A **prévia** logo abaixo mostra exatamente como as fotos vão aparecer no site.
+- **Salvar banner** grava em `config/heroFotos` e o site atualiza na hora.
+  **Desfazer** volta para a última versão salva.
+- Com zero fotos, o topo do site mostra um espaço discreto — nunca imagem
+  quebrada.
+
+> Precisa das regras com o nó `config` liberado (seção 4). Sem isso, salvar
+> retorna "Sem permissão para salvar o banner".
+
 ---
 
 ## 10. Como o catálogo chega na tela
@@ -342,6 +367,8 @@ instabilidade do Firebase nunca coloca no ar aparelhos que já foram vendidos.
 | Foto não envia | Upload preset não está como **Unsigned**, ou o cloud name está errado |
 | Produto salvo não aparece no site | O interruptor **Ativo** está desligado |
 | Aviso "Recorte de fundo indisponível" | A conta Cloudinary não tem essa transformação liberada (seção 3.1) — a foto é salva sem recorte |
+| "Sem permissão para salvar o banner" | Falta o nó `config` nas regras do banco (seção 4) |
+| Topo do site sem as fotos do banner | Nenhuma foto cadastrada em **Banner inicial**, ou o nó `config` não está liberado para leitura |
 | Produto aparece no grupo errado | O campo **Status** (Novo/Seminovo) define em qual seção do catálogo ele entra |
 | Site em branco e erro de CORS no console | Abriu o `index.html` por duplo clique — use um servidor local (seção 7) |
 | Build do Netlify avisa "Firebase indisponível" | Normal antes de configurar; ele usa o `data/produtos.json` |

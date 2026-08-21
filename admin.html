@@ -39,6 +39,8 @@
     <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></symbol>
     <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></symbol>
     <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></symbol>
+    <symbol id="i-banner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></symbol>
 </svg>
 
 <!-- =====================================================================
@@ -59,8 +61,7 @@
         <img class="auth-card__logo" src="assets/img/logo.png" alt="Thunder Cell" width="331" height="400" />
         <h1>Painel administrativo</h1>
         <p class="auth-card__sub">
-            Acesso restrito à equipe da loja. O login é o do Firebase Authentication —
-            criado no Console, não neste código.
+            Acesso restrito à equipe da loja.
         </p>
 
         <form id="formLogin">
@@ -73,7 +74,7 @@
                 <input class="input" type="password" id="senha" autocomplete="current-password" required />
             </div>
             <p class="campo__erro" id="loginErro" hidden></p>
-            <button class="btn btn--primary btn--block" type="submit" id="btnLogin">Entrar</button>
+            <button class="btn btn--primary btn--block btn--lg" type="submit" id="btnLogin">Entrar</button>
         </form>
 
         <a class="auth-card__voltar" href="index.html">← Voltar para o site</a>
@@ -85,64 +86,110 @@
      ===================================================================== -->
 <div id="painel" hidden>
 
-    <header class="admin-header">
-        <div class="container admin-header__inner">
-            <a class="brand" href="index.html">
-                <img class="brand__logo" src="assets/img/logo.png" alt="" width="331" height="400" />
-                <span class="brand__name">Thunder <em>Cell</em></span>
-            </a>
-            <span class="admin-header__badge">Admin</span>
+    <header class="ap-header">
+        <div class="ap-container">
+            <div class="ap-header__topo">
+                <span class="ap-marca">
+                    <img src="assets/img/logo.png" alt="" width="331" height="400" />
+                    <span class="ap-marca__nome">Thunder <em>Cell</em></span>
+                </span>
+                <span class="ap-marca__selo">Admin</span>
 
-            <div class="admin-header__acoes">
-                <a class="btn btn--ghost btn--sm" href="index.html" target="_blank" rel="noopener">
+                <a class="ap-acao" href="index.html" target="_blank" rel="noopener" title="Ver site">
                     <svg class="icon" aria-hidden="true"><use href="#i-external"></use></svg>
-                    <span class="btn__texto">Ver site</span>
+                    <span class="ap-acao__texto">Ver site</span>
                 </a>
-                <button class="btn btn--ghost btn--sm" type="button" id="btnSair">
+                <button class="ap-acao" type="button" id="btnSair" title="Sair">
                     <svg class="icon" aria-hidden="true"><use href="#i-logout"></use></svg>
-                    <span class="btn__texto">Sair</span>
+                    <span class="ap-acao__texto">Sair</span>
                 </button>
             </div>
+
+            <nav class="ap-nav" aria-label="Seções do painel">
+                <button class="ap-nav__item is-active" type="button" data-view="produtos" aria-current="page">
+                    <svg class="icon" aria-hidden="true"><use href="#i-box"></use></svg>
+                    Produtos
+                </button>
+                <button class="ap-nav__item" type="button" data-view="hero">
+                    <svg class="icon" aria-hidden="true"><use href="#i-banner"></use></svg>
+                    Banner inicial
+                </button>
+            </nav>
         </div>
     </header>
 
-    <main class="container admin-main">
+    <main class="ap-container ap-main">
 
         <!-- Avisos de setup pendente (Firebase / Cloudinary) -->
         <div id="avisos"></div>
 
-        <div class="toolbar">
-            <div class="field">
-                <div class="input-wrap">
-                    <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
-                    <input class="input" type="search" id="buscaAdmin" placeholder="Buscar por modelo…" autocomplete="off" />
+        <!-- ========== VIEW: PRODUTOS ========== -->
+        <section class="ap-view" id="viewProdutos">
+            <div class="ap-toolbar">
+                <div class="campo">
+                    <div class="input-wrap">
+                        <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+                        <input class="input" type="search" id="buscaAdmin" placeholder="Buscar por modelo…" autocomplete="off" aria-label="Buscar produto" />
+                    </div>
                 </div>
+
+                <button class="btn btn--primary" type="button" id="btnNovo">
+                    <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
+                    Novo produto
+                </button>
+
+                <div class="ap-stats" id="stats"></div>
             </div>
 
-            <button class="btn btn--primary fab" type="button" id="btnNovo">
-                <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
-                Novo produto
-            </button>
-
-            <div class="toolbar__stats" id="stats"></div>
-        </div>
-
-        <div class="produto-lista" id="lista">
-            <div class="skeleton-item">
-                <div class="skeleton-item__foto shimmer"></div>
-                <div class="skeleton-item__linhas">
-                    <div class="shimmer shimmer--title"></div>
-                    <div class="shimmer shimmer--price"></div>
+            <div class="ap-lista" id="lista">
+                <div class="ap-skeleton">
+                    <div class="ap-skeleton__foto shimmer"></div>
+                    <div class="ap-skeleton__linhas">
+                        <div class="shimmer shimmer--title"></div>
+                        <div class="shimmer shimmer--price"></div>
+                    </div>
+                </div>
+                <div class="ap-skeleton">
+                    <div class="ap-skeleton__foto shimmer"></div>
+                    <div class="ap-skeleton__linhas">
+                        <div class="shimmer shimmer--title"></div>
+                        <div class="shimmer shimmer--price"></div>
+                    </div>
                 </div>
             </div>
-            <div class="skeleton-item">
-                <div class="skeleton-item__foto shimmer"></div>
-                <div class="skeleton-item__linhas">
-                    <div class="shimmer shimmer--title"></div>
-                    <div class="shimmer shimmer--price"></div>
-                </div>
+        </section>
+
+        <!-- ========== VIEW: BANNER INICIAL ========== -->
+        <section class="ap-view" id="viewHero" hidden>
+            <div class="ap-titulo">
+                <h2>Banner inicial</h2>
+                <p>
+                    As três fotos que aparecem no topo da página inicial.
+                    Toque num quadro para enviar, use as setas para reordenar.
+                </p>
             </div>
-        </div>
+
+            <div class="campo" id="campoHero">
+                <div class="ap-hero-grid" id="heroSlots"></div>
+                <p class="campo__dica">
+                    Melhor resultado: foto do aparelho em pé, fundo claro.
+                    Elas entram no site na mesma ordem mostrada aqui.
+                </p>
+                <p class="campo__erro" hidden></p>
+            </div>
+
+            <input type="file" id="inputHero" accept="image/*" hidden />
+
+            <div class="ap-preview">
+                <p class="ap-preview__rotulo">Prévia no site</p>
+                <div class="hero__gallery" id="heroPreview"></div>
+            </div>
+
+            <div style="display:grid; gap:0.6rem; grid-template-columns:1fr 1.6fr;">
+                <button class="btn btn--ghost" type="button" id="btnHeroDesfazer">Desfazer</button>
+                <button class="btn btn--primary" type="button" id="btnHeroSalvar">Salvar banner</button>
+            </div>
+        </section>
     </main>
 </div>
 
@@ -153,16 +200,18 @@
     <div class="sheet__panel">
         <div class="sheet__head">
             <h2 id="formTitulo">Novo produto</h2>
-            <button class="btn-icon" type="button" id="btnFecharForm" aria-label="Fechar" style="margin:0">
+            <button class="ap-acao" type="button" id="btnFecharForm" aria-label="Fechar">
                 <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
             </button>
         </div>
 
-        <form id="formProduto" novalidate>
+        <!-- `sheet__form` é o flex que preenche o painel: é o que mantém o
+             rodapé (com o botão Salvar) sempre colado no pé da tela. -->
+        <form class="sheet__form" id="formProduto" novalidate>
             <div class="sheet__body">
 
                 <div class="campo" id="campoModelo">
-                    <label for="fModelo">Modelo <span style="color:var(--accent)">*</span></label>
+                    <label for="fModelo">Modelo <span class="campo__obrig">*</span></label>
                     <input class="input" type="text" id="fModelo" placeholder="Ex.: iPhone 15 Pro" autocomplete="off" required />
                     <p class="campo__erro" hidden></p>
                 </div>
@@ -184,7 +233,7 @@
                     </div>
 
                     <div class="campo" id="campoPreco">
-                        <label for="fPreco">Preço <span style="color:var(--accent)">*</span></label>
+                        <label for="fPreco">Preço <span class="campo__obrig">*</span></label>
                         <div class="input-prefixo">
                             <input class="input" type="text" id="fPreco" inputmode="decimal" placeholder="0,00" required />
                         </div>
@@ -195,14 +244,14 @@
                 <div class="campo">
                     <label for="fParcelamento">Texto de parcelamento</label>
                     <input class="input" type="text" id="fParcelamento" placeholder="Em até 12x com juros da máquina" autocomplete="off" />
-                    <p class="campo__dica">Opcional. Em branco, o site usa o texto padrão do site-config.js.</p>
+                    <p class="campo__dica">Opcional. Em branco, o site usa o texto padrão.</p>
                 </div>
 
                 <div class="form-grid form-grid--2">
                     <div class="campo">
                         <label for="fBateria">Bateria (%)</label>
                         <input class="input" type="number" id="fBateria" min="0" max="100" step="1" inputmode="numeric" placeholder="Ex.: 88" />
-                        <p class="campo__dica">Deixe em branco para não exibir.</p>
+                        <p class="campo__dica">Em branco, não aparece no card.</p>
                     </div>
 
                     <div class="campo">
@@ -232,27 +281,24 @@
                             <option value="novo">Aparelhos novos</option>
                             <option value="usado">Aparelhos seminovos</option>
                         </select>
-                        <p class="campo__dica">Segue o status automaticamente. Mude só se precisar.</p>
+                        <p class="campo__dica">Segue o status automaticamente.</p>
                     </div>
                 </div>
 
                 <div class="campo">
                     <label for="fDescricao">Descrição</label>
-                    <textarea class="textarea" id="fDescricao" rows="3" placeholder="Uma ou duas frases sobre o aparelho (aparece no card e no detalhe)."></textarea>
+                    <textarea class="textarea" id="fDescricao" rows="3" placeholder="Uma ou duas frases sobre o aparelho."></textarea>
                 </div>
 
                 <!-- Fotos -->
                 <div class="campo" id="campoFotos">
-                    <label>Fotos <span style="color:var(--accent)">*</span></label>
-                    <p class="campo__dica">
-                        A primeira foto é a capa do card. Arraste para cá, ou toque para
-                        escolher da galeria/câmera.
-                    </p>
+                    <label>Fotos <span class="campo__obrig">*</span></label>
+                    <p class="campo__dica">A primeira foto é a capa do card.</p>
 
                     <div class="dropzone" id="dropzone" tabindex="0" role="button">
                         <svg class="icon" aria-hidden="true"><use href="#i-upload"></use></svg>
                         <span><strong>Toque para enviar</strong> ou arraste as fotos aqui</span>
-                        <span style="font-size:0.76rem">JPG, PNG ou WebP · até 10 MB cada</span>
+                        <span style="font-size:0.75rem">JPG, PNG ou WebP · até 10 MB cada</span>
                     </div>
                     <input type="file" id="inputFotos" accept="image/*" multiple hidden />
 
@@ -264,7 +310,7 @@
                 <label class="switch-row" for="fDestaque">
                     <span class="switch-row__texto">
                         <span class="switch-row__titulo">Destaque</span>
-                        <span class="switch-row__dica">Aparece no topo do catálogo com selo laranja sólido.</span>
+                        <span class="switch-row__dica">Vai para o topo da seção, com selo laranja.</span>
                     </span>
                     <span class="switch">
                         <input type="checkbox" id="fDestaque" />
@@ -275,7 +321,7 @@
                 <label class="switch-row" for="fAtivo">
                     <span class="switch-row__texto">
                         <span class="switch-row__titulo">Ativo</span>
-                        <span class="switch-row__dica">Desligado, o produto some do site público (mas continua aqui).</span>
+                        <span class="switch-row__dica">Desligado, some do site mas continua aqui.</span>
                     </span>
                     <span class="switch">
                         <input type="checkbox" id="fAtivo" checked />
@@ -285,7 +331,7 @@
 
                 <div class="campo">
                     <label for="fObservacoes">Observações internas</label>
-                    <textarea class="textarea" id="fObservacoes" rows="2" placeholder="Só para a loja: de onde veio, quanto custou, detalhes do aparelho…"></textarea>
+                    <textarea class="textarea" id="fObservacoes" rows="2" placeholder="Só para a loja: de onde veio, quanto custou…"></textarea>
                     <p class="campo__dica">Nunca aparece no site público.</p>
                 </div>
 

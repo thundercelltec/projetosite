@@ -255,11 +255,12 @@
                 </div>
             </div>
 
-            <!-- Trio de aparelhos: o do centro maior e à frente -->
-            <div class="hero__gallery reveal" style="--delay: 120ms" aria-hidden="true">
-                <img class="hero__phone hero__phone--side hero__phone--left" src="assets/img/samsung-a17-1.jpg" alt="" width="400" height="500" fetchpriority="high" />
-                <img class="hero__phone hero__phone--center" src="assets/img/xiaomi-redmi-15-1.png" alt="" width="400" height="500" fetchpriority="high" />
-                <img class="hero__phone hero__phone--side hero__phone--right" src="assets/img/xiaomi-redmi-note-14-1.png" alt="" width="400" height="500" fetchpriority="high" />
+            <!-- Fotos do banner: cadastradas em /admin > Banner inicial e
+                 guardadas em config/heroFotos. O bloco abaixo é pré-renderizado
+                 no deploy e atualizado pelo main.js quando o banco responde. -->
+            <div class="hero__gallery reveal" id="heroGallery" style="--delay: 120ms" aria-hidden="true">
+                <!-- BUILD:HERO-START -->
+                <!-- BUILD:HERO-END -->
             </div>
         </div>
     </section>

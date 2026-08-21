@@ -22,7 +22,10 @@
       "Bash(node url-test.mjs)",
       "Bash(grep -n \"^// ---------\\\\|^const telaCarregando\\\\|^if \\(!auth\\)\\\\|^} else {\\\\|^  onAuthStateChanged\\\\|^\\\\$\\(\\\\\"formLogin\\\\\"\\)\\\\|^\\\\$\\(\\\\\"btnSair\\\\\"\\)\\\\|^let painelIniciado\\\\|^function iniciarPainel\" assets/js/admin.js)",
       "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/produtos.json?print=pretty\")",
-      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/.json\")"
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/.json\")",
+      "Bash(curl -s -o /dev/null -w \"  HTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/.json\")",
+      "Bash(curl -s -o /dev/null -w \"  HTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/produtos.json\")",
+      "Bash(curl -s -w \"\\\\n  HTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/config/heroFotos.json\")"
     ]
   }
 }

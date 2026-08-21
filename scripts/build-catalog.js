@@ -61,6 +61,22 @@ function lerCatalogoLocal() {
  * @returns os dados, `"sem-config"` se o Firebase nem foi configurado ainda,
  *          ou `"indisponivel"` se ele está configurado mas não respondeu.
  */
+/** Lê as fotos do banner. Falhar aqui não derruba o build. */
+async function lerHeroDoFirebase(firebaseConfig, firebaseConfigurado) {
+    if (!firebaseConfigurado()) return [];
+
+    const url = `${firebaseConfig.databaseURL.replace(/\/$/, '')}/config/heroFotos.json`;
+    try {
+        const resposta = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+        if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+        const dados = await resposta.json();
+        return Array.isArray(dados) ? dados.filter((u) => typeof u === 'string' && u.trim()) : [];
+    } catch (erro) {
+        console.warn(`  ! Não foi possível ler o banner (${erro.message}).`);
+        return null;
+    }
+}
+
 async function lerCatalogoDoFirebase(firebaseConfig, firebaseConfigurado) {
     if (!firebaseConfigurado()) return 'sem-config';
 
@@ -154,18 +170,48 @@ function dadosDeReserva(produtos) {
     return `<script type="application/json" id="produtosFallback">${JSON.stringify(enxuto)}</script>`;
 }
 
+/**
+ * Fotos do banner já no HTML: elas ficam acima da dobra, então esperar o
+ * JavaScript buscá-las custaria caro no tempo de carregamento percebido.
+ */
+function heroHtml(fotos, otimizarUrl, escapeHtml) {
+    if (!fotos || fotos.length === 0) {
+        return `<p class="hero__gallery-vazio">
+    <svg class="icon" aria-hidden="true"><use href="#i-image"></use></svg>
+    <span>Fotos do banner em breve</span>
+  </p>`;
+    }
+
+    return fotos
+        .slice(0, 3)
+        .map(
+            (url, i) =>
+                `<img class="hero__phone" src="${escapeHtml(otimizarUrl(url, 600))}" alt="" width="400" height="533" ` +
+                `${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" />`
+        )
+        .join('\n');
+}
+
 /* ---------- Execução ---------- */
 
 async function principal() {
     console.log('Thunder Cell — pré-renderizando o catálogo…');
 
-    const [{ firebaseConfig, firebaseConfigurado }, { listarProdutos }, { catalogoHtml }, { garantiaDoStatus }] =
-        await Promise.all([
-            importarModulo('firebase-config.js'),
-            importarModulo('produtos-utils.js'),
-            importarModulo('produto-card.js'),
-            importarModulo('site-config.js'),
-        ]);
+    const [
+        { firebaseConfig, firebaseConfigurado },
+        { listarProdutos, escapeHtml },
+        { catalogoHtml },
+        { garantiaDoStatus },
+        { otimizarUrl },
+    ] = await Promise.all([
+        importarModulo('firebase-config.js'),
+        importarModulo('produtos-utils.js'),
+        importarModulo('produto-card.js'),
+        importarModulo('site-config.js'),
+        importarModulo('image-config.js'),
+    ]);
+    // `heroHtml` é módulo-nível mas precisa do escape; passa por parâmetro.
+    const montarHero = (fotos) => heroHtml(fotos, otimizarUrl, escapeHtml);
 
     const doFirebase = await lerCatalogoDoFirebase(firebaseConfig, firebaseConfigurado);
 
@@ -209,6 +255,13 @@ async function principal() {
     html = injetar(html, 'PRODUCTS', cards);
     html = injetar(html, 'JSONLD', jsonLdDosProdutos(produtos, garantiaDoStatus));
     html = injetar(html, 'DATA', dadosDeReserva(produtos));
+
+    // `null` = não conseguimos ler o banner; nesse caso o bloco fica como está.
+    const heroFotos = await lerHeroDoFirebase(firebaseConfig, firebaseConfigurado);
+    if (heroFotos !== null) {
+        console.log(`  · ${heroFotos.length} foto(s) no banner inicial`);
+        html = injetar(html, 'HERO', montarHero(heroFotos));
+    }
 
     fs.writeFileSync(INDEX_PATH, html, 'utf8');
     console.log('  ✓ index.html atualizado.');
