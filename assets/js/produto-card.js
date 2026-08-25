@@ -12,7 +12,13 @@
 // site-config.js.
 // ============================================================================
 
-import { siteConfig, linkWhatsapp, mensagemInteresse, garantiaDoStatus } from "./site-config.js";
+import {
+  siteConfig,
+  linkWhatsapp,
+  mensagemInteresse,
+  mensagemAvisoRetorno,
+  garantiaDoStatus,
+} from "./site-config.js";
 import {
   escapeHtml,
   formatarPrecoCurto,
@@ -44,37 +50,69 @@ export function specRowHtml(produto) {
   return `<div class="spec-row">${badges.join("")}</div>`;
 }
 
-export function cardHtml(produto, indice = 0) {
+/**
+ * @param {object} produto
+ * @param {number} indice   posição no grupo (usada no atraso da animação)
+ * @param {object} [opcoes]
+ * @param {boolean} [opcoes.extra]  card além do limite inicial do grupo.
+ *   Extras NÃO recebem a classe `reveal`: eles nascem escondidos por
+ *   `display:none`, e um elemento nesse estado nunca dispara o
+ *   IntersectionObserver — ficariam com opacidade 0 para sempre ao expandir.
+ */
+export function cardHtml(produto, indice = 0, { extra = false } = {}) {
   const selo = seloDoProduto(produto);
   const frente = fotoPrincipal(produto);
   const verso = fotoVerso(produto);
   const titulo = escapeHtml(produto.titulo);
   const parcelamento = produto.parcelamento || siteConfig.parcelamentoPadrao;
-  const wa = linkWhatsapp(mensagemInteresse(produto.titulo));
+  const esgotado = produto.emEstoque === false;
+
+  // Esgotado troca o convite de compra por um pedido de aviso — o link é o
+  // mesmo WhatsApp, só muda a mensagem que já vai escrita.
+  const mensagem = esgotado
+    ? mensagemAvisoRetorno(produto.titulo)
+    : mensagemInteresse(produto.titulo);
+  const wa = linkWhatsapp(mensagem);
+
+  const classesMidia = ["product-card__media", esgotado ? "product-card__media--esgotado" : ""]
+    .filter(Boolean)
+    .join(" ");
+  const faixaEsgotado = esgotado ? `<span class="selo-esgotado">Esgotado</span>` : "";
 
   const midia = frente
-    ? `<div class="product-card__media">
+    ? `<div class="${classesMidia}">
     <img class="product-card__img product-card__img--front" src="${escapeHtml(frente)}" alt="${titulo}" loading="lazy" decoding="async" width="600" height="450" />
     ${verso ? `<img class="product-card__img product-card__img--back" src="${escapeHtml(verso)}" alt="${titulo} — parte de trás" loading="lazy" decoding="async" width="600" height="450" />` : ""}
-    ${seloHtml(selo)}
+    ${seloHtml(selo)}${faixaEsgotado}
   </div>`
-    : `<div class="product-card__media product-card__media--sem-foto">
-    ${icone("image")}<span>Foto em breve</span>${seloHtml(selo)}
+    : `<div class="${classesMidia} product-card__media--sem-foto">
+    ${icone("image")}<span>Foto em breve</span>${seloHtml(selo)}${faixaEsgotado}
   </div>`;
 
-  return `<article class="product-card reveal${produto.destaque ? " product-card--destaque" : ""}" style="--delay: ${Math.min(indice, 8) * 60}ms" data-id="${escapeHtml(produto.id)}">
+  const classes = [
+    "product-card",
+    extra ? "product-card--extra" : "reveal",
+    produto.destaque ? "product-card--destaque" : "",
+    esgotado ? "product-card--esgotado" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return `<article class="${classes}" style="--delay: ${Math.min(indice, 8) * 60}ms" data-id="${escapeHtml(produto.id)}">
   ${midia}
   <div class="product-card__body">
     <h3 class="product-card__name">${escapeHtml(produto.modelo)}${produto.capacidade ? ` <span>${escapeHtml(produto.capacidade)}</span>` : ""}</h3>
     <div>
       <p class="product-card__price">${formatarPrecoCurto(produto.preco)}</p>
-      ${parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}
+      ${esgotado
+        ? `<p class="retorna-breve">${icone("refresh")}Retorna em breve</p>`
+        : parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}
     </div>
     ${specRowHtml(produto)}
     ${produto.descricao ? `<p class="product-card__desc">${escapeHtml(produto.descricao)}</p>` : ""}
     <div class="product-card__actions">
       <button class="btn btn--ghost btn--sm" type="button" data-detalhes="${escapeHtml(produto.id)}">Ver detalhes</button>
-      <a class="btn btn--whatsapp btn--sm" data-wa data-wa-message="${escapeHtml(mensagemInteresse(produto.titulo))}" href="${escapeHtml(wa)}" target="_blank" rel="noopener noreferrer">${icone("whatsapp")}Tenho interesse</a>
+      <a class="btn ${esgotado ? "btn--aviso" : "btn--whatsapp"} btn--sm" data-wa data-wa-message="${escapeHtml(mensagem)}" href="${escapeHtml(wa)}" target="_blank" rel="noopener noreferrer">${icone(esgotado ? "bell" : "whatsapp")}${esgotado ? "Avise-me quando chegar" : "Tenho interesse"}</a>
     </div>
   </div>
 </article>`;
@@ -88,24 +126,50 @@ export function cardHtml(produto, indice = 0) {
 // numa grade só confunde quem está comparando.
 
 // A divisão do catálogo segue o campo `categoria` do produto.
+// `limite` = quantos cards aparecem antes de tocar em "Ver mais". No celular
+// o catálogo inteiro vira uma rolagem longa demais; o resto fica a um toque.
 export const GRUPOS = [
-  { categoria: "novo", titulo: "Aparelhos novos", icone: "star", garantiaDe: "Novo" },
-  { categoria: "usado", titulo: "Aparelhos seminovos", icone: "refresh", garantiaDe: "Seminovo" },
+  { categoria: "novo", titulo: "Aparelhos novos", icone: "star", garantiaDe: "Novo", limite: 3 },
+  { categoria: "usado", titulo: "Aparelhos seminovos", icone: "refresh", garantiaDe: "Seminovo", limite: 2 },
 ];
 
 function grupoHtml(grupo, produtos) {
   const garantia = garantiaDoStatus(grupo.garantiaDe);
   const quantidade = produtos.length === 1 ? "1 aparelho" : `${produtos.length} aparelhos`;
 
-  return `<section class="catalog-group" data-grupo="${grupo.categoria}">
+  const escondidos = Math.max(0, produtos.length - grupo.limite);
+  const rotuloMais =
+    escondidos === 1 ? "Ver mais 1 aparelho" : `Ver mais ${escondidos} aparelhos`;
+
+  // Todos os cards vão para o HTML — inclusive os que começam escondidos.
+  // Esconder no CSS (e não na geração) mantém o catálogo inteiro visível para
+  // o Google e para quem estiver sem JavaScript.
+  const cards = produtos
+    .map((p, i) => cardHtml(p, i, { extra: i >= grupo.limite }))
+    .join("\n");
+
+  const botao = escondidos
+    ? `
+  <div class="grupo-mais">
+    <button class="btn btn--outline grupo-mais__btn" type="button"
+            data-expandir="${grupo.categoria}" aria-expanded="false"
+            aria-controls="grade-${grupo.categoria}"
+            data-label-mais="${escapeHtml(rotuloMais)}" data-label-menos="Ver menos">
+      <span class="grupo-mais__label">${escapeHtml(rotuloMais)}</span>
+      ${icone("chevron")}
+    </button>
+  </div>`
+    : "";
+
+  return `<section class="catalog-group${escondidos ? " is-recolhido" : ""}" data-grupo="${grupo.categoria}">
   <header class="catalog-group__head">
     <h3 class="catalog-group__title">${icone(grupo.icone)}${grupo.titulo}</h3>
     <span class="catalog-group__count">${quantidade}</span>
     <p class="catalog-group__sub">Garantia de <strong>${escapeHtml(garantia.texto)}</strong> ${escapeHtml(garantia.detalhe)}.</p>
   </header>
-  <div class="product-grid">
-${produtos.map((p, i) => cardHtml(p, i)).join("\n")}
-  </div>
+  <div class="product-grid" id="grade-${grupo.categoria}">
+${cards}
+  </div>${botao}
 </section>`;
 }
 

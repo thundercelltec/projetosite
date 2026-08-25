@@ -62,15 +62,14 @@ Cadastrou no painel → aparece no site na hora, sem redeploy.
 `assets/js/firebase-config.js`. Este projeto é exclusivo da Thunder Cell,
 separado do site de leilão (Thunder Diecast).
 
-Falta você fazer **dois passos no Console** (não dá para fazer pelo código):
+Falta um passo no Console (não dá para fazer pelo código):
 
 1. **Criar o login do painel.** Console do Firebase → **Authentication** →
    **Vamos começar** → aba **Sign-in method** → ative **E-mail/senha**.
    Depois, aba **Users** → **Adicionar usuário** com o e-mail e a senha da loja.
    Sem isso, ninguém entra no `/admin`.
-2. **Acrescentar o nó `config` às regras do banco** — veja a seção 4. As regras
-   de `produtos` já estão publicadas; falta só liberar o `config`, que é onde o
-   Banner inicial guarda as fotos do topo do site.
+2. ✅ **Regras do banco** — já publicadas, incluindo o nó `config`. Nada a fazer;
+   o texto está na seção 4 para referência.
 
 > **Por que estas chaves estão no repositório?** Porque o site é estático: a
 > Netlify publica exatamente o que está versionado, e o navegador precisa delas
@@ -129,11 +128,10 @@ recortá-las, reenvie a foto pelo painel.
 
 ## 4. Regras de segurança do banco
 
-> 🟠 **Atualize as regras: falta liberar o nó `config`.** Testei o banco e as
-> regras de produtos já estão publicadas (a raiz responde 401 e `produtos`
-> responde 200 — perfeito). Mas o **Banner inicial** grava em
-> `config/heroFotos`, e hoje esse caminho está bloqueado: salvar o banner falha
-> com "Permission denied" e o site não consegue ler as fotos do topo.
+> ✅ **Já publicadas.** Conferido no banco: a raiz responde 401 (fechada),
+> `produtos` e `config/heroFotos` respondem 200 (leitura pública). Está do
+> jeito certo. O texto abaixo fica de referência, para o caso de precisar
+> republicar.
 
 No Console do Firebase: **Realtime Database** → aba **Regras** → cole isto e
 clique em **Publicar**.
@@ -260,6 +258,37 @@ Todo lugar do site que cita um prazo lê daqui (o HTML usa
 `data-garantia="Novo"` / `data-garantia="Seminovo"`), então mudar a política é
 editar essas duas linhas.
 
+### Paleta de cores
+
+Fica no topo de `assets/css/style.css`, em `:root`. Trocar ali muda o site e o
+painel de uma vez.
+
+| Token | Cor | Onde aparece |
+|---|---|---|
+| `--brand` | `#184878` | Azul da logo: cabeçalho, botões, links, ícones, abas |
+| `--brand-dark` | `#0F3C62` | Hover dos botões azuis |
+| `--ouro` | `#D4AF37` | Dourado cheio: selo DESTAQUE (com texto escuro) |
+| `--ouro-ink` | `#806215` | Dourado como **texto**: preços, selos, badges |
+| `--muted` | `#4A4A4A` | Texto de apoio |
+| `--bg` | `#F0F1F3` | Fundo cinza claro das seções |
+| `--esgotado` | `#B3261E` | Faixa e avisos de produto esgotado |
+| `--sombra-logo` | duas `drop-shadow` | Contorno escuro da logo (ela é prateada e sumia no fundo claro) |
+| `--whatsapp` | `#25D366` | Verde oficial do WhatsApp, preservado |
+
+Três armadilhas que já estão resolvidas — cuidado ao mexer:
+
+- **`--ouro` e `--ouro-ink` não são intercambiáveis.** O dourado vivo tem só
+  2:1 de contraste sobre branco; como texto ele reprova em AA. Por isso preço
+  e selos usam `--ouro-ink` (5,06:1) e o `--ouro` fica só em preenchimento.
+- **Texto branco sobre o verde do WhatsApp reprova** (1,98:1). Os botões usam
+  `--whatsapp-ink` (verde-escuro, 6,31:1) sobre o verde vivo — assim a cor
+  reconhecível é mantida e o texto fica legível.
+- **O azul foi extraído da logo**, não escolhido de olho: `#184878` é um dos
+  tons realmente presentes em `assets/img/logo.png`.
+
+O favicon já é a logo azul, então não precisou mudar. O `theme-color` das
+páginas públicas passou a ser o azul da marca.
+
 ---
 
 ## 7. Rodar localmente
@@ -307,7 +336,17 @@ Endereço: `https://thundercell.netlify.app/admin`
 - **Status** decide em qual seção do site o produto entra: *Novo* vai para
   "Aparelhos novos", *Seminovo* para "Aparelhos seminovos". O selo do card e o
   prazo de garantia mostrado seguem esse campo.
-- **Destaque:** joga o produto para o topo do seu grupo, com selo laranja sólido.
+- **Em estoque:** desligue quando o aparelho acabar. Ele **continua no site**,
+  mas com faixa **ESGOTADO** sobre a foto, aviso "Retorna em breve", opacidade
+  reduzida e o botão trocado por "Avise-me quando chegar" (mesmo WhatsApp, com
+  outra mensagem já escrita). Esgotados também vão para o fim da sua seção.
+  Quando voltar, é só religar — a loja decide a hora.
+- **Destaque:** joga o produto para o topo do seu grupo, com selo dourado sólido.
+- **Quantos aparecem no site:** cada seção mostra os primeiros — **3** em
+  "Aparelhos novos" e **2** em "Aparelhos seminovos" — e o resto fica atrás de
+  um botão "Ver mais". Os limites estão em `GRUPOS`, no
+  `assets/js/produto-card.js`. Nada some: quem tem mais produtos ganha o botão
+  automaticamente, quem tem menos que o limite nem mostra o botão.
 - **Ativo:** desligado, o produto some do site mas continua no painel.
 - Na lista, **Ativo** e **Destaque** também podem ser ligados/desligados com um
   toque, sem abrir o formulário.
@@ -330,6 +369,24 @@ A aba **Banner inicial** controla as três fotos do topo da página inicial.
 
 > Precisa das regras com o nó `config` liberado (seção 4). Sem isso, salvar
 > retorna "Sem permissão para salvar o banner".
+
+### Instagram
+
+A aba **Instagram** controla as fotos da seção "Acompanhe a loja no Instagram"
+(até 8). Funciona igual ao Banner: toque num quadro, envie, reordene, salve.
+Grava em `config/instagram`.
+
+**Por que não é automático?** O Instagram não oferece feed gratuito para site
+estático — a API oficial exige um app e um token do Facebook, que expiram e
+precisam de manutenção. Widgets de terceiros resolveriam, mas colocariam um
+script externo no site (mais lento e fora do seu controle). Escolher as fotos
+aqui leva menos de um minuto, não quebra nunca e você decide o que aparece.
+
+Fluxo sugerido: publique no Instagram, salve a imagem, envie aqui. Ao tocar
+numa foto, o visitante vai para o perfil **@thundercelltec**.
+
+Sem nenhuma foto cadastrada, a grade some e fica só o convite para seguir —
+a seção nunca aparece quebrada.
 
 ---
 
@@ -366,8 +423,12 @@ instabilidade do Firebase nunca coloca no ar aparelhos que já foram vendidos.
 | Salva e aparece "Sem permissão para salvar" | Regras do banco não publicadas (seção 4) |
 | Foto não envia | Upload preset não está como **Unsigned**, ou o cloud name está errado |
 | Produto salvo não aparece no site | O interruptor **Ativo** está desligado |
+| Produto aparece com faixa ESGOTADO | O interruptor **Em estoque** está desligado |
 | Aviso "Recorte de fundo indisponível" | A conta Cloudinary não tem essa transformação liberada (seção 3.1) — a foto é salva sem recorte |
 | "Sem permissão para salvar o banner" | Falta o nó `config` nas regras do banco (seção 4) |
+| Seção do Instagram só mostra o convite | Nenhuma foto cadastrada em **/admin > Instagram** |
+| Produto cadastrado não aparece no catálogo | Pode estar além do limite da seção — toque em **"Ver mais"** |
+| Mapa do rodapé não carrega | Bloqueador de anúncios ou rede sem acesso ao Google; o link "Como chegar" continua funcionando |
 | Topo do site sem as fotos do banner | Nenhuma foto cadastrada em **Banner inicial**, ou o nó `config` não está liberado para leitura |
 | Produto aparece no grupo errado | O campo **Status** (Novo/Seminovo) define em qual seção do catálogo ele entra |
 | Site em branco e erro de CORS no console | Abriu o `index.html` por duplo clique — use um servidor local (seção 7) |

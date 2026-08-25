@@ -75,6 +75,11 @@ export function mensagemInteresse(nomeProduto) {
   return `Olá! Tenho interesse no ${nomeProduto}. Ele ainda está disponível?`;
 }
 
+/** Mensagem de quem quer ser avisado quando um esgotado voltar. */
+export function mensagemAvisoRetorno(nomeProduto) {
+  return `Olá! O ${nomeProduto} está esgotado no site. Podem me avisar quando chegar?`;
+}
+
 /**
  * Garantia que vale para um determinado status ("Novo" | "Seminovo").
  * Qualquer valor inesperado cai no prazo mais curto — errar para menos é o

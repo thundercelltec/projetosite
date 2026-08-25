@@ -41,6 +41,7 @@
     <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></symbol>
     <symbol id="i-banner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M8 5v14M16 5v14"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
 </svg>
 
 <!-- =====================================================================
@@ -112,7 +113,11 @@
                 </button>
                 <button class="ap-nav__item" type="button" data-view="hero">
                     <svg class="icon" aria-hidden="true"><use href="#i-banner"></use></svg>
-                    Banner inicial
+                    Banner<span class="ap-nav__extra"> inicial</span>
+                </button>
+                <button class="ap-nav__item" type="button" data-view="instagram">
+                    <svg class="icon" aria-hidden="true"><use href="#i-instagram"></use></svg>
+                    Instagram
                 </button>
             </nav>
         </div>
@@ -185,9 +190,50 @@
                 <div class="hero__gallery" id="heroPreview"></div>
             </div>
 
-            <div style="display:grid; gap:0.6rem; grid-template-columns:1fr 1.6fr;">
+            <div class="ap-acoes-salvar">
                 <button class="btn btn--ghost" type="button" id="btnHeroDesfazer">Desfazer</button>
                 <button class="btn btn--primary" type="button" id="btnHeroSalvar">Salvar banner</button>
+            </div>
+        </section>
+
+        <!-- ========== VIEW: INSTAGRAM ========== -->
+        <section class="ap-view" id="viewInstagram" hidden>
+            <div class="ap-titulo">
+                <h2>Instagram</h2>
+                <p>
+                    As fotos que aparecem na seção "Acompanhe a loja no Instagram".
+                    Escolha até 8 — normalmente as publicações mais recentes.
+                </p>
+            </div>
+
+            <div class="aviso aviso--info">
+                <svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg>
+                <span>
+                    O Instagram não oferece feed automático gratuito para site estático
+                    (a API oficial exige app e token do Facebook). Por isso as fotos são
+                    escolhidas aqui — leva menos de um minuto e você controla o que aparece.
+                </span>
+            </div>
+
+            <div class="campo" id="campoIg">
+                <div class="ap-hero-grid ap-hero-grid--ig" id="igSlots"></div>
+                <p class="campo__dica">
+                    Baixe a foto da publicação e envie aqui. Ao tocar nelas, o visitante
+                    vai para o perfil <strong>@thundercelltec</strong>.
+                </p>
+                <p class="campo__erro" hidden></p>
+            </div>
+
+            <input type="file" id="inputIg" accept="image/*" hidden />
+
+            <div class="ap-preview">
+                <p class="ap-preview__rotulo">Prévia no site</p>
+                <div class="ig-grid ig-grid--previa" id="igPreview"></div>
+            </div>
+
+            <div class="ap-acoes-salvar">
+                <button class="btn btn--ghost" type="button" id="btnIgDesfazer">Desfazer</button>
+                <button class="btn btn--primary" type="button" id="btnIgSalvar">Salvar fotos</button>
             </div>
         </section>
     </main>
@@ -307,10 +353,21 @@
                 </div>
 
                 <!-- Interruptores -->
+                <label class="switch-row" for="fEmEstoque">
+                    <span class="switch-row__texto">
+                        <span class="switch-row__titulo">Em estoque</span>
+                        <span class="switch-row__dica">Desligado, o card fica marcado como <strong>ESGOTADO</strong> no site — mas continua aparecendo.</span>
+                    </span>
+                    <span class="switch">
+                        <input type="checkbox" id="fEmEstoque" checked />
+                        <span class="switch__trilho"></span>
+                    </span>
+                </label>
+
                 <label class="switch-row" for="fDestaque">
                     <span class="switch-row__texto">
                         <span class="switch-row__titulo">Destaque</span>
-                        <span class="switch-row__dica">Vai para o topo da seção, com selo laranja.</span>
+                        <span class="switch-row__dica">Vai para o topo da seção, com selo dourado.</span>
                     </span>
                     <span class="switch">
                         <input type="checkbox" id="fDestaque" />

@@ -26,24 +26,55 @@
    1. Tokens
    --------------------------------------------------------------- */
 :root {
-    /* Cores */
-    --bg: #FAFAFA;
-    --surface: #FFFFFF;
+    /* ---- Paleta ----------------------------------------------------------
+       Azul da marca: extraído da logo.png. #184878 é um dos tons de fato
+       presentes na arte, não uma aproximação. Ele carrega bem os dois papéis:
+       8,99:1 como texto sobre o fundo claro e 9,39:1 com texto branco em cima.
+
+       Dourado: dois tokens de propósito, porque dourado vivo não passa em
+       contraste como texto. `--ouro` é o tom cheio (preenchimentos, e sobre
+       azul); `--ouro-ink` é o dourado escuro usado sempre que a cor virar
+       TEXTO sobre fundo claro — 5,06:1, aprovado em AA inclusive para
+       texto pequeno. Trocar um pelo outro quebra a legibilidade.
+       -------------------------------------------------------------------- */
+    --bg: #F0F1F3;           /* fundo cinza claro das seções */
+    --surface: #FFFFFF;      /* cards e faixas claras */
     --ink: #1A1A1A;
-    --muted: #6B6B6B;
-    --muted-soft: #9A9A9A;
-    --accent: #E85D2C;
-    --accent-dark: #C94A1E;
-    --accent-tint: #FDF1EB;   /* fundo claro dos selos e ícones */
-    --accent-line: #F3C9B6;   /* bordas suaves em laranja */
-    --border: #ECECEC;
+    --muted: #4A4A4A;        /* texto de apoio — 7,84:1 sobre o fundo */
+    --muted-soft: #6B6B6B;   /* rótulos e dicas — 4,72:1, ainda AA */
+
+    --brand: #184878;        /* azul da logo */
+    --brand-dark: #0F3C62;   /* hover e ênfase */
+    --brand-tint: #E7EEF6;   /* fundo azulado bem claro */
+    --brand-line: #BFD2E5;   /* bordas suaves em azul */
+
+    --ouro: #D4AF37;         /* dourado cheio: fundos sólidos e sobre azul */
+    --ouro-ink: #806215;     /* dourado como TEXTO em fundo claro — 5,06:1 */
+    --ouro-tint: #FBF4DE;    /* fundo dourado bem claro */
+    --ouro-line: #E3CE8C;    /* bordas suaves em dourado */
+
+    --border: #E2E4E8;
+
+    /* Verde do WhatsApp preservado como pedido. Texto branco em cima dele dá
+       só 1,98:1 (reprova); por isso o texto dos botões é verde-escuro, que
+       chega a 6,31:1 e mantém o verde reconhecível. */
     --whatsapp: #25D366;
-    --whatsapp-dark: #128C7E;
+    --whatsapp-dark: #1FC65D;   /* hover */
+    --whatsapp-ink: #0B3B2E;    /* texto e ícone sobre o verde */
+    --esgotado: #B3261E;     /* selo de esgotado — 6,54:1 com texto branco */
 
     /* Formas */
     --radius: 16px;
     --radius-sm: 10px;
     --radius-pill: 999px;
+
+    /* A logo é prateada/branca com detalhes azuis: sobre fundo claro ela
+       praticamente some. Duas sombras resolvem sem parecer efeito pesado —
+       a primeira é um halo colado no contorno (separa a arte do fundo), a
+       segunda dá uma profundidade sutil. Para calibrar, mexa só aqui. */
+    --sombra-logo:
+        drop-shadow(0 0 1px rgba(15, 40, 70, 0.55))
+        drop-shadow(0 1px 3px rgba(15, 40, 70, 0.40));
 
     /* Sombras — suaves por padrão, um pouco mais densas no hover */
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
@@ -115,10 +146,10 @@ h1, h2, h3, h4 {
     letter-spacing: -0.02em;
 }
 
-::selection { background: var(--accent); color: #fff; }
+::selection { background: var(--brand); color: #fff; }
 
 :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--brand);
     outline-offset: 3px;
     border-radius: 4px;
 }
@@ -129,7 +160,7 @@ h1, h2, h3, h4 {
     left: -9999px;
     top: 0;
     z-index: 200;
-    background: var(--accent);
+    background: var(--brand);
     color: #fff;
     padding: 0.7rem 1.1rem;
     border-radius: 0 0 var(--radius-sm) 0;
@@ -170,13 +201,13 @@ h1, h2, h3, h4 {
     pointer-events: none;
     z-index: 0;
 }
-.blob--accent { background: radial-gradient(circle, rgba(232, 93, 44, 0.10), transparent 68%); }
+.blob--brand { background: radial-gradient(circle, rgba(24, 72, 120, 0.10), transparent 68%); }
 .blob--ink    { background: radial-gradient(circle, rgba(26, 26, 26, 0.05), transparent 68%); }
 
 /* Linha pontilhada decorativa */
 .dotted-rule {
     height: 1px;
-    background-image: linear-gradient(to right, var(--accent-line) 40%, transparent 0%);
+    background-image: linear-gradient(to right, var(--brand-line) 40%, transparent 0%);
     background-size: 8px 1px;
     background-repeat: repeat-x;
     border: 0;
@@ -208,32 +239,41 @@ h1, h2, h3, h4 {
 .btn:active { transform: translateY(1px); }
 
 .btn--primary {
-    background: var(--accent);
+    background: var(--brand);
     color: #fff;
-    box-shadow: 0 6px 18px rgba(232, 93, 44, 0.28);
+    box-shadow: 0 6px 18px rgba(24, 72, 120, 0.26);
 }
-.btn--primary:hover { background: var(--accent-dark); box-shadow: 0 10px 24px rgba(232, 93, 44, 0.34); }
+.btn--primary:hover { background: var(--brand-dark); box-shadow: 0 10px 24px rgba(24, 72, 120, 0.32); }
 
 .btn--outline {
-    border: 1.5px solid var(--accent);
-    color: var(--accent);
+    border: 1.5px solid var(--brand);
+    color: var(--brand);
     background: var(--surface);
 }
-.btn--outline:hover { background: var(--accent-tint); }
+.btn--outline:hover { background: var(--brand-tint); }
 
 .btn--ghost {
     border: 1.5px solid var(--border);
     color: var(--ink);
     background: var(--surface);
 }
-.btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn--ghost:hover { border-color: var(--brand); color: var(--brand); }
 
 .btn--whatsapp {
     background: var(--whatsapp);
-    color: #fff;
+    color: var(--whatsapp-ink);
     box-shadow: 0 6px 18px rgba(37, 211, 102, 0.26);
 }
-.btn--whatsapp:hover { background: var(--whatsapp-dark); }
+.btn--whatsapp:hover { background: var(--whatsapp-dark); color: var(--whatsapp-ink); }
+
+/* CTA de produto esgotado: contorno neutro para não competir com o verde do
+   WhatsApp dos produtos que realmente estão à venda. */
+.btn--aviso {
+    border: 1.5px solid var(--esgotado);
+    color: var(--esgotado);
+    background: var(--surface);
+}
+.btn--aviso:hover { background: var(--esgotado); color: #fff; }
 
 .btn--lg { padding: 0.95rem 1.7rem; font-size: 1rem; }
 .btn--sm { padding: 0.6rem 1rem; font-size: 0.86rem; }
@@ -275,6 +315,7 @@ h1, h2, h3, h4 {
     width: 34px;
     height: 41px;
     object-fit: contain;
+    filter: var(--sombra-logo);
 }
 .brand__name {
     font-family: var(--font-title);
@@ -282,7 +323,7 @@ h1, h2, h3, h4 {
     font-size: 1.12rem;
     letter-spacing: -0.03em;
 }
-.brand__name em { font-style: normal; color: var(--accent); }
+.brand__name em { font-style: normal; color: var(--brand); }
 
 .nav { display: none; }
 
@@ -304,7 +345,7 @@ h1, h2, h3, h4 {
     position: absolute;
     left: 0; right: 0; bottom: 0;
     height: 2px;
-    background: var(--accent);
+    background: var(--brand);
     border-radius: 2px;
     transform: scaleX(0);
     transform-origin: left;
@@ -395,9 +436,9 @@ h1, h2, h3, h4 {
     gap: 0.5rem;
     padding: 0.4rem 0.9rem;
     border-radius: var(--radius-pill);
-    background: var(--accent-tint);
-    border: 1px solid var(--accent-line);
-    color: var(--accent-dark);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-line);
+    color: var(--brand-dark);
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 0.06em;
@@ -410,7 +451,7 @@ h1, h2, h3, h4 {
     font-size: clamp(2.1rem, 7vw, 3.5rem);
     margin-bottom: 1rem;
 }
-.hero__title span { color: var(--accent); }
+.hero__title span { color: var(--brand); }
 
 .hero__copy {
     color: var(--muted);
@@ -440,7 +481,7 @@ h1, h2, h3, h4 {
     font-family: var(--font-title);
     font-weight: 700;
     font-size: clamp(1.2rem, 4vw, 1.6rem);
-    color: var(--accent);
+    color: var(--ouro-ink);
     line-height: 1.1;
 }
 .hero__proof-label {
@@ -470,7 +511,7 @@ h1, h2, h3, h4 {
     position: absolute;
     inset: auto 0 4%;
     height: 70%;
-    background: radial-gradient(ellipse at center, rgba(232, 93, 44, 0.12), transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(24, 72, 120, 0.12), transparent 70%);
     border-radius: 50%;
     z-index: 0;
 }
@@ -497,14 +538,14 @@ h1, h2, h3, h4 {
     gap: 0.5rem;
     min-height: 160px;
     padding: 1.5rem 1rem;
-    border: 1px dashed var(--accent-line);
+    border: 1px dashed var(--brand-line);
     border-radius: var(--radius);
     background: var(--surface);
     color: var(--muted-soft);
     font-size: 0.85rem;
     text-align: center;
 }
-.hero__gallery-vazio .icon { width: 30px; height: 30px; color: var(--accent-line); }
+.hero__gallery-vazio .icon { width: 30px; height: 30px; color: var(--brand-line); }
 
 @media (min-width: 900px) {
     .hero__inner {
@@ -532,7 +573,7 @@ h1, h2, h3, h4 {
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--brand);
     display: block;
     margin-bottom: 0.6rem;
 }
@@ -556,12 +597,12 @@ h1, h2, h3, h4 {
     content: '';
     flex: 1;
     height: 1px;
-    background-image: linear-gradient(to right, var(--accent-line) 45%, transparent 0%);
+    background-image: linear-gradient(to right, var(--brand-line) 45%, transparent 0%);
     background-size: 7px 1px;
 }
 .rule-diamond span {
     width: 8px; height: 8px;
-    background: var(--accent);
+    background: var(--brand);
     rotate: 45deg;
     flex: none;
     border-radius: 1px;
@@ -604,7 +645,7 @@ h1, h2, h3, h4 {
     top: 50%;
     translate: 0 -50%;
     width: 18px; height: 18px;
-    color: var(--accent);
+    color: var(--brand);
     pointer-events: none;
 }
 
@@ -622,7 +663,7 @@ h1, h2, h3, h4 {
 .input:focus,
 .select:focus {
     outline: none;
-    border-color: var(--accent);
+    border-color: var(--brand);
     background: var(--surface);
 }
 .input::placeholder { color: var(--muted-soft); }
@@ -630,7 +671,7 @@ h1, h2, h3, h4 {
 .select {
     appearance: none;
     /* Seta em SVG inline (evita depender de uma fonte de ícones) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23E85D2C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23184878' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.85rem center;
     padding-right: 2.4rem;
@@ -656,7 +697,7 @@ h1, h2, h3, h4 {
     gap: 0.4rem;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--brand);
 }
 .btn-clear .icon { width: 15px; height: 15px; }
 .btn-clear:hover { text-decoration: underline; }
@@ -710,9 +751,9 @@ h1, h2, h3, h4 {
 .tab .icon { width: 15px; height: 15px; }
 .tab:hover { color: var(--ink); }
 .tab.is-active {
-    background: var(--accent);
+    background: var(--brand);
     color: #fff;
-    box-shadow: 0 4px 12px rgba(232, 93, 44, 0.3);
+    box-shadow: 0 4px 12px rgba(24, 72, 120, 0.28);
 }
 
 .catalog-group + .catalog-group { margin-top: clamp(2rem, 5vw, 3rem); }
@@ -736,7 +777,7 @@ h1, h2, h3, h4 {
 }
 .catalog-group__title .icon {
     width: 20px; height: 20px;
-    color: var(--accent);
+    color: var(--brand);
     flex: none;
 }
 .catalog-group__count {
@@ -744,9 +785,9 @@ h1, h2, h3, h4 {
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--accent-dark);
-    background: var(--accent-tint);
-    border: 1px solid var(--accent-line);
+    color: var(--ouro-ink);
+    background: var(--ouro-tint);
+    border: 1px solid var(--ouro-line);
     border-radius: var(--radius-pill);
     padding: 0.2rem 0.6rem;
 }
@@ -756,6 +797,40 @@ h1, h2, h3, h4 {
     color: var(--muted);
 }
 .catalog-group__sub strong { color: var(--ink); font-weight: 600; }
+
+/* ---- Ver mais / Ver menos ---------------------------------------------
+   Sem JavaScript o botão não faria nada, então ele só existe quando a
+   classe `js` está no <html> — e aí todos os cards ficam visíveis, que é o
+   comportamento certo tanto para o visitante quanto para o Google. */
+.grupo-mais { display: none; }
+.js .grupo-mais {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.3rem;
+}
+
+.js .catalog-group.is-recolhido .product-card--extra { display: none; }
+
+.grupo-mais__btn { gap: 0.5rem; }
+.grupo-mais__btn .icon {
+    width: 17px; height: 17px;
+    transition: transform 0.28s var(--ease);
+}
+.grupo-mais__btn[aria-expanded="true"] .icon { transform: rotate(180deg); }
+
+/* Entrada dos cards extras. `backwards` mantém o estado inicial durante o
+   atraso, senão eles piscam no lugar antes de começar a animar. */
+.js .catalog-group.is-expandindo .product-card--extra {
+    animation: card-entra 0.42s var(--ease) backwards;
+    animation-delay: var(--delay, 0ms);
+}
+@keyframes card-entra {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .js .catalog-group.is-expandindo .product-card--extra { animation: none; }
+}
 
 /* ---------------------------------------------------------------
    9. Cards de produto
@@ -777,6 +852,8 @@ h1, h2, h3, h4 {
 
 .product-card {
     position: relative;
+    /* Ponto de referência das container queries das ações do card. */
+    container: card / inline-size;
     display: flex;
     flex-direction: column;
     background: var(--surface);
@@ -784,21 +861,21 @@ h1, h2, h3, h4 {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     overflow: hidden;
-    /* Espaço para a barra vertical laranja da lateral esquerda */
+    /* Espaço para a barra vertical azul da lateral esquerda */
     padding-left: 5px;
     transition: transform 0.26s var(--ease), box-shadow 0.26s var(--ease);
 }
 
-/* Barra vertical laranja — a assinatura visual do card */
+/* Barra vertical azul — a assinatura visual do card */
 .product-card::before {
     content: '';
     position: absolute;
     left: 0; top: 0; bottom: 0;
     width: 5px;
-    background: var(--accent);
+    background: var(--brand);
 }
 .product-card--destaque::before {
-    background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+    background: linear-gradient(180deg, var(--brand), var(--brand-dark));
     width: 6px;
 }
 
@@ -840,7 +917,7 @@ h1, h2, h3, h4 {
     font-size: 0.85rem;
     gap: 0.5rem;
 }
-.product-card__media--sem-foto .icon { width: 34px; height: 34px; color: var(--accent-line); }
+.product-card__media--sem-foto .icon { width: 34px; height: 34px; color: var(--brand-line); }
 
 /* Selo em pílula com estrela.
    O selo fica por cima da foto do produto, que pode ser clara ou escura — por
@@ -862,45 +939,91 @@ h1, h2, h3, h4 {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     background: var(--surface);
-    border: 1.5px solid var(--accent);
-    color: var(--accent-dark);
+    border: 1.5px solid var(--ouro-ink);
+    color: var(--ouro-ink);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 .pill .icon { width: 13px; height: 13px; stroke-width: 2.4; }
 
-/* Destaque: laranja sólido, texto branco e estrela preenchida.
-   O anel branco (primeira sombra) garante leitura mesmo sobre foto laranja. */
+/* Destaque: dourado sólido com texto quase preto (8,28:1) — mais legível que
+   texto branco sobre dourado, que reprovaria. O anel branco separa o selo de
+   qualquer foto atrás dele. */
 .pill--destaque {
-    background: var(--accent);
+    background: var(--ouro);
     border-color: #fff;
-    color: #fff;
+    color: #1A1A1A;
     box-shadow:
-        0 0 0 1.5px var(--accent),
+        0 0 0 1.5px var(--ouro),
         0 3px 12px rgba(0, 0, 0, 0.28);
 }
 .pill--destaque .icon {
-    fill: #fff;
-    stroke: #fff;
+    fill: #1A1A1A;
+    stroke: #1A1A1A;
 }
 
-/* Novo: preenchimento levemente tingido, para diferenciar do seminovo */
-.pill--novo { background: var(--accent-tint); }
+/* Novo: preenchimento levemente dourado, para diferenciar do seminovo */
+.pill--novo { background: var(--ouro-tint); }
 
-/* Marca d'água "indisponível" */
-.product-card--esgotado .product-card__media::after {
-    content: 'Sem estoque';
+/* ---- Produto esgotado -------------------------------------------------
+   O card continua no catálogo (a loja decide quando reativar), só fica
+   visivelmente marcado: opacidade reduzida, faixa sobre a foto e CTA
+   trocado por "Avise-me quando chegar". */
+.product-card--esgotado {
+    opacity: 0.7;
+    --reveal-opacidade: 0.7;
+}
+@media (hover: hover) {
+    /* Sem o "levanta no hover": o card não é uma oferta ativa. */
+    .product-card--esgotado:hover { transform: none; box-shadow: var(--shadow); }
+    .product-card--esgotado:hover .product-card__img--back { opacity: 0; }
+    .product-card--esgotado:hover .product-card__img--front { opacity: 1; }
+}
+
+/* Véu sobre a foto, para o selo ter contraste em qualquer imagem */
+.product-card__media--esgotado::after {
+    content: '';
     position: absolute;
     inset: 0;
-    display: grid;
-    place-items: center;
-    background: rgba(255, 255, 255, 0.72);
-    font-family: var(--font-title);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    color: var(--muted);
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.55);
+    pointer-events: none;
 }
+
+/* Faixa central "ESGOTADO" */
+.selo-esgotado {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    translate: 0 -50%;
+    padding: 0.45rem 0.5rem;
+    background: var(--esgotado);
+    color: #fff;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+}
+
+/* "Avise-me quando chegar" é bem mais longo que "Tenho interesse" e não cabe
+   em meia largura de card. No esgotado as ações viram uma coluna só. */
+.product-card--esgotado .product-card__actions { grid-template-columns: 1fr; }
+
+/* Aviso de retorno, logo abaixo do preço */
+.retorna-breve {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--esgotado);
+}
+.retorna-breve .icon { width: 14px; height: 14px; flex: none; }
 
 .product-card__body {
     display: flex;
@@ -920,7 +1043,7 @@ h1, h2, h3, h4 {
     font-family: var(--font-title);
     font-size: clamp(1.5rem, 4.5vw, 1.75rem);
     font-weight: 700;
-    color: var(--accent);
+    color: var(--ouro-ink);
     line-height: 1.1;
     letter-spacing: -0.03em;
 }
@@ -950,7 +1073,7 @@ h1, h2, h3, h4 {
     color: var(--muted);
     white-space: nowrap;
 }
-.spec .icon { width: 14px; height: 14px; color: var(--accent); flex: none; }
+.spec .icon { width: 14px; height: 14px; color: var(--ouro-ink); flex: none; }
 .spec strong { color: var(--ink); font-weight: 600; }
 
 .product-card__desc {
@@ -963,15 +1086,23 @@ h1, h2, h3, h4 {
     overflow: hidden;
 }
 
+/* Os dois botões só ficam lado a lado quando o CARD é largo o bastante — e
+   isso não depende da largura da tela: numa grade de 3 colunas o card é
+   estreito mesmo num monitor grande. Container query mede o card, que é a
+   pergunta certa; com media query "Tenho interesse" vazava para fora. */
 .product-card__actions {
     display: grid;
     gap: 0.5rem;
     margin-top: auto;
     padding-top: 0.4rem;
 }
-@media (min-width: 380px) {
+/* 340px: "Ver detalhes" (111px) + "Tenho interesse" (156px) + gap + o padding
+   do card dão 317px no limite; 340 deixa folga para fonte maior ou tradução. */
+@container card (min-width: 340px) {
     .product-card__actions { grid-template-columns: 1fr 1fr; }
 }
+/* Navegador sem suporte a container query fica na coluna única: mais alto,
+   porém sempre legível. */
 
 /* Aviso quando a busca não encontra nada */
 .empty-state {
@@ -979,11 +1110,11 @@ h1, h2, h3, h4 {
     text-align: center;
     padding: 3rem 1.5rem;
     background: var(--surface);
-    border: 1px dashed var(--accent-line);
+    border: 1px dashed var(--brand-line);
     border-radius: var(--radius);
     color: var(--muted);
 }
-.empty-state .icon { width: 40px; height: 40px; color: var(--accent-line); margin: 0 auto 0.9rem; }
+.empty-state .icon { width: 40px; height: 40px; color: var(--brand-line); margin: 0 auto 0.9rem; }
 .empty-state h3 { font-size: 1.1rem; color: var(--ink); margin-bottom: 0.4rem; }
 
 /* ---------------------------------------------------------------
@@ -1003,7 +1134,7 @@ h1, h2, h3, h4 {
     position: absolute;
     left: 0; top: 0; bottom: 0;
     width: 5px;
-    background: var(--accent-line);
+    background: var(--brand-line);
 }
 .skeleton-card__media { aspect-ratio: 4 / 3; }
 .skeleton-card__body { padding: 1.1rem 1.15rem 1.35rem; display: grid; gap: 0.6rem; }
@@ -1032,9 +1163,9 @@ h1, h2, h3, h4 {
     margin-bottom: 1.2rem;
     padding: 0.85rem 1rem;
     border-radius: var(--radius-sm);
-    background: var(--accent-tint);
-    border: 1px solid var(--accent-line);
-    color: var(--accent-dark);
+    background: var(--brand-tint);
+    border: 1px solid var(--brand-line);
+    color: var(--brand-dark);
     font-size: 0.86rem;
 }
 .catalog-notice.is-visible { display: flex; }
@@ -1088,7 +1219,7 @@ h1, h2, h3, h4 {
     box-shadow: var(--shadow);
     color: var(--ink);
 }
-.modal__close:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.modal__close:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
 .modal__close .icon { width: 18px; height: 18px; }
 
 .modal__gallery {
@@ -1115,7 +1246,7 @@ h1, h2, h3, h4 {
     font-family: var(--font-title);
     font-weight: 700;
     font-size: clamp(1.7rem, 5vw, 2.1rem);
-    color: var(--accent);
+    color: var(--ouro-ink);
     letter-spacing: -0.03em;
 }
 .modal__desc { color: var(--muted); font-size: 0.95rem; }
@@ -1154,20 +1285,20 @@ h1, h2, h3, h4 {
     .info-card:hover {
         transform: translateY(-4px);
         box-shadow: var(--shadow-md);
-        border-color: var(--accent-line);
+        border-color: var(--brand-line);
     }
 }
 
-/* Ícone circular contornado em laranja */
+/* Ícone circular contornado em azul */
 .icon-circle {
     width: 56px; height: 56px;
     margin: 0 auto 0.95rem;
     display: grid;
     place-items: center;
     border-radius: 50%;
-    border: 1.5px solid var(--accent);
-    background: var(--accent-tint);
-    color: var(--accent);
+    border: 1.5px solid var(--brand);
+    background: var(--brand-tint);
+    color: var(--brand);
 }
 .icon-circle .icon { width: 24px; height: 24px; }
 
@@ -1205,11 +1336,11 @@ h1, h2, h3, h4 {
     text-transform: uppercase;
     color: var(--muted);
 }
-.prazo-list__tag--novo { color: var(--accent-dark); }
+.prazo-list__tag--novo { color: var(--brand-dark); }
 .prazo-list strong {
     font-family: var(--font-title);
     font-size: 0.95rem;
-    color: var(--accent);
+    color: var(--ouro-ink);
     white-space: nowrap;
 }
 
@@ -1228,20 +1359,20 @@ h1, h2, h3, h4 {
     gap: 0.65rem;
     margin-bottom: 0.9rem;
 }
-.about__brandline img { width: 30px; height: 36px; object-fit: contain; }
+.about__brandline img { width: 30px; height: 36px; object-fit: contain; filter: var(--sombra-logo); }
 .about__brandline span {
     font-family: var(--font-title);
     font-weight: 600;
     font-size: 0.8rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--brand);
 }
 .about__brandline hr {
     flex: 1;
     height: 1px;
     border: 0;
-    background-image: linear-gradient(to right, var(--accent-line) 45%, transparent 0%);
+    background-image: linear-gradient(to right, var(--brand-line) 45%, transparent 0%);
     background-size: 7px 1px;
 }
 
@@ -1314,12 +1445,12 @@ h1, h2, h3, h4 {
     .service-card:hover {
         transform: translateY(-4px);
         box-shadow: var(--shadow-md);
-        border-color: var(--accent);
+        border-color: var(--brand);
     }
 }
 .service-card--cta {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--brand);
+    border-color: var(--brand);
     color: #fff;
 }
 .service-card--cta .icon-circle {
@@ -1362,11 +1493,261 @@ h1, h2, h3, h4 {
     font-size: 0.9rem;
     color: var(--muted);
 }
-.check-list .icon { width: 18px; height: 18px; color: var(--accent); flex: none; margin-top: 2px; }
+.check-list .icon { width: 18px; height: 18px; color: var(--brand); flex: none; margin-top: 2px; }
 .check-list strong { color: var(--ink); font-weight: 600; }
 
 .panel .btn { margin-top: auto; }
 .panel__note { font-size: 0.76rem; color: var(--muted-soft); margin-top: 0.7rem; text-align: center; }
+
+/* ---------------------------------------------------------------
+   14b. Troca / entrada de aparelho usado
+   --------------------------------------------------------------- */
+/* Faixa azul cheia: é a única seção escura da página, então funciona como
+   respiro no ritmo e destaca a oferta sem precisar de mais nada. */
+.troca {
+    background: var(--brand);
+    color: #fff;
+    overflow: hidden;
+}
+.troca__blob {
+    width: 460px; height: 460px;
+    top: -220px; right: -160px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.22), transparent 68%);
+}
+
+.troca__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 2.2rem;
+    align-items: center;
+}
+@media (min-width: 900px) {
+    .troca__inner { grid-template-columns: 1.05fr 0.95fr; gap: 3rem; }
+}
+
+.troca__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.38rem 0.9rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+.troca__eyebrow .icon { width: 15px; height: 15px; }
+
+.troca__titulo {
+    font-size: clamp(1.7rem, 5.5vw, 2.6rem);
+    margin-bottom: 0.9rem;
+}
+/* Dourado sobre o azul: 4,46:1 — e o título é texto grande, então sobra. */
+.troca__titulo span { color: var(--ouro); }
+
+.troca__copy {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: clamp(0.96rem, 2.2vw, 1.05rem);
+    max-width: 46ch;
+    margin-bottom: 1.7rem;
+}
+
+/* Botão claro sobre o azul: máximo contraste sem competir com o WhatsApp */
+.btn--troca {
+    background: #fff;
+    color: var(--brand-dark);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+.btn--troca:hover { background: var(--ouro); color: #1A1A1A; }
+
+.troca__passos { display: grid; gap: 0.7rem; }
+.troca__passos li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.troca__num {
+    flex: none;
+    width: 30px; height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--ouro);
+    color: #1A1A1A;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: 0.88rem;
+}
+.troca__passos h3 { font-size: 0.96rem; margin-bottom: 0.15rem; }
+.troca__passos p { font-size: 0.85rem; color: rgba(255, 255, 255, 0.82); line-height: 1.45; }
+
+/* ---------------------------------------------------------------
+   14c. Instagram
+   --------------------------------------------------------------- */
+/* Colunas explícitas em vez de auto-fill: com 4 fotos o auto-fill abria 8
+   trilhas e deixava metade da linha vazia. Assim 4 ou 8 fotos preenchem
+   sempre — 4 viram uma linha, 8 viram duas. */
+.ig-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+    margin-bottom: 1.4rem;
+    position: relative;
+    z-index: 1;
+}
+@media (min-width: 560px) { .ig-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .ig-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.ig-grid[hidden] { display: none; }
+
+.ig-foto {
+    position: relative;
+    display: block;
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+.ig-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s var(--ease);
+}
+/* Sobreposição só no hover: o ícone confirma que aquilo leva ao Instagram */
+.ig-foto::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 72, 120, 0.55);
+    opacity: 0;
+    transition: opacity 0.25s var(--ease);
+}
+.ig-foto .icon {
+    position: absolute;
+    top: 50%; left: 50%;
+    translate: -50% -50%;
+    z-index: 2;
+    width: 26px; height: 26px;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.25s var(--ease);
+}
+@media (hover: hover) {
+    .ig-foto:hover img { transform: scale(1.06); }
+    .ig-foto:hover::after,
+    .ig-foto:hover .icon { opacity: 1; }
+}
+
+.ig-convite {
+    display: grid;
+    gap: 0.9rem;
+    justify-items: center;
+    text-align: center;
+    padding: 1.6rem 1.25rem;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    position: relative;
+    z-index: 1;
+}
+.ig-convite__icone {
+    width: 52px; height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1.5px solid var(--brand);
+    background: var(--brand-tint);
+    color: var(--brand);
+}
+.ig-convite__icone .icon { width: 24px; height: 24px; }
+.ig-convite h3 { font-size: 1.1rem; margin-bottom: 0.2rem; }
+.ig-convite p { font-size: 0.9rem; color: var(--muted); }
+
+@media (min-width: 700px) {
+    .ig-convite {
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        justify-items: start;
+        text-align: left;
+        gap: 1.1rem;
+        padding: 1.3rem 1.5rem;
+    }
+}
+
+/* ---------------------------------------------------------------
+   14d. Perguntas frequentes
+   --------------------------------------------------------------- */
+.faq {
+    display: grid;
+    gap: 0.6rem;
+    max-width: 48rem;
+    margin-inline: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.faq__item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.faq__item[open] {
+    border-color: var(--brand-line);
+    box-shadow: var(--shadow);
+    background: var(--surface);
+}
+
+.faq__item summary {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    /* 48px de alvo de toque, confortável no celular */
+    min-height: 48px;
+    padding: 0.9rem 1.1rem;
+    cursor: pointer;
+    font-family: var(--font-title);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    list-style: none;
+    color: var(--ink);
+}
+/* Remove o triângulo padrão do <details> nos dois motores */
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::marker { content: ''; }
+.faq__item summary:hover { color: var(--brand); }
+
+.faq__seta {
+    flex: none;
+    margin-left: auto;
+    width: 18px; height: 18px;
+    color: var(--brand);
+    transition: transform 0.24s var(--ease);
+}
+.faq__item[open] .faq__seta { transform: rotate(180deg); }
+
+.faq__resposta {
+    padding: 0 1.1rem 1.1rem;
+    display: grid;
+    gap: 0.7rem;
+}
+.faq__resposta p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; }
+.faq__resposta strong { color: var(--ink); }
+.faq__resposta a { color: var(--brand); font-weight: 600; }
+.faq__resposta a:hover { text-decoration: underline; }
 
 /* ---------------------------------------------------------------
    15. Rodapé
@@ -1390,14 +1771,14 @@ h1, h2, h3, h4 {
     font-size: 0.8rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--brand);
     margin-bottom: 1rem;
 }
 .footer__tagline { color: var(--muted); font-size: 0.9rem; margin: 0.9rem 0 1.2rem; max-width: 34ch; }
 
 .footer__links { display: grid; gap: 0.55rem; }
 .footer__links a { color: var(--muted); font-size: 0.9rem; transition: color 0.16s var(--ease); }
-.footer__links a:hover { color: var(--accent); }
+.footer__links a:hover { color: var(--brand); }
 
 .footer__line {
     display: flex;
@@ -1407,9 +1788,9 @@ h1, h2, h3, h4 {
     color: var(--muted);
     margin-bottom: 0.7rem;
 }
-.footer__line .icon { width: 17px; height: 17px; color: var(--accent); flex: none; margin-top: 2px; }
+.footer__line .icon { width: 17px; height: 17px; color: var(--brand); flex: none; margin-top: 2px; }
 .footer__line strong { color: var(--ink); font-weight: 600; }
-.footer__line a:hover { color: var(--accent); }
+.footer__line a:hover { color: var(--brand); }
 
 .footer__map {
     display: inline-flex;
@@ -1417,7 +1798,7 @@ h1, h2, h3, h4 {
     gap: 0.4rem;
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--brand);
     margin: -0.3rem 0 1rem 1.6rem;
 }
 .footer__map:hover { text-decoration: underline; }
@@ -1429,17 +1810,82 @@ h1, h2, h3, h4 {
     display: grid;
     place-items: center;
     border-radius: 50%;
-    border: 1.5px solid var(--accent-line);
-    color: var(--accent);
+    border: 1.5px solid var(--brand-line);
+    color: var(--brand);
     transition: all 0.2s var(--ease);
 }
 .social a .icon { width: 20px; height: 20px; }
 .social a:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-tint);
+    border-color: var(--brand);
+    color: var(--brand);
+    background: var(--brand-tint);
     transform: translateY(-2px);
 }
+
+.footer__dica {
+    font-size: 0.8rem;
+    color: var(--muted-soft);
+    margin-top: 0.4rem;
+}
+
+/* ---- Mapas das unidades ---------------------------------------------- */
+.mapas { padding-bottom: 2.2rem; }
+
+.mapas__titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 1rem;
+}
+.mapas__titulo .icon { width: 17px; height: 17px; flex: none; }
+
+.mapas__grid { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .mapas__grid { grid-template-columns: 1fr 1fr; } }
+
+.mapa {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.mapa iframe {
+    display: block;
+    width: 100%;
+    height: 220px;
+    border: 0;
+    /* O mapa do Google é colorido e "quente"; um leve dessaturar aproxima o
+       bloco da paleta do site sem apagar as ruas. */
+    filter: saturate(0.85);
+}
+@media (min-width: 760px) { .mapa iframe { height: 240px; } }
+
+.mapa figcaption {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.9rem 1rem 1rem;
+    border-top: 1px solid var(--border);
+}
+.mapa figcaption strong {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+}
+.mapa figcaption span { font-size: 0.85rem; color: var(--muted); }
+.mapa figcaption a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand);
+}
+.mapa figcaption a:hover { text-decoration: underline; }
+.mapa figcaption a .icon { width: 15px; height: 15px; }
 
 .footer__bottom {
     border-top: 1px solid var(--border);
@@ -1451,7 +1897,7 @@ h1, h2, h3, h4 {
     text-align: center;
 }
 .footer__bottom a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
-.footer__bottom a:hover { color: var(--accent); }
+.footer__bottom a:hover { color: var(--brand); }
 
 /* Espaço extra no mobile para o botão flutuante não cobrir o rodapé */
 @media (max-width: 700px) { .footer__bottom { padding-bottom: 5.5rem; } }
@@ -1469,7 +1915,9 @@ h1, h2, h3, h4 {
     place-items: center;
     border-radius: 50%;
     background: var(--whatsapp);
-    color: #fff;
+    /* Glifo escuro em vez de branco: sobre o verde vivo, branco dá 1,98:1 e
+       reprova o mínimo de 3:1 exigido para ícone que carrega significado. */
+    color: var(--whatsapp-ink);
     box-shadow: 0 10px 26px rgba(37, 211, 102, 0.42);
     transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease);
 }
@@ -1507,8 +1955,11 @@ h1, h2, h3, h4 {
     transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
     transition-delay: var(--delay, 0ms);
 }
+/* O alvo é uma variável para o elemento poder pedir outra opacidade final:
+   o card esgotado fica em 0.7, e antes essa regra (mais específica) vencia e
+   devolvia tudo para 1. */
 .js .reveal.is-visible {
-    opacity: 1;
+    opacity: var(--reveal-opacidade, 1);
     transform: none;
 }
 
@@ -1520,7 +1971,7 @@ h1, h2, h3, h4 {
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
     }
-    .js .reveal { opacity: 1; transform: none; }
+    .js .reveal { opacity: var(--reveal-opacidade, 1); transform: none; }
 }
 
 /* ---------------------------------------------------------------
@@ -1534,7 +1985,7 @@ h1, h2, h3, h4 {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    color: var(--accent);
+    color: var(--brand);
     font-weight: 600;
     font-size: 0.9rem;
     margin-bottom: 1.8rem;
@@ -1552,13 +2003,13 @@ h1, h2, h3, h4 {
     font-size: 1.15rem;
     margin: 2.2rem 0 0.8rem;
 }
-.policy h2 .icon { width: 20px; height: 20px; color: var(--accent); flex: none; }
+.policy h2 .icon { width: 20px; height: 20px; color: var(--brand); flex: none; }
 
 .policy p, .policy li { color: var(--muted); font-size: 0.95rem; }
 .policy ul { display: grid; gap: 0.5rem; margin-top: 0.6rem; padding-left: 1.3rem; list-style: disc; }
-.policy li::marker { color: var(--accent); }
+.policy li::marker { color: var(--brand); }
 .policy strong { color: var(--ink); }
-.policy a { color: var(--accent); font-weight: 600; }
+.policy a { color: var(--brand); font-weight: 600; }
 .policy a:hover { text-decoration: underline; }
 
 /* Resumo dos dois prazos, logo no começo da política */
@@ -1572,7 +2023,7 @@ h1, h2, h3, h4 {
 .policy__resumo > div {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
+    border-left: 4px solid var(--brand);
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow);
     padding: 1rem 1.1rem;
@@ -1589,7 +2040,7 @@ h1, h2, h3, h4 {
 .policy__resumo strong {
     font-family: var(--font-title);
     font-size: 1.55rem;
-    color: var(--accent);
+    color: var(--brand);
     line-height: 1.1;
 }
 .policy__resumo-nota { font-size: 0.85rem; color: var(--muted); margin-left: 0.35rem; }
@@ -1600,7 +2051,7 @@ h1, h2, h3, h4 {
     border-radius: var(--radius);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
+    border-left: 4px solid var(--brand);
     box-shadow: var(--shadow);
     font-size: 0.88rem;
 }

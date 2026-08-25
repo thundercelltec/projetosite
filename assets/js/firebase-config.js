@@ -35,6 +35,8 @@ export const DB_PATHS = {
   produtos: "produtos",
   // Fotos do banner da página inicial (array de URLs do Cloudinary).
   heroFotos: "config/heroFotos",
+  // Fotos da seção "Acompanhe no Instagram" (mesma ideia, outra lista).
+  instagram: "config/instagram",
 };
 
 /**

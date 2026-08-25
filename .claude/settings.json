@@ -25,7 +25,13 @@
       "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/.json\")",
       "Bash(curl -s -o /dev/null -w \"  HTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/.json\")",
       "Bash(curl -s -o /dev/null -w \"  HTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/produtos.json\")",
-      "Bash(curl -s -w \"\\\\n  HTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/config/heroFotos.json\")"
+      "Bash(curl -s -w \"\\\\n  HTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/config/heroFotos.json\")",
+      "Bash(awk -F: '{print $1}')",
+      "Bash(python -)",
+      "Bash(curl -s -o /dev/null -w \"  HTTP %{http_code}\\\\n\" \"https://thundercell-49af1-default-rtdb.firebaseio.com/config/heroFotos.json\")",
+      "Bash(curl -s \"https://thundercell-49af1-default-rtdb.firebaseio.com/produtos.json\")",
+      "Bash(grep -n \"Banner inicial — as 3 fotos\\\\|^const MAX_HERO\\\\|btnHeroSalvar\\\\\"\\).addEventListener\\\\|^// ---------------------------------------------------------------------------$\" assets/js/admin.js)",
+      "Bash(node -)"
     ]
   }
 }

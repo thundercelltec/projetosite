@@ -223,24 +223,29 @@ function iniciarPainel() {
     }
   );
 
-  // Fotos do banner inicial
-  onValue(
-    ref(db, DB_PATHS.heroFotos),
-    (snap) => {
-      const salvas = snap.val();
-      heroSalvo = Array.isArray(salvas)
-        ? salvas.filter((u) => typeof u === "string" && u.trim() !== "")
-        : [];
-      // Só sobrescreve a tela se ninguém estiver mexendo — senão uma
-      // atualização vinda do banco apagaria a edição em andamento.
-      if (!heroMudou()) heroFotos = [...heroSalvo];
-      renderizarHero();
-    },
-    (erro) => {
-      console.error("Erro ao ler o banner:", erro);
-      renderizarHero();
-    }
-  );
+  // Galerias de configuração. `definirSalvo` não pisa numa edição em
+  // andamento — só sincroniza quando a tela está igual ao que está salvo.
+  [
+    [DB_PATHS.heroFotos, galeriaHero, "banner"],
+    [DB_PATHS.instagram, galeriaInstagram, "Instagram"],
+  ]
+    // Um caminho ausente no firebase-config.js viraria `ref(db, undefined)` e
+    // derrubaria a escuta inteira. Melhor pular a galeria e seguir.
+    .filter(([caminho, , nome]) => {
+      if (caminho) return true;
+      console.warn(`Caminho do ${nome} não definido em DB_PATHS — galeria desativada.`);
+      return false;
+    })
+    .forEach(([caminho, galeria, nome]) => {
+    onValue(
+      ref(db, caminho),
+      (snap) => galeria.definirSalvo(snap.val()),
+      (erro) => {
+        console.error(`Erro ao ler o ${nome}:`, erro);
+        galeria.renderizar();
+      }
+    );
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -286,7 +291,13 @@ function itemHtml(p) {
     ? `<img class="ap-item__foto" src="${escapeHtml(miniaturaUrl(capa, 200))}" alt="" loading="lazy" />`
     : `<div class="ap-item__foto ap-item__foto--vazia">${icone("image")}</div>`;
 
-  const classes = ["ap-item", p.ativo ? "" : "ap-item--inativo"].filter(Boolean).join(" ");
+  const classes = [
+    "ap-item",
+    p.ativo ? "" : "ap-item--inativo",
+    p.emEstoque ? "" : "ap-item--esgotado",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return `
     <article class="${classes}" data-id="${escapeHtml(p.id)}">
@@ -297,6 +308,7 @@ function itemHtml(p) {
           <p class="ap-item__preco">${formatarBRL(p.preco)}</p>
           <div class="ap-item__tags">
             <span class="ap-tag ${p.ativo ? "ap-tag--ativo" : "ap-tag--inativo"}">${p.ativo ? "Ativo" : "Inativo"}</span>
+            ${p.emEstoque ? "" : `<span class="ap-tag ap-tag--esgotado">Esgotado</span>`}
             ${p.destaque ? `<span class="ap-tag ap-tag--destaque">Destaque</span>` : ""}
             <span class="ap-tag">${escapeHtml(p.status)}</span>
             ${p.condicao ? `<span class="ap-tag">${escapeHtml(p.condicao)}</span>` : ""}
@@ -326,11 +338,13 @@ function atualizarStats() {
   const total = produtos.length;
   const ativos = produtos.filter((p) => p.ativo).length;
   const destaques = produtos.filter((p) => p.destaque).length;
+  const esgotados = produtos.filter((p) => !p.emEstoque).length;
 
   $("stats").innerHTML = `
     <span class="ap-chip">${icone("box")} <strong>${total}</strong> cadastrados</span>
     <span class="ap-chip">${icone("eye")} <strong>${ativos}</strong> no site</span>
-    <span class="ap-chip">${icone("star")} <strong>${destaques}</strong> em destaque</span>`;
+    <span class="ap-chip">${icone("star")} <strong>${destaques}</strong> em destaque</span>
+    ${esgotados ? `<span class="ap-chip ap-chip--alerta">${icone("alert")} <strong>${esgotados}</strong> esgotado${esgotados > 1 ? "s" : ""}</span>` : ""}`;
 }
 
 elBusca.addEventListener("input", renderizarLista);
@@ -664,6 +678,7 @@ function abrirFormulario(id = null) {
   $("fDescricao").value = p?.descricao ?? "";
   $("fDestaque").checked = p?.destaque ?? false;
   $("fAtivo").checked = p ? p.ativo : true;
+  $("fEmEstoque").checked = p ? p.emEstoque : true;
   // `observacoes` só existe no registro cru: de propósito, não passa pelo
   // objeto canônico que o site público consome.
   $("fObservacoes").value = bruto?.observacoes ?? "";
@@ -749,6 +764,7 @@ $("formProduto").addEventListener("submit", async (e) => {
     descricao: $("fDescricao").value.trim(),
     destaque: $("fDestaque").checked,
     ativo: $("fAtivo").checked,
+    emEstoque: $("fEmEstoque").checked,
     fotos,
     observacoes: $("fObservacoes").value.trim(),
     atualizadoEm: serverTimestamp(),
@@ -789,7 +805,7 @@ $("fPreco").addEventListener("input", () => marcarErro("campoPreco", ""));
 // ---------------------------------------------------------------------------
 // Navegação: Produtos × Banner inicial
 // ---------------------------------------------------------------------------
-const VIEWS = { produtos: "viewProdutos", hero: "viewHero" };
+const VIEWS = { produtos: "viewProdutos", hero: "viewHero", instagram: "viewInstagram" };
 
 function mostrarView(nome) {
   Object.entries(VIEWS).forEach(([chave, id]) => {
@@ -810,197 +826,250 @@ document.querySelectorAll(".ap-nav__item").forEach((botao) => {
   botao.addEventListener("click", () => mostrarView(botao.dataset.view));
 });
 
-// ---------------------------------------------------------------------------
-// Banner inicial — as 3 fotos do topo da página
-// ---------------------------------------------------------------------------
-// Guardadas em `config/heroFotos` como uma lista simples de URLs. O site lê
-// esse mesmo nó, então trocar aqui muda a home na hora.
-
-const MAX_HERO = 3;
-
-/** Fotos como estão salvas no banco (para o "Desfazer"). */
-let heroSalvo = [];
-/** Fotos em edição na tela. */
-let heroFotos = [];
-let heroEnviando = 0;
-/** Índice do quadro que abriu o seletor de arquivo. */
-let heroSlotAlvo = null;
-
-const elHeroSlots = $("heroSlots");
-const elHeroPreview = $("heroPreview");
-const elInputHero = $("inputHero");
-
-function heroMudou() {
-  return JSON.stringify(heroSalvo) !== JSON.stringify(heroFotos);
-}
-
-function renderizarHero() {
-  const quadros = [];
-
-  for (let i = 0; i < MAX_HERO; i++) {
-    const url = heroFotos[i];
-
-    if (url) {
-      quadros.push(`
-        <div class="ap-slot ap-slot--cheio" data-slot="${i}">
-          <span class="ap-slot__ordem">${i + 1}</span>
-          <img src="${escapeHtml(miniaturaUrl(url, 400))}" alt="Foto ${i + 1} do banner" />
-          <div class="ap-slot__acoes">
-            <button type="button" data-hero="esquerda" data-i="${i}" ${i === 0 ? "disabled" : ""} aria-label="Mover para a esquerda">${icone("left")}</button>
-            <button type="button" data-hero="direita" data-i="${i}" ${i === heroFotos.length - 1 ? "disabled" : ""} aria-label="Mover para a direita">${icone("right")}</button>
-            <button type="button" data-hero="remover" data-i="${i}" aria-label="Remover foto">${icone("trash")}</button>
-          </div>
-        </div>`);
-      continue;
-    }
-
-    // Quadro em branco: só o primeiro vago aceita clique, para as fotos
-    // entrarem sempre em sequência (sem buraco no meio).
-    const proximoVago = heroFotos.length === i;
-    quadros.push(`
-      <div class="ap-slot" data-slot="${i}" ${proximoVago ? 'tabindex="0" role="button"' : 'aria-hidden="true" style="opacity:.45"'}>
-        ${icone("upload")}
-        <span>${proximoVago ? "Enviar foto" : "Vazio"}</span>
-      </div>`);
-  }
-
-  const enviando = Array.from(
-    { length: heroEnviando },
-    () => `<div class="ap-slot ap-slot--enviando"><div class="spinner"></div></div>`
-  ).join("");
-
-  elHeroSlots.innerHTML = quadros.join("") + enviando;
-
-  renderizarPreviaHero();
-
-  $("btnHeroSalvar").disabled = heroEnviando > 0 || !heroMudou();
-  $("btnHeroDesfazer").disabled = heroEnviando > 0 || !heroMudou();
-}
-
-/** Prévia usando o mesmo HTML/CSS da home, para não haver surpresa. */
-function renderizarPreviaHero() {
-  elHeroPreview.innerHTML = heroFotos.length
-    ? heroFotos
-        .map(
-          (url) =>
-            `<img class="hero__phone" src="${escapeHtml(miniaturaUrl(url, 400))}" alt="" />`
-        )
-        .join("")
-    : `<p class="hero__gallery-vazio">Sem fotos no banner — o site mostra o topo sem imagens.</p>`;
-}
-
-elHeroSlots.addEventListener("click", (e) => {
-  const acao = e.target.closest("[data-hero]");
-  if (acao) {
-    const i = Number(acao.dataset.i);
-    if (acao.dataset.hero === "remover") {
-      heroFotos.splice(i, 1);
-    } else {
-      const destino = acao.dataset.hero === "esquerda" ? i - 1 : i + 1;
-      if (destino < 0 || destino >= heroFotos.length) return;
-      [heroFotos[i], heroFotos[destino]] = [heroFotos[destino], heroFotos[i]];
-    }
-    renderizarHero();
-    marcarErro("campoHero", "");
-    return;
-  }
-
-  const slot = e.target.closest(".ap-slot[tabindex]");
-  if (!slot) return;
-  heroSlotAlvo = Number(slot.dataset.slot);
-  elInputHero.click();
-});
-
-elHeroSlots.addEventListener("keydown", (e) => {
-  if (e.key !== "Enter" && e.key !== " ") return;
-  const slot = e.target.closest(".ap-slot[tabindex]");
-  if (!slot) return;
-  e.preventDefault();
-  heroSlotAlvo = Number(slot.dataset.slot);
-  elInputHero.click();
-});
-
-elInputHero.addEventListener("change", async () => {
-  const arquivo = elInputHero.files?.[0];
-  elInputHero.value = "";
-  if (!arquivo) return;
-
-  if (!cloudinaryConfigurado()) {
-    toast("Configure o Cloudinary para enviar fotos.", "erro");
-    return;
-  }
-  if (!arquivo.type.startsWith("image/")) {
-    toast("Escolha um arquivo de imagem.", "erro");
-    return;
-  }
-  if (arquivo.size > TAMANHO_MAXIMO) {
-    toast("A imagem passa de 10 MB.", "erro");
-    return;
-  }
-  if (heroFotos.length >= MAX_HERO) {
-    toast(`O banner aceita no máximo ${MAX_HERO} fotos.`, "erro");
-    return;
-  }
-
-  heroEnviando += 1;
-  renderizarHero();
-  try {
-    const url = await enviarParaCloudinary(arquivo);
-    if (heroSlotAlvo !== null && heroSlotAlvo < heroFotos.length) heroFotos[heroSlotAlvo] = url;
-    else heroFotos.push(url);
-    marcarErro("campoHero", "");
-  } catch (erro) {
-    console.error("Falha no upload do banner:", erro);
-    toast("Não foi possível enviar a foto.", "erro");
-  } finally {
-    heroEnviando -= 1;
-    heroSlotAlvo = null;
-    renderizarHero();
-  }
-});
-
-$("btnHeroDesfazer").addEventListener("click", () => {
-  heroFotos = [...heroSalvo];
-  marcarErro("campoHero", "");
-  renderizarHero();
-});
-
-$("btnHeroSalvar").addEventListener("click", async () => {
-  if (!db) {
-    toast("Firebase não configurado — não há onde salvar.", "erro");
-    return;
-  }
-
-  const btn = $("btnHeroSalvar");
-  btn.disabled = true;
-  btn.textContent = "Salvando…";
-
-  try {
-    // `set` com a lista inteira: o nó vira exatamente o que está na tela,
-    // incluindo o caso de esvaziar tudo.
-    await set(ref(db, DB_PATHS.heroFotos), heroFotos);
-    heroSalvo = [...heroFotos];
-    toast("Banner atualizado. Já está no ar.", "ok");
-  } catch (erro) {
-    console.error("Erro ao salvar o banner:", erro);
-    toast(
-      erro?.code === "PERMISSION_DENIED"
-        ? "Sem permissão para salvar o banner. Libere o nó config nas regras do banco."
-        : "Não foi possível salvar o banner.",
-      "erro"
-    );
-  } finally {
-    btn.textContent = "Salvar banner";
-    renderizarHero();
-  }
-});
-
 // Status e seção do site são a mesma informação em 99% dos casos. Mexer no
 // status já ajusta a seção, para ninguém cadastrar um "Novo" que vai parar na
 // prateleira dos seminovos por descuido. Quem precisar ainda pode trocar a
 // seção na mão depois.
 $("fStatus").addEventListener("change", () => {
   $("fCategoria").value = categoriaDoStatus($("fStatus").value);
+});
+
+// ---------------------------------------------------------------------------
+// Galerias de configuração (Banner inicial e Instagram)
+// ---------------------------------------------------------------------------
+// As duas telas fazem exatamente a mesma coisa: uma fila de fotos que a loja
+// envia, reordena e salva num nó do banco. Em vez de duplicar isso, aqui vai
+// uma fábrica — cada galeria é uma instância com seus próprios elementos e
+// seu próprio caminho no Firebase.
+
+/**
+ * @param {object} cfg
+ * @param {string} cfg.caminho    nó do Realtime Database (DB_PATHS.*)
+ * @param {number} cfg.maximo     quantas fotos a galeria aceita
+ * @param {string} cfg.slots      id do container dos quadros
+ * @param {string} cfg.input      id do <input type="file">
+ * @param {string} cfg.campo      id do .campo (para marcar erro)
+ * @param {string} cfg.salvar     id do botão de salvar
+ * @param {string} cfg.desfazer   id do botão de desfazer
+ * @param {string} cfg.rotulo     nome usado nas mensagens
+ * @param {(fotos: string[]) => void} [cfg.aoMudar]  eco em uma prévia, se houver
+ */
+function criarGaleria(cfg) {
+  /** Como está salvo no banco (base do "Desfazer"). */
+  let salvo = [];
+  /** Como está na tela. */
+  let atual = [];
+  let enviando = 0;
+  /** Índice do quadro que abriu o seletor de arquivo. */
+  let alvo = null;
+
+  const elSlots = $(cfg.slots);
+  const elInput = $(cfg.input);
+  const elSalvar = $(cfg.salvar);
+  const elDesfazer = $(cfg.desfazer);
+
+  const mudou = () => JSON.stringify(salvo) !== JSON.stringify(atual);
+
+  function renderizar() {
+    const quadros = [];
+
+    for (let i = 0; i < cfg.maximo; i++) {
+      const url = atual[i];
+
+      if (url) {
+        quadros.push(`
+          <div class="ap-slot ap-slot--cheio" data-slot="${i}">
+            <span class="ap-slot__ordem">${i + 1}</span>
+            <img src="${escapeHtml(miniaturaUrl(url, 400))}" alt="Foto ${i + 1}" />
+            <div class="ap-slot__acoes">
+              <button type="button" data-galeria="esquerda" data-i="${i}" ${i === 0 ? "disabled" : ""} aria-label="Mover para a esquerda">${icone("left")}</button>
+              <button type="button" data-galeria="direita" data-i="${i}" ${i === atual.length - 1 ? "disabled" : ""} aria-label="Mover para a direita">${icone("right")}</button>
+              <button type="button" data-galeria="remover" data-i="${i}" aria-label="Remover foto">${icone("trash")}</button>
+            </div>
+          </div>`);
+        continue;
+      }
+
+      // Só o primeiro quadro vago aceita clique: as fotos entram em sequência,
+      // sem buraco no meio da fila.
+      const proximoVago = atual.length === i;
+      quadros.push(`
+        <div class="ap-slot" data-slot="${i}" ${proximoVago ? 'tabindex="0" role="button"' : 'aria-hidden="true" style="opacity:.45"'}>
+          ${icone("upload")}
+          <span>${proximoVago ? "Enviar foto" : "Vazio"}</span>
+        </div>`);
+    }
+
+    const emEnvio = Array.from(
+      { length: enviando },
+      () => `<div class="ap-slot ap-slot--enviando"><div class="spinner"></div></div>`
+    ).join("");
+
+    elSlots.innerHTML = quadros.join("") + emEnvio;
+
+    cfg.aoMudar?.([...atual]);
+    elSalvar.disabled = enviando > 0 || !mudou();
+    elDesfazer.disabled = enviando > 0 || !mudou();
+  }
+
+  elSlots.addEventListener("click", (e) => {
+    const acao = e.target.closest("[data-galeria]");
+    if (acao) {
+      const i = Number(acao.dataset.i);
+      if (acao.dataset.galeria === "remover") {
+        atual.splice(i, 1);
+      } else {
+        const destino = acao.dataset.galeria === "esquerda" ? i - 1 : i + 1;
+        if (destino < 0 || destino >= atual.length) return;
+        [atual[i], atual[destino]] = [atual[destino], atual[i]];
+      }
+      renderizar();
+      marcarErro(cfg.campo, "");
+      return;
+    }
+
+    const slot = e.target.closest(".ap-slot[tabindex]");
+    if (!slot) return;
+    alvo = Number(slot.dataset.slot);
+    elInput.click();
+  });
+
+  elSlots.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const slot = e.target.closest(".ap-slot[tabindex]");
+    if (!slot) return;
+    e.preventDefault();
+    alvo = Number(slot.dataset.slot);
+    elInput.click();
+  });
+
+  elInput.addEventListener("change", async () => {
+    const arquivo = elInput.files?.[0];
+    elInput.value = "";
+    if (!arquivo) return;
+
+    if (!cloudinaryConfigurado()) {
+      toast("Configure o Cloudinary para enviar fotos.", "erro");
+      return;
+    }
+    if (!arquivo.type.startsWith("image/")) {
+      toast("Escolha um arquivo de imagem.", "erro");
+      return;
+    }
+    if (arquivo.size > TAMANHO_MAXIMO) {
+      toast("A imagem passa de 10 MB.", "erro");
+      return;
+    }
+    if (atual.length >= cfg.maximo) {
+      toast(`${cfg.rotulo} aceita no máximo ${cfg.maximo} fotos.`, "erro");
+      return;
+    }
+
+    enviando += 1;
+    renderizar();
+    try {
+      const url = await enviarParaCloudinary(arquivo);
+      if (alvo !== null && alvo < atual.length) atual[alvo] = url;
+      else atual.push(url);
+      marcarErro(cfg.campo, "");
+    } catch (erro) {
+      console.error("Falha no upload:", erro);
+      toast("Não foi possível enviar a foto.", "erro");
+    } finally {
+      enviando -= 1;
+      alvo = null;
+      renderizar();
+    }
+  });
+
+  elDesfazer.addEventListener("click", () => {
+    atual = [...salvo];
+    marcarErro(cfg.campo, "");
+    renderizar();
+  });
+
+  elSalvar.addEventListener("click", async () => {
+    if (!db) {
+      toast("Firebase não configurado — não há onde salvar.", "erro");
+      return;
+    }
+
+    const textoOriginal = elSalvar.textContent;
+    elSalvar.disabled = true;
+    elSalvar.textContent = "Salvando…";
+
+    try {
+      // `set` com a lista inteira: o nó vira exatamente o que está na tela,
+      // inclusive quando a loja esvazia tudo.
+      await set(ref(db, cfg.caminho), atual);
+      salvo = [...atual];
+      toast(`${cfg.rotulo} atualizado. Já está no ar.`, "ok");
+    } catch (erro) {
+      console.error("Erro ao salvar:", erro);
+      toast(
+        erro?.code === "PERMISSION_DENIED"
+          ? "Sem permissão para salvar. Libere o nó config nas regras do banco."
+          : "Não foi possível salvar.",
+        "erro"
+      );
+    } finally {
+      elSalvar.textContent = textoOriginal;
+      renderizar();
+    }
+  });
+
+  return {
+    /** Recebe o que veio do banco. Não pisa na edição em andamento. */
+    definirSalvo(lista) {
+      salvo = Array.isArray(lista)
+        ? lista
+            .map((item) => (typeof item === "string" ? item : item?.url))
+            .filter((u) => typeof u === "string" && u.trim() !== "")
+        : [];
+      if (!mudou()) atual = [...salvo];
+      renderizar();
+    },
+    renderizar,
+  };
+}
+
+// ---- Banner inicial ------------------------------------------------------
+const galeriaHero = criarGaleria({
+  caminho: DB_PATHS.heroFotos,
+  maximo: 3,
+  slots: "heroSlots",
+  input: "inputHero",
+  campo: "campoHero",
+  salvar: "btnHeroSalvar",
+  desfazer: "btnHeroDesfazer",
+  rotulo: "Banner",
+  aoMudar: (fotos) => {
+    // Prévia com o mesmo HTML/CSS da home, para não haver surpresa.
+    $("heroPreview").innerHTML = fotos.length
+      ? fotos
+          .map((url) => `<img class="hero__phone" src="${escapeHtml(miniaturaUrl(url, 400))}" alt="" />`)
+          .join("")
+      : `<p class="hero__gallery-vazio">Sem fotos no banner — o site mostra o topo sem imagens.</p>`;
+  },
+});
+
+// ---- Instagram -----------------------------------------------------------
+const galeriaInstagram = criarGaleria({
+  caminho: DB_PATHS.instagram,
+  maximo: 8,
+  slots: "igSlots",
+  input: "inputIg",
+  campo: "campoIg",
+  salvar: "btnIgSalvar",
+  desfazer: "btnIgDesfazer",
+  rotulo: "Instagram",
+  aoMudar: (fotos) => {
+    $("igPreview").innerHTML = fotos.length
+      ? fotos
+          .map((url) => `<span class="ig-foto"><img src="${escapeHtml(miniaturaUrl(url, 300))}" alt="" /></span>`)
+          .join("")
+      : `<p class="campo__dica">Sem fotos — o site mostra só o convite para seguir o perfil.</p>`;
+  },
 });
 
 // ---------------------------------------------------------------------------

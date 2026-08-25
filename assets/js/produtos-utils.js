@@ -119,8 +119,15 @@ export function normalizarProduto(id, bruto) {
     ? categoriaBruta
     : categoriaDoStatus(status);
 
-  // Ativo: campo novo `ativo`, campo antigo `disponivel`. Default = visível.
-  const ativo = bruto.ativo !== undefined ? bruto.ativo !== false : bruto.disponivel !== false;
+  // Ativo = aparece no site. Default: visível.
+  const ativo = bruto.ativo !== false;
+
+  // Em estoque = pode comprar agora. Um produto pode estar ativo e esgotado:
+  // ele continua no catálogo, só marcado.
+  // O catálogo antigo usava `disponivel: false` com esse mesmo sentido de
+  // "acabou" — por isso ele cai aqui, e não em `ativo`.
+  const emEstoque =
+    bruto.emEstoque !== undefined ? bruto.emEstoque !== false : bruto.disponivel !== false;
 
   return {
     id: String(id),
@@ -136,6 +143,7 @@ export function normalizarProduto(id, bruto) {
     categoria,
     destaque: bruto.destaque === true,
     ativo,
+    emEstoque,
     fotos,
     descricao: String(bruto.descricao ?? "").trim(),
     // `observacoes` é interno: fica de fora do objeto canônico usado no site
@@ -164,9 +172,16 @@ export function listarProdutos(dados, { somenteAtivos = true } = {}) {
   return ordenarProdutos(lista);
 }
 
-/** Destaques no topo; dentro de cada grupo, o cadastrado mais recente primeiro. */
+/**
+ * Ordem do catálogo:
+ *   1. quem está em estoque vem antes — um esgotado no topo da vitrine
+ *      frustra quem está comprando, mesmo estando em destaque;
+ *   2. depois os destaques;
+ *   3. por fim o cadastrado mais recente.
+ */
 export function ordenarProdutos(lista) {
   return [...lista].sort((a, b) => {
+    if (a.emEstoque !== b.emEstoque) return a.emEstoque ? -1 : 1;
     if (a.destaque !== b.destaque) return a.destaque ? -1 : 1;
     return (b.criadoEm || 0) - (a.criadoEm || 0);
   });

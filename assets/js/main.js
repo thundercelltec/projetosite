@@ -11,7 +11,13 @@
 // Enquanto (1) não chega, a grade mostra o skeleton de carregamento.
 // ============================================================================
 
-import { siteConfig, linkWhatsapp, mensagemInteresse, garantiaDoStatus } from "./site-config.js";
+import {
+  siteConfig,
+  linkWhatsapp,
+  mensagemInteresse,
+  mensagemAvisoRetorno,
+  garantiaDoStatus,
+} from "./site-config.js";
 import { firebaseConfig, DB_PATHS, firebaseConfigurado } from "./firebase-config.js";
 import { otimizarUrl } from "./image-config.js";
 import { listarProdutos, formatarPrecoCurto, escapeHtml } from "./produtos-utils.js";
@@ -208,6 +214,7 @@ function renderizar() {
   // na fila da animação de entrada.
   aplicarConfig();
   observarReveal(area);
+  restaurarGruposExpandidos();
 
   atualizarContagem(lista.length);
 }
@@ -218,10 +225,19 @@ function atualizarContagem(exibidos) {
     resultsInfo.textContent = "";
     return;
   }
+  // Contar esgotados como "disponíveis" seria uma promessa falsa: eles estão
+  // no catálogo, mas não à venda. Por isso o aviso é separado.
+  const lista = aplicarFiltros();
+  const esgotados = lista.filter((p) => !p.emEstoque).length;
+  const aviso =
+    esgotados > 0
+      ? ` · <strong>${esgotados}</strong> esgotado${esgotados > 1 ? "s" : ""}`
+      : "";
+
   resultsInfo.innerHTML =
-    exibidos === produtos.length
-      ? `<strong>${produtos.length}</strong> ${produtos.length === 1 ? "aparelho disponível" : "aparelhos disponíveis"}`
-      : `<strong>${exibidos}</strong> de ${produtos.length} aparelhos`;
+    (exibidos === produtos.length
+      ? `<strong>${produtos.length}</strong> ${produtos.length === 1 ? "aparelho no catálogo" : "aparelhos no catálogo"}`
+      : `<strong>${exibidos}</strong> de ${produtos.length} aparelhos`) + aviso;
 }
 
 function estadoVazioSemResultado() {
@@ -290,6 +306,10 @@ function abrirModal(produto) {
 
   const parcelamento = produto.parcelamento || siteConfig.parcelamentoPadrao;
   const garantia = garantiaDoStatus(produto.status);
+  const esgotado = produto.emEstoque === false;
+  const mensagem = esgotado
+    ? mensagemAvisoRetorno(produto.titulo)
+    : mensagemInteresse(produto.titulo);
   const galeria = produto.fotos.length
     ? `<div class="modal__gallery">
          ${produto.fotos
@@ -308,7 +328,9 @@ function abrirModal(produto) {
       ${specRowHtml(produto)}
       <div>
         <p class="modal__price">${formatarPrecoCurto(produto.preco)}</p>
-        ${parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}
+        ${esgotado
+          ? `<p class="retorna-breve"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>Retorna em breve</p>`
+          : parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}
       </div>
       ${produto.descricao ? `<p class="modal__desc">${escapeHtml(produto.descricao)}</p>` : ""}
       <hr class="dotted-rule" />
@@ -317,9 +339,9 @@ function abrirModal(produto) {
         <strong>${escapeHtml(garantia.texto)}</strong> ${escapeHtml(garantia.detalhe)}.
       </p>
       <div class="modal__actions">
-        <a class="btn btn--whatsapp btn--lg" data-wa data-wa-message="${escapeHtml(mensagemInteresse(produto.titulo))}" href="#">
-          <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
-          Tenho interesse
+        <a class="btn ${esgotado ? "btn--aviso" : "btn--whatsapp"} btn--lg" data-wa data-wa-message="${escapeHtml(mensagem)}" href="#">
+          <svg class="icon" aria-hidden="true"><use href="#i-${esgotado ? "bell" : "whatsapp"}"></use></svg>
+          ${esgotado ? "Avise-me quando chegar" : "Tenho interesse"}
         </a>
         <button class="btn btn--ghost btn--lg" type="button" data-fechar-modal>Voltar ao catálogo</button>
       </div>
@@ -404,6 +426,127 @@ function renderizarHero(fotos) {
               ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" />`
     )
     .join("");
+}
+
+// ---------------------------------------------------------------------------
+// Ver mais / Ver menos por grupo
+// ---------------------------------------------------------------------------
+// Cada grupo nasce recolhido (o limite vem do produto-card.js). A escolha do
+// visitante fica guardada aqui e é reaplicada a cada redesenho — senão digitar
+// na busca recolheria de novo o que a pessoa acabou de abrir.
+const gruposExpandidos = new Set();
+
+const semMovimento = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function definirEstadoGrupo(grupo, expandido, { animar = false } = {}) {
+  const botao = grupo.querySelector("[data-expandir]");
+  if (!botao) return;
+
+  grupo.classList.toggle("is-recolhido", !expandido);
+  botao.setAttribute("aria-expanded", String(expandido));
+  botao.querySelector(".grupo-mais__label").textContent = expandido
+    ? botao.dataset.labelMenos
+    : botao.dataset.labelMais;
+
+  if (!expandido || !animar) return;
+
+  // Os extras não têm a classe `reveal`, então já entram visíveis; a animação
+  // é só o "fade + sobe" da aparição.
+  grupo.classList.add("is-expandindo");
+  setTimeout(() => grupo.classList.remove("is-expandindo"), 900);
+}
+
+/** Reaplica, depois de cada render, o que o visitante tinha aberto. */
+function restaurarGruposExpandidos() {
+  area.querySelectorAll(".catalog-group").forEach((grupo) => {
+    if (gruposExpandidos.has(grupo.dataset.grupo)) definirEstadoGrupo(grupo, true);
+  });
+}
+
+function iniciarVerMais() {
+  area?.addEventListener("click", (e) => {
+    const botao = e.target.closest("[data-expandir]");
+    if (!botao) return;
+
+    const grupo = botao.closest(".catalog-group");
+    const chave = botao.dataset.expandir;
+    const vaiExpandir = grupo.classList.contains("is-recolhido");
+
+    if (vaiExpandir) {
+      gruposExpandidos.add(chave);
+      definirEstadoGrupo(grupo, true, { animar: true });
+      return;
+    }
+
+    gruposExpandidos.delete(chave);
+    definirEstadoGrupo(grupo, false);
+    // Recolher some com o conteúdo abaixo do dedo; voltar ao topo do grupo
+    // evita o susto de "para onde a página pulou?".
+    grupo.scrollIntoView({
+      behavior: semMovimento() ? "auto" : "smooth",
+      block: "start",
+    });
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Instagram
+// ---------------------------------------------------------------------------
+// Não existe embed automático do Instagram que seja gratuito e funcione num
+// site estático (a API oficial exige app + token do Facebook). Então a loja
+// escolhe as fotos em /admin > Instagram, e elas ficam em config/instagram.
+// Sem foto cadastrada, a grade some e sobra o convite — que já está no HTML.
+const igGrid = document.getElementById("igGrid");
+
+function renderizarInstagram(itens) {
+  if (!igGrid) return;
+
+  const fotos = (Array.isArray(itens) ? itens : [])
+    .map((item) => (typeof item === "string" ? { url: item } : item))
+    .filter((item) => item && typeof item.url === "string" && item.url.trim() !== "")
+    .slice(0, 8);
+
+  if (fotos.length === 0) {
+    igGrid.hidden = true;
+    igGrid.innerHTML = "";
+    return;
+  }
+
+  igGrid.innerHTML = fotos
+    .map(({ url, link }) => {
+      // Sem link do post, o clique leva ao perfil — nunca a lugar nenhum.
+      const destino = link && link.trim() ? link.trim() : siteConfig.instagram;
+      return `<a class="ig-foto" href="${escapeHtml(destino)}" target="_blank" rel="noopener noreferrer"
+                 aria-label="Ver publicação no Instagram">
+                <img src="${escapeHtml(otimizarUrl(url, 500))}" alt="" loading="lazy" decoding="async" />
+                <svg class="icon" aria-hidden="true"><use href="#i-instagram"></use></svg>
+              </a>`;
+    })
+    .join("");
+  igGrid.hidden = false;
+}
+
+// ---------------------------------------------------------------------------
+// Perguntas frequentes
+// ---------------------------------------------------------------------------
+// O accordion é `<details name="faq">` puro: abre e fecha sem JavaScript. O
+// atributo `name` (que fecha os irmãos) é recente; onde ele não existe, este
+// trecho faz o mesmo trabalho na mão.
+function iniciarFaq() {
+  const itens = [...document.querySelectorAll('.faq__item[name="faq"]')];
+  if (itens.length === 0) return;
+
+  const suportaExclusivo = "name" in document.createElement("details");
+  if (suportaExclusivo) return;
+
+  itens.forEach((item) => {
+    item.addEventListener("toggle", () => {
+      if (!item.open) return;
+      itens.forEach((outro) => {
+        if (outro !== item) outro.open = false;
+      });
+    });
+  });
 }
 
 /** Cartões-fantasma exibidos enquanto o catálogo do banco não chega. */
@@ -497,6 +640,13 @@ async function carregarCatalogo() {
       }
     );
 
+    // Fotos do Instagram. Sem elas a seção continua de pé (só o convite).
+    onValue(
+      ref(db, DB_PATHS.instagram),
+      (snap) => renderizarInstagram(snap.val()),
+      (erro) => console.warn("Fotos do Instagram não carregadas:", erro?.code || erro)
+    );
+
     // Fotos do banner. Falha aqui não atrapalha o catálogo: o HTML já traz o
     // banner pré-renderizado do último deploy, e o hero tem estado vazio.
     onValue(
@@ -533,4 +683,6 @@ iniciarReveal();
 iniciarAbas();
 iniciarFiltros();
 iniciarModal();
+iniciarVerMais();
+iniciarFaq();
 carregarCatalogo();
