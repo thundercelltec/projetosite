@@ -228,7 +228,7 @@ function atualizarContagem(exibidos) {
   // Contar esgotados como "disponíveis" seria uma promessa falsa: eles estão
   // no catálogo, mas não à venda. Por isso o aviso é separado.
   const lista = aplicarFiltros();
-  const esgotados = lista.filter((p) => !p.emEstoque).length;
+  const esgotados = lista.filter((p) => p.statusEstoque === "esgotado").length;
   const aviso =
     esgotados > 0
       ? ` · <strong>${esgotados}</strong> esgotado${esgotados > 1 ? "s" : ""}`
@@ -306,7 +306,7 @@ function abrirModal(produto) {
 
   const parcelamento = produto.parcelamento || siteConfig.parcelamentoPadrao;
   const garantia = garantiaDoStatus(produto.status);
-  const esgotado = produto.emEstoque === false;
+  const esgotado = produto.statusEstoque === "esgotado";
   const mensagem = esgotado
     ? mensagemAvisoRetorno(produto.titulo)
     : mensagemInteresse(produto.titulo);

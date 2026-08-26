@@ -65,7 +65,7 @@ export function cardHtml(produto, indice = 0, { extra = false } = {}) {
   const verso = fotoVerso(produto);
   const titulo = escapeHtml(produto.titulo);
   const parcelamento = produto.parcelamento || siteConfig.parcelamentoPadrao;
-  const esgotado = produto.emEstoque === false;
+  const esgotado = produto.statusEstoque === "esgotado";
 
   // Esgotado troca o convite de compra por um pedido de aviso — o link é o
   // mesmo WhatsApp, só muda a mensagem que já vai escrita.
@@ -104,6 +104,11 @@ export function cardHtml(produto, indice = 0, { extra = false } = {}) {
     .filter(Boolean)
     .join(" ");
 
+  // O card mostra só o essencial de comparação: foto, selo, modelo, preço,
+  // parcelamento e os badges. A `descricao` fica de fora de propósito — na
+  // prática ela repetia, produto a produto e com texto diferente em cada um,
+  // o que as seções de garantia e de troca de usado já dizem uma vez só logo
+  // abaixo. Ela continua inteira no banco e aparece em "Ver detalhes".
   return `<article class="${classes}" style="--delay: ${Math.min(indice, 8) * 60}ms" data-id="${escapeHtml(produto.id)}">
   ${midia}
   <div class="product-card__body">
@@ -115,7 +120,6 @@ export function cardHtml(produto, indice = 0, { extra = false } = {}) {
         : parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}
     </div>
     ${specRowHtml(produto)}
-    ${produto.descricao ? `<p class="product-card__desc">${escapeHtml(produto.descricao)}</p>` : ""}
     <div class="product-card__actions">
       <button class="btn btn--ghost btn--sm" type="button" data-detalhes="${escapeHtml(produto.id)}">Ver detalhes</button>
       <a class="btn ${esgotado ? "btn--aviso" : "btn--whatsapp"} btn--sm" data-wa data-wa-message="${escapeHtml(mensagem)}" href="${escapeHtml(wa)}" target="_blank" rel="noopener noreferrer">${icone(esgotado ? "bell" : "whatsapp")}${esgotado ? "Avise-me quando chegar" : "Tenho interesse"}</a>

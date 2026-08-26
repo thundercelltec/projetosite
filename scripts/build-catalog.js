@@ -133,7 +133,10 @@ function jsonLdDosProdutos(produtos, garantiaDoStatus) {
             '@type': 'Offer',
             price: p.preco.toFixed(2),
             priceCurrency: 'BRL',
-            availability: 'https://schema.org/InStock',
+            availability:
+                p.statusEstoque === 'esgotado'
+                    ? 'https://schema.org/OutOfStock'
+                    : 'https://schema.org/InStock',
             itemCondition:
                 p.status === 'Novo'
                     ? 'https://schema.org/NewCondition'
@@ -161,7 +164,10 @@ function dadosDeReserva(produtos) {
         condicao: p.condicao,
         status: p.status,
         destaque: p.destaque,
-        ativo: true,
+        // A lista já vem sem inativos; o que precisa sobreviver aqui é a
+        // diferença entre "à venda" e "esgotado" — sem ela, um aparelho que
+        // acabou voltaria a parecer disponível sempre que o Firebase demorasse.
+        status_estoque: p.statusEstoque,
         fotos: p.fotos,
         descricao: p.descricao,
         criadoEm: p.criadoEm,

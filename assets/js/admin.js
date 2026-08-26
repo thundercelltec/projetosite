@@ -46,6 +46,9 @@ import {
   normalizarProduto,
   ordenarProdutos,
   categoriaDoStatus,
+  camposLegadosDeStatus,
+  STATUS_ESTOQUE,
+  ROTULO_STATUS_ESTOQUE,
 } from "./produtos-utils.js";
 
 // ---------------------------------------------------------------------------
@@ -213,6 +216,7 @@ function iniciarPainel() {
           .filter(Boolean)
       );
       renderizarLista();
+      migrarStatusEstoque();
     },
     (erro) => {
       console.error("Erro ao ler produtos:", erro);
@@ -246,6 +250,68 @@ function iniciarPainel() {
       }
     );
   });
+}
+
+// ---------------------------------------------------------------------------
+// Migração para `status_estoque`
+// ---------------------------------------------------------------------------
+// Antes desta versão o estado do produto morava em dois booleanos separados
+// (`ativo` + `emEstoque`). Ler os dois continua funcionando — `statusEstoqueDe`
+// deriva o estado novo a partir deles —, mas deixar o banco meio convertido
+// significaria que o campo `status_estoque` não é confiável para consultar
+// direto no console do Firebase.
+//
+// Então, na primeira vez que alguém abre o painel depois do deploy, todo
+// registro que ainda não tem `status_estoque` recebe o valor derivado dos
+// booleanos: `ativo: false` → "inativo", `emEstoque: false` → "esgotado",
+// o resto → "ativo". Nenhum produto é criado, removido ou reordenado, e o
+// `atualizadoEm` não é tocado — isto não é uma edição da loja.
+//
+// Roda uma vez por sessão: `onValue` dispara de novo com o resultado da
+// própria escrita, e sem essa trava daria laço.
+let migracaoFeita = false;
+
+async function migrarStatusEstoque() {
+  if (migracaoFeita || !db) return;
+
+  // Percorre a lista já normalizada, e não os registros crus: um registro
+  // quebrado (sem modelo, por exemplo) seria recusado pela validação das
+  // regras e derrubaria a escrita inteira junto com os produtos bons.
+  const pendentes = produtos.filter(
+    (p) =>
+      !STATUS_ESTOQUE.includes(
+        String(brutos[p.id]?.status_estoque ?? "").trim().toLowerCase()
+      )
+  );
+
+  // Marca antes de gravar: uma segunda passada do onValue durante a escrita
+  // não pode reenviar a mesma migração.
+  migracaoFeita = true;
+  if (pendentes.length === 0) return;
+
+  // Uma escrita só, com os caminhos de todos os produtos: ou o banco converte
+  // o catálogo inteiro, ou não converte nada — nunca um meio-termo.
+  // `p.statusEstoque` já é o estado derivado dos booleanos antigos.
+  const alteracoes = {};
+  pendentes.forEach((p) => {
+    Object.entries(camposDeStatus(p.statusEstoque)).forEach(([campo, valor]) => {
+      alteracoes[`${p.id}/${campo}`] = valor;
+    });
+  });
+
+  try {
+    await update(ref(db, DB_PATHS.produtos), alteracoes);
+    console.info(`status_estoque preenchido em ${pendentes.length} produto(s).`);
+    toast(
+      `${pendentes.length} produto(s) migrado(s) para o novo campo de status.`,
+      "ok"
+    );
+  } catch (erro) {
+    console.error("Não foi possível migrar o status dos produtos:", erro);
+    // Sem alarde: o painel e o site continuam corretos pela derivação em
+    // `statusEstoqueDe`. Só o campo no banco é que fica para a próxima.
+    migracaoFeita = false;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -285,19 +351,31 @@ function renderizarLista() {
   elLista.innerHTML = lista.map(itemHtml).join("");
 }
 
+/** Ícone de cada estado — o mesmo no botão da lista e na leitura de relance. */
+const ICONE_STATUS = { ativo: "eye", esgotado: "alert", inativo: "eye-off" };
+
+/** Os três botões de troca rápida de status, com o atual já marcado. */
+function segStatusHtml(p) {
+  const botoes = STATUS_ESTOQUE.map((estado) => {
+    const atual = p.statusEstoque === estado;
+    const rotulo = ROTULO_STATUS_ESTOQUE[estado];
+    return `<button class="ap-seg__btn ap-seg__btn--${estado}${atual ? " is-on" : ""}"
+                    type="button" data-acao="status" data-status="${estado}" data-id="${escapeHtml(p.id)}"
+                    aria-pressed="${atual}" title="${rotulo}">
+              ${icone(ICONE_STATUS[estado])}<span class="ap-seg__rotulo">${rotulo}</span>
+            </button>`;
+  }).join("");
+
+  return `<div class="ap-seg" role="group" aria-label="Status de ${escapeHtml(p.titulo)}">${botoes}</div>`;
+}
+
 function itemHtml(p) {
   const capa = p.fotos[0];
   const foto = capa
     ? `<img class="ap-item__foto" src="${escapeHtml(miniaturaUrl(capa, 200))}" alt="" loading="lazy" />`
     : `<div class="ap-item__foto ap-item__foto--vazia">${icone("image")}</div>`;
 
-  const classes = [
-    "ap-item",
-    p.ativo ? "" : "ap-item--inativo",
-    p.emEstoque ? "" : "ap-item--esgotado",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const classes = ["ap-item", `ap-item--${p.statusEstoque}`].join(" ");
 
   return `
     <article class="${classes}" data-id="${escapeHtml(p.id)}">
@@ -307,8 +385,7 @@ function itemHtml(p) {
           <h3 class="ap-item__nome">${escapeHtml(p.titulo)}</h3>
           <p class="ap-item__preco">${formatarBRL(p.preco)}</p>
           <div class="ap-item__tags">
-            <span class="ap-tag ${p.ativo ? "ap-tag--ativo" : "ap-tag--inativo"}">${p.ativo ? "Ativo" : "Inativo"}</span>
-            ${p.emEstoque ? "" : `<span class="ap-tag ap-tag--esgotado">Esgotado</span>`}
+            <span class="ap-tag ap-tag--${p.statusEstoque}">${ROTULO_STATUS_ESTOQUE[p.statusEstoque]}</span>
             ${p.destaque ? `<span class="ap-tag ap-tag--destaque">Destaque</span>` : ""}
             <span class="ap-tag">${escapeHtml(p.status)}</span>
             ${p.condicao ? `<span class="ap-tag">${escapeHtml(p.condicao)}</span>` : ""}
@@ -317,10 +394,9 @@ function itemHtml(p) {
         </div>
       </div>
 
+      ${segStatusHtml(p)}
+
       <div class="ap-item__acoes">
-        <button class="ap-btn-lista ${p.ativo ? "is-on" : ""}" type="button" data-acao="ativo" data-id="${escapeHtml(p.id)}">
-          ${icone(p.ativo ? "eye" : "eye-off")} ${p.ativo ? "Ativo" : "Inativo"}
-        </button>
         <button class="ap-btn-lista ${p.destaque ? "is-on" : ""}" type="button" data-acao="destaque" data-id="${escapeHtml(p.id)}">
           ${icone("star")} Destaque
         </button>
@@ -336,15 +412,19 @@ function itemHtml(p) {
 
 function atualizarStats() {
   const total = produtos.length;
-  const ativos = produtos.filter((p) => p.ativo).length;
+  const contar = (estado) => produtos.filter((p) => p.statusEstoque === estado).length;
+  const esgotados = contar("esgotado");
+  const inativos = contar("inativo");
+  // "No site" inclui os esgotados: eles continuam na vitrine, só marcados.
+  const noSite = total - inativos;
   const destaques = produtos.filter((p) => p.destaque).length;
-  const esgotados = produtos.filter((p) => !p.emEstoque).length;
 
   $("stats").innerHTML = `
     <span class="ap-chip">${icone("box")} <strong>${total}</strong> cadastrados</span>
-    <span class="ap-chip">${icone("eye")} <strong>${ativos}</strong> no site</span>
+    <span class="ap-chip">${icone("eye")} <strong>${noSite}</strong> no site</span>
     <span class="ap-chip">${icone("star")} <strong>${destaques}</strong> em destaque</span>
-    ${esgotados ? `<span class="ap-chip ap-chip--alerta">${icone("alert")} <strong>${esgotados}</strong> esgotado${esgotados > 1 ? "s" : ""}</span>` : ""}`;
+    ${esgotados ? `<span class="ap-chip ap-chip--alerta">${icone("alert")} <strong>${esgotados}</strong> esgotado${esgotados > 1 ? "s" : ""}</span>` : ""}
+    ${inativos ? `<span class="ap-chip">${icone("eye-off")} <strong>${inativos}</strong> inativo${inativos > 1 ? "s" : ""}</span>` : ""}`;
 }
 
 elBusca.addEventListener("input", renderizarLista);
@@ -361,21 +441,37 @@ elLista.addEventListener("click", (e) => {
 
   if (acao === "editar") abrirFormulario(id);
   else if (acao === "excluir") pedirConfirmacaoExclusao(produto);
-  else if (acao === "ativo") alternarCampo(botao, id, "ativo", !produto.ativo);
-  else if (acao === "destaque") alternarCampo(botao, id, "destaque", !produto.destaque);
+  else if (acao === "destaque") gravarCampos(botao, id, { destaque: !produto.destaque });
+  else if (acao === "status") {
+    const novo = botao.dataset.status;
+    // Tocar no estado que já está marcado não é erro nem troca: só ignora.
+    if (novo === produto.statusEstoque) return;
+    gravarCampos(botao, id, camposDeStatus(novo));
+  }
 });
 
-async function alternarCampo(botao, id, campo, valor) {
-  // Desabilita durante a escrita para não disparar dois toggles no mesmo item
+/**
+ * O que vai para o banco quando o estado muda.
+ * `status_estoque` é a fonte da verdade; `ativo` e `emEstoque` seguem junto
+ * como espelho, porque as regras publicadas do Realtime Database e o catálogo
+ * de reserva ainda falam a língua dos booleanos. Sempre gravados na MESMA
+ * escrita, para nunca existir um instante em que discordem.
+ */
+function camposDeStatus(statusEstoque) {
+  return { status_estoque: statusEstoque, ...camposLegadosDeStatus(statusEstoque) };
+}
+
+async function gravarCampos(botao, id, campos) {
+  // Desabilita durante a escrita para não disparar duas trocas no mesmo item
   // (o `onValue` redesenha a lista e o estado voltaria a ficar ambíguo).
   botao.disabled = true;
   try {
     await update(ref(db, `${DB_PATHS.produtos}/${id}`), {
-      [campo]: valor,
+      ...campos,
       atualizadoEm: serverTimestamp(),
     });
   } catch (erro) {
-    console.error(`Erro ao alterar ${campo}:`, erro);
+    console.error("Erro ao alterar produto:", erro);
     toast("Não foi possível salvar a alteração.", "erro");
     botao.disabled = false;
   }
@@ -659,6 +755,20 @@ dropzone.addEventListener("drop", (e) => {
 // ---------------------------------------------------------------------------
 const sheet = $("sheetForm");
 
+/** Marca no formulário o estado do produto (grupo de rádios do status). */
+function definirStatusNoFormulario(statusEstoque) {
+  const alvo = STATUS_ESTOQUE.includes(statusEstoque) ? statusEstoque : "ativo";
+  document.querySelectorAll('input[name="statusEstoque"]').forEach((radio) => {
+    radio.checked = radio.value === alvo;
+  });
+}
+
+/** Estado escolhido no formulário. */
+function statusDoFormulario() {
+  const marcado = document.querySelector('input[name="statusEstoque"]:checked');
+  return STATUS_ESTOQUE.includes(marcado?.value) ? marcado.value : "ativo";
+}
+
 function abrirFormulario(id = null) {
   editandoId = id;
   limparErros();
@@ -677,8 +787,7 @@ function abrirFormulario(id = null) {
   $("fCategoria").value = p?.categoria ?? categoriaDoStatus(p?.status ?? "Seminovo");
   $("fDescricao").value = p?.descricao ?? "";
   $("fDestaque").checked = p?.destaque ?? false;
-  $("fAtivo").checked = p ? p.ativo : true;
-  $("fEmEstoque").checked = p ? p.emEstoque : true;
+  definirStatusNoFormulario(p ? p.statusEstoque : "ativo");
   // `observacoes` só existe no registro cru: de propósito, não passa pelo
   // objeto canônico que o site público consome.
   $("fObservacoes").value = bruto?.observacoes ?? "";
@@ -763,8 +872,7 @@ $("formProduto").addEventListener("submit", async (e) => {
     categoria: $("fCategoria").value,
     descricao: $("fDescricao").value.trim(),
     destaque: $("fDestaque").checked,
-    ativo: $("fAtivo").checked,
-    emEstoque: $("fEmEstoque").checked,
+    ...camposDeStatus(statusDoFormulario()),
     fotos,
     observacoes: $("fObservacoes").value.trim(),
     atualizadoEm: serverTimestamp(),
@@ -781,7 +889,12 @@ $("formProduto").addEventListener("submit", async (e) => {
     } else {
       const novo = push(ref(db, DB_PATHS.produtos));
       await set(novo, { ...dados, criadoEm: serverTimestamp() });
-      toast("Produto cadastrado e já no ar.", "ok");
+      toast(
+        dados.status_estoque === "inativo"
+          ? "Produto cadastrado como inativo — ainda não aparece no site."
+          : "Produto cadastrado e já no ar.",
+        "ok"
+      );
     }
     fecharFormulario();
   } catch (erro) {

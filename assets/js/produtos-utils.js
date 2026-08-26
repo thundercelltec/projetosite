@@ -22,6 +22,61 @@ export function categoriaDoStatus(status) {
   return status === "Novo" ? "novo" : "usado";
 }
 
+// ---------------------------------------------------------------------------
+// Estado de publicação (status_estoque)
+// ---------------------------------------------------------------------------
+// Um campo só, três estados. Antes isto eram dois booleanos independentes
+// (`ativo` + `emEstoque`) que podiam se contradizer no banco — "inativo mas em
+// estoque" não quer dizer nada, e a loja tinha que acertar dois interruptores
+// para descrever um estado só.
+//
+// No Firebase o campo se chama `status_estoque`; aqui dentro ele é
+// `statusEstoque`, como todo o resto do objeto canônico.
+export const STATUS_ESTOQUE = ["ativo", "esgotado", "inativo"];
+
+export const ROTULO_STATUS_ESTOQUE = {
+  ativo: "Ativo",
+  esgotado: "Esgotado",
+  inativo: "Inativo",
+};
+
+/**
+ * Estado de publicação de um registro cru.
+ *
+ * `status_estoque` manda. Sem ele, deriva dos campos antigos — é isso que faz
+ * todo produto cadastrado antes desta mudança continuar com o estado correto
+ * mesmo que a migração do painel ainda não tenha rodado, e o que mantém o
+ * `data/produtos.json` (que usa `disponivel`) funcionando como reserva.
+ */
+export function statusEstoqueDe(bruto) {
+  const salvo = String(bruto?.status_estoque ?? "").trim().toLowerCase();
+  if (STATUS_ESTOQUE.includes(salvo)) return salvo;
+
+  // "Fora do site" vem primeiro: um produto inativo continua inativo mesmo que
+  // o booleano de estoque diga o contrário.
+  if (bruto?.ativo === false) return "inativo";
+
+  // `disponivel: false` é como o catálogo estático antigo escrevia "acabou".
+  const temEstoque =
+    bruto?.emEstoque !== undefined ? bruto.emEstoque !== false : bruto?.disponivel !== false;
+  return temEstoque ? "ativo" : "esgotado";
+}
+
+/**
+ * Os dois booleanos antigos, derivados do estado novo.
+ *
+ * O painel grava isto junto com `status_estoque` de propósito: as regras
+ * publicadas do banco, o `data/produtos.json` e qualquer export antigo ainda
+ * falam a língua dos booleanos. Eles são **espelho**, nunca fonte — quem lê
+ * sempre passa por `statusEstoqueDe()`, que dá prioridade ao campo novo.
+ */
+export function camposLegadosDeStatus(statusEstoque) {
+  return {
+    ativo: statusEstoque !== "inativo",
+    emEstoque: statusEstoque === "ativo",
+  };
+}
+
 const formatadorBRL = new Intl.NumberFormat("pt-BR", {
   style: "currency",
   currency: "BRL",
@@ -114,15 +169,8 @@ export function normalizarProduto(id, bruto) {
     ? categoriaBruta
     : categoriaDoStatus(status);
 
-  // Ativo = aparece no site. Default: visível.
-  const ativo = bruto.ativo !== false;
-
-  // Em estoque = pode comprar agora. Um produto pode estar ativo e esgotado:
-  // ele continua no catálogo, só marcado.
-  // O catálogo antigo usava `disponivel: false` com esse mesmo sentido de
-  // "acabou" — por isso ele cai aqui, e não em `ativo`.
-  const emEstoque =
-    bruto.emEstoque !== undefined ? bruto.emEstoque !== false : bruto.disponivel !== false;
+  // Estado de publicação: "ativo" | "esgotado" | "inativo".
+  const statusEstoque = statusEstoqueDe(bruto);
 
   return {
     id: String(id),
@@ -137,8 +185,11 @@ export function normalizarProduto(id, bruto) {
     status,
     categoria,
     destaque: bruto.destaque === true,
-    ativo,
-    emEstoque,
+    statusEstoque,
+    // Derivados do estado, para o resto do site continuar perguntando as duas
+    // coisas simples que ele sempre perguntou: "aparece?" e "dá para comprar?".
+    ativo: statusEstoque !== "inativo",
+    emEstoque: statusEstoque === "ativo",
     fotos,
     descricao: String(bruto.descricao ?? "").trim(),
     // `observacoes` é interno: fica de fora do objeto canônico usado no site
@@ -162,7 +213,9 @@ export function listarProdutos(dados, { somenteAtivos = true } = {}) {
   const lista = entradas
     .map(([id, bruto]) => normalizarProduto(id, bruto))
     .filter(Boolean)
-    .filter((p) => (somenteAtivos ? p.ativo : true));
+    // Inativo é o único estado que some do site: o esgotado continua na
+    // vitrine, só marcado.
+    .filter((p) => (somenteAtivos ? p.statusEstoque !== "inativo" : true));
 
   return ordenarProdutos(lista);
 }

@@ -1,0 +1,152 @@
+<!doctype html><html lang=pt-BR><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<link rel=stylesheet href=assets/css/style.css>
+<link rel=stylesheet href=assets/css/admin.css></head>
+<body class=admin style="padding:1.5rem"><svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6"/><path d="M18.4 2.6a2 2 0 0 1 2.8 2.8L12 14.6l-4 1 1-4Z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.7 6.2A9.9 9.9 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-3 3.7M6.6 6.6A17 17 0 0 0 2 12s3.5 6 10 6a9.6 9.6 0 0 0 4.3-1M3 3l18 18M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 15.1 8.8l6.9 1-5 4.9 1.2 6.8-6.2-3.2-6.2 3.2L7 14.7l-5-4.9 6.9-1L12 2.5Z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.6"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></symbol>
+    <symbol id="i-banner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
+</svg>
+<div class="ap-container" style="max-width:520px">
+  <h2 style="font-family:var(--font-title);margin-bottom:.4rem">Lista de produtos</h2>
+  <p style="font-size:.8rem;color:var(--muted);margin-bottom:1rem">Badge de status + troca rápida nos três estados, sem abrir o formulário.</p>
+  <div style="display:grid;gap:.7rem"><article class="ap-item ap-item--ativo">
+    <div class="ap-item__topo">
+      <img class="ap-item__foto" src="assets/img/xiaomi-redmi-15-1.png" alt="" />
+      <div class="ap-item__info">
+        <h3 class="ap-item__nome">Xiaomi Redmi 15 256GB</h3>
+        <p class="ap-item__preco">R$ 1.499,00</p>
+        <div class="ap-item__tags">
+          <span class="ap-tag ap-tag--ativo">Ativo</span>
+          <span class="ap-tag ap-tag--destaque">Destaque</span>
+          <span class="ap-tag">Novo</span>
+          <span class="ap-tag">Excelente</span>
+          <span class="ap-tag">Bat. 100%</span>
+        </div>
+      </div>
+    </div>
+    <div class="ap-seg" role="group"><button class="ap-seg__btn ap-seg__btn--ativo is-on" type="button"
+              aria-pressed="true" title="Ativo">
+              <svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg><span class="ap-seg__rotulo">Ativo</span>
+            </button><button class="ap-seg__btn ap-seg__btn--esgotado" type="button"
+              aria-pressed="false" title="Esgotado">
+              <svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg><span class="ap-seg__rotulo">Esgotado</span>
+            </button><button class="ap-seg__btn ap-seg__btn--inativo" type="button"
+              aria-pressed="false" title="Inativo">
+              <svg class="icon" aria-hidden="true"><use href="#i-eye-off"></use></svg><span class="ap-seg__rotulo">Inativo</span>
+            </button></div>
+    <div class="ap-item__acoes">
+      <button class="ap-btn-lista is-on" type="button"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg> Destaque</button>
+      <button class="ap-btn-lista" type="button"><svg class="icon" aria-hidden="true"><use href="#i-edit"></use></svg> Editar</button>
+      <button class="ap-btn-lista ap-btn-lista--perigo" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg> Excluir</button>
+    </div>
+  </article><article class="ap-item ap-item--esgotado">
+    <div class="ap-item__topo">
+      <img class="ap-item__foto" src="assets/img/samsung-a17-1.jpg" alt="" />
+      <div class="ap-item__info">
+        <h3 class="ap-item__nome">Samsung Galaxy A17 128GB</h3>
+        <p class="ap-item__preco">R$ 1.199,00</p>
+        <div class="ap-item__tags">
+          <span class="ap-tag ap-tag--esgotado">Esgotado</span>
+          
+          <span class="ap-tag">Novo</span>
+          <span class="ap-tag">Excelente</span>
+          <span class="ap-tag">Bat. 100%</span>
+        </div>
+      </div>
+    </div>
+    <div class="ap-seg" role="group"><button class="ap-seg__btn ap-seg__btn--ativo" type="button"
+              aria-pressed="false" title="Ativo">
+              <svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg><span class="ap-seg__rotulo">Ativo</span>
+            </button><button class="ap-seg__btn ap-seg__btn--esgotado is-on" type="button"
+              aria-pressed="true" title="Esgotado">
+              <svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg><span class="ap-seg__rotulo">Esgotado</span>
+            </button><button class="ap-seg__btn ap-seg__btn--inativo" type="button"
+              aria-pressed="false" title="Inativo">
+              <svg class="icon" aria-hidden="true"><use href="#i-eye-off"></use></svg><span class="ap-seg__rotulo">Inativo</span>
+            </button></div>
+    <div class="ap-item__acoes">
+      <button class="ap-btn-lista " type="button"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg> Destaque</button>
+      <button class="ap-btn-lista" type="button"><svg class="icon" aria-hidden="true"><use href="#i-edit"></use></svg> Editar</button>
+      <button class="ap-btn-lista ap-btn-lista--perigo" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg> Excluir</button>
+    </div>
+  </article><article class="ap-item ap-item--inativo">
+    <div class="ap-item__topo">
+      <img class="ap-item__foto" src="assets/img/xiaomi-poco-c71-1.jpg" alt="" />
+      <div class="ap-item__info">
+        <h3 class="ap-item__nome">Xiaomi Poco C71 64GB</h3>
+        <p class="ap-item__preco">R$ 799,00</p>
+        <div class="ap-item__tags">
+          <span class="ap-tag ap-tag--inativo">Inativo</span>
+          
+          <span class="ap-tag">Novo</span>
+          <span class="ap-tag">Excelente</span>
+          <span class="ap-tag">Bat. 100%</span>
+        </div>
+      </div>
+    </div>
+    <div class="ap-seg" role="group"><button class="ap-seg__btn ap-seg__btn--ativo" type="button"
+              aria-pressed="false" title="Ativo">
+              <svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg><span class="ap-seg__rotulo">Ativo</span>
+            </button><button class="ap-seg__btn ap-seg__btn--esgotado" type="button"
+              aria-pressed="false" title="Esgotado">
+              <svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg><span class="ap-seg__rotulo">Esgotado</span>
+            </button><button class="ap-seg__btn ap-seg__btn--inativo is-on" type="button"
+              aria-pressed="true" title="Inativo">
+              <svg class="icon" aria-hidden="true"><use href="#i-eye-off"></use></svg><span class="ap-seg__rotulo">Inativo</span>
+            </button></div>
+    <div class="ap-item__acoes">
+      <button class="ap-btn-lista " type="button"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg> Destaque</button>
+      <button class="ap-btn-lista" type="button"><svg class="icon" aria-hidden="true"><use href="#i-edit"></use></svg> Editar</button>
+      <button class="ap-btn-lista ap-btn-lista--perigo" type="button"><svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg> Excluir</button>
+    </div>
+  </article></div>
+
+  <h2 style="font-family:var(--font-title);margin:2rem 0 .4rem">Formulário de edição</h2>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem"><fieldset class="status-campo" id="campoStatusEstoque">
+                    <legend class="status-campo__titulo">Status do produto</legend>
+
+                    <label class="status-op status-op--ativo">
+                        <input type="radio" name="statusEstoque" value="ativo" checked />
+                        <span class="status-op__marca" aria-hidden="true"></span>
+                        <span class="status-op__texto">
+                            <span class="status-op__nome">Ativo</span>
+                            <span class="status-op__dica">Aparece no catálogo normalmente, pronto para venda.</span>
+                        </span>
+                    </label>
+
+                    <label class="status-op status-op--esgotado">
+                        <input type="radio" name="statusEstoque" value="esgotado" />
+                        <span class="status-op__marca" aria-hidden="true"></span>
+                        <span class="status-op__texto">
+                            <span class="status-op__nome">Esgotado</span>
+                            <span class="status-op__dica">Continua no catálogo com a foto em cinza, faixa <strong>ESGOTADO</strong> e o botão trocado por “Avise-me quando chegar”.</span>
+                        </span>
+                    </label>
+
+                    <label class="status-op status-op--inativo">
+                        <input type="radio" name="statusEstoque" value="inativo" />
+                        <span class="status-op__marca" aria-hidden="true"></span>
+                        <span class="status-op__texto">
+                            <span class="status-op__nome">Inativo</span>
+                            <span class="status-op__dica">Some do site inteiro. Fica salvo aqui para reativar quando quiser.</span>
+                        </span>
+                    </label>
+                </fieldset></div>
+</div></body></html>

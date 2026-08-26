@@ -179,7 +179,9 @@ painel), use esta versão no lugar:
         ".validate": "newData.hasChildren(['modelo','preco','fotos'])",
         "modelo":    { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120" },
         "preco":     { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "status_estoque": { ".validate": "newData.val() == 'ativo' || newData.val() == 'esgotado' || newData.val() == 'inativo'" },
         "ativo":     { ".validate": "newData.isBoolean()" },
+        "emEstoque": { ".validate": "newData.isBoolean()" },
         "destaque":  { ".validate": "newData.isBoolean()" },
         "bateria":   { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
         "condicao":  { ".validate": "newData.val() == '' || newData.val() == 'Boa' || newData.val() == 'Muito boa' || newData.val() == 'Excelente'" },
@@ -336,21 +338,34 @@ Endereço: `https://thundercell.netlify.app/admin`
 - **Status** decide em qual seção do site o produto entra: *Novo* vai para
   "Aparelhos novos", *Seminovo* para "Aparelhos seminovos". O selo do card e o
   prazo de garantia mostrado seguem esse campo.
-- **Em estoque:** desligue quando o aparelho acabar. Ele **continua no site**,
-  mas com faixa **ESGOTADO** sobre a foto, aviso "Retorna em breve", opacidade
-  reduzida e o botão trocado por "Avise-me quando chegar" (mesmo WhatsApp, com
-  outra mensagem já escrita). Esgotados também vão para o fim da sua seção.
-  Quando voltar, é só religar — a loja decide a hora.
+- **Status do produto** é um campo só, com três opções:
+  - **Ativo** — aparece no catálogo normalmente, pronto para venda.
+  - **Esgotado** — **continua no site**, com a foto em preto e branco, a faixa
+    **ESGOTADO** atravessando a imagem, o aviso "Retorna em breve" e o botão
+    trocado por "Avise-me quando chegar" (mesmo WhatsApp, com outra mensagem já
+    escrita). Esgotados também vão para o fim da sua seção. Quando o aparelho
+    voltar, é só marcar **Ativo** de novo.
+  - **Inativo** — some do site inteiro, mas continua salvo no painel para ser
+    reativado quando a loja quiser.
 - **Destaque:** joga o produto para o topo do seu grupo, com selo dourado sólido.
 - **Quantos aparecem no site:** cada seção mostra os primeiros — **3** em
   "Aparelhos novos" e **2** em "Aparelhos seminovos" — e o resto fica atrás de
   um botão "Ver mais". Os limites estão em `GRUPOS`, no
   `assets/js/produto-card.js`. Nada some: quem tem mais produtos ganha o botão
   automaticamente, quem tem menos que o limite nem mostra o botão.
-- **Ativo:** desligado, o produto some do site mas continua no painel.
-- Na lista, **Ativo** e **Destaque** também podem ser ligados/desligados com um
-  toque, sem abrir o formulário.
+- Na lista, cada produto traz os três botões de status (**Ativo · Esgotado ·
+  Inativo**) e o de **Destaque**: dá para trocar com um toque, sem abrir o
+  formulário. O badge colorido ao lado do preço mostra em que estado ele está.
 - **Observações internas** nunca aparecem no site (leia a ressalva na seção 4).
+
+> **Nota técnica.** O status vive no campo `status_estoque` do banco
+> (`"ativo"` | `"esgotado"` | `"inativo"`). Ele substituiu os dois booleanos
+> antigos `ativo` + `emEstoque`, que continuam sendo gravados junto **apenas
+> como espelho** (as regras publicadas e o catálogo de reserva ainda os usam) —
+> quem manda é sempre o `status_estoque`. Produtos cadastrados antes da mudança
+> são convertidos sozinhos na primeira vez que o painel é aberto, e enquanto
+> isso não acontece o site já deriva o estado correto dos booleanos. Nenhum
+> produto precisa ser recadastrado.
 
 Dica: salve o painel na tela inicial do celular (menu do navegador → "Adicionar
 à tela de início") para abrir como se fosse um app.
@@ -422,8 +437,8 @@ instabilidade do Firebase nunca coloca no ar aparelhos que já foram vendidos.
 | "E-mail ou senha incorretos" com a senha certa | O usuário não foi criado em *Authentication > Users*, ou o método E-mail/senha não está ativo |
 | Salva e aparece "Sem permissão para salvar" | Regras do banco não publicadas (seção 4) |
 | Foto não envia | Upload preset não está como **Unsigned**, ou o cloud name está errado |
-| Produto salvo não aparece no site | O interruptor **Ativo** está desligado |
-| Produto aparece com faixa ESGOTADO | O interruptor **Em estoque** está desligado |
+| Produto salvo não aparece no site | O status do produto está em **Inativo** |
+| Produto aparece com faixa ESGOTADO | O status do produto está em **Esgotado** |
 | Aviso "Recorte de fundo indisponível" | A conta Cloudinary não tem essa transformação liberada (seção 3.1) — a foto é salva sem recorte |
 | "Sem permissão para salvar o banner" | Falta o nó `config` nas regras do banco (seção 4) |
 | Seção do Instagram só mostra o convite | Nenhuma foto cadastrada em **/admin > Instagram** |

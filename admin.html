@@ -352,17 +352,37 @@
                     <p class="campo__erro" hidden></p>
                 </div>
 
-                <!-- Interruptores -->
-                <label class="switch-row" for="fEmEstoque">
-                    <span class="switch-row__texto">
-                        <span class="switch-row__titulo">Em estoque</span>
-                        <span class="switch-row__dica">Desligado, o card fica marcado como <strong>ESGOTADO</strong> no site — mas continua aparecendo.</span>
-                    </span>
-                    <span class="switch">
-                        <input type="checkbox" id="fEmEstoque" checked />
-                        <span class="switch__trilho"></span>
-                    </span>
-                </label>
+                <!-- Status do produto: um campo, três estados -->
+                <fieldset class="status-campo" id="campoStatusEstoque">
+                    <legend class="status-campo__titulo">Status do produto</legend>
+
+                    <label class="status-op status-op--ativo">
+                        <input type="radio" name="statusEstoque" value="ativo" checked />
+                        <span class="status-op__marca" aria-hidden="true"></span>
+                        <span class="status-op__texto">
+                            <span class="status-op__nome">Ativo</span>
+                            <span class="status-op__dica">Aparece no catálogo normalmente, pronto para venda.</span>
+                        </span>
+                    </label>
+
+                    <label class="status-op status-op--esgotado">
+                        <input type="radio" name="statusEstoque" value="esgotado" />
+                        <span class="status-op__marca" aria-hidden="true"></span>
+                        <span class="status-op__texto">
+                            <span class="status-op__nome">Esgotado</span>
+                            <span class="status-op__dica">Continua no catálogo com a foto em cinza, faixa <strong>ESGOTADO</strong> e o botão trocado por “Avise-me quando chegar”.</span>
+                        </span>
+                    </label>
+
+                    <label class="status-op status-op--inativo">
+                        <input type="radio" name="statusEstoque" value="inativo" />
+                        <span class="status-op__marca" aria-hidden="true"></span>
+                        <span class="status-op__texto">
+                            <span class="status-op__nome">Inativo</span>
+                            <span class="status-op__dica">Some do site inteiro. Fica salvo aqui para reativar quando quiser.</span>
+                        </span>
+                    </label>
+                </fieldset>
 
                 <label class="switch-row" for="fDestaque">
                     <span class="switch-row__texto">
@@ -371,17 +391,6 @@
                     </span>
                     <span class="switch">
                         <input type="checkbox" id="fDestaque" />
-                        <span class="switch__trilho"></span>
-                    </span>
-                </label>
-
-                <label class="switch-row" for="fAtivo">
-                    <span class="switch-row__texto">
-                        <span class="switch-row__titulo">Ativo</span>
-                        <span class="switch-row__dica">Desligado, some do site mas continua aqui.</span>
-                    </span>
-                    <span class="switch">
-                        <input type="checkbox" id="fAtivo" checked />
                         <span class="switch__trilho"></span>
                     </span>
                 </label>

@@ -23,7 +23,7 @@ const ENTRADA = path.join(ROOT, 'data', 'produtos.json');
 const SAIDA = path.join(ROOT, 'data', 'importar-no-firebase.json');
 
 async function principal() {
-    const { normalizarProduto, categoriaDoStatus } = await import(
+    const { normalizarProduto, categoriaDoStatus, camposLegadosDeStatus } = await import(
         pathToFileURL(path.join(ROOT, 'assets', 'js', 'produtos-utils.js')).href
     );
 
@@ -52,7 +52,10 @@ async function principal() {
             // Define em qual seção do site o aparelho entra.
             categoria: categoriaDoStatus(p.status),
             destaque: false,
-            ativo: p.ativo,
+            // Estado de publicação já no formato novo (`status_estoque` manda;
+            // os booleanos vão junto como espelho, veja produtos-utils.js).
+            status_estoque: p.statusEstoque,
+            ...camposLegadosDeStatus(p.statusEstoque),
             fotos: p.fotos,
             descricao: p.descricao,
             observacoes: 'Importado do catálogo antigo — conferir bateria e condição.',

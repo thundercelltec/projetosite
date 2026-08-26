@@ -10,7 +10,9 @@
       "status": "Novo",
       "categoria": "novo",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/xiaomi-redmi-a7-pro-1.jpg",
         "assets/img/xiaomi-redmi-a7-pro-2.jpg"
@@ -30,7 +32,9 @@
       "status": "Seminovo",
       "categoria": "usado",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/xiaomi-poco-c71-1.jpg",
         "assets/img/xiaomi-poco-c71-2.jpg"
@@ -50,7 +54,9 @@
       "status": "Seminovo",
       "categoria": "usado",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/samsung-a07-2.jpg",
         "assets/img/samsung-a07-1.jpg"
@@ -70,7 +76,9 @@
       "status": "Novo",
       "categoria": "novo",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/samsung-a17-1.jpg",
         "assets/img/samsung-a17-2.jpg"
@@ -90,7 +98,9 @@
       "status": "Novo",
       "categoria": "novo",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/xiaomi-redmi-15-1.png",
         "assets/img/xiaomi-redmi-15-2.png",
@@ -111,7 +121,9 @@
       "status": "Novo",
       "categoria": "novo",
       "destaque": false,
-      "ativo": false,
+      "status_estoque": "esgotado",
+      "ativo": true,
+      "emEstoque": false,
       "fotos": [
         "assets/img/xiaomi-redmi-note-14-1.png",
         "assets/img/xiaomi-redmi-note-14-2.png"
@@ -131,7 +143,9 @@
       "status": "Seminovo",
       "categoria": "usado",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/dell-vostro-1.jpg",
         "assets/img/dell-vostro-2.jpg",
@@ -152,7 +166,9 @@
       "status": "Novo",
       "categoria": "novo",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/xiaomi-redmi-pad-2-1.jpg",
         "assets/img/xiaomi-redmi-pad-2-2.jpg"
@@ -172,7 +188,9 @@
       "status": "Seminovo",
       "categoria": "usado",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/jbl-xtreme-4-1.jpg",
         "assets/img/jbl-xtreme-4-2.jpg",
@@ -193,7 +211,9 @@
       "status": "Seminovo",
       "categoria": "usado",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/xiaomi-smart-band-9-1.jpg",
         "assets/img/xiaomi-smart-band-9-2.jpg"
@@ -213,7 +233,9 @@
       "status": "Seminovo",
       "categoria": "usado",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/xiaomi-smart-band-10-1.jpg",
         "assets/img/xiaomi-smart-band-10-2.jpg"
@@ -233,7 +255,9 @@
       "status": "Seminovo",
       "categoria": "usado",
       "destaque": false,
+      "status_estoque": "ativo",
       "ativo": true,
+      "emEstoque": true,
       "fotos": [
         "assets/img/echo-show-5-1.jpg",
         "assets/img/echo-show-5-2.jpg",

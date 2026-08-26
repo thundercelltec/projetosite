@@ -347,13 +347,57 @@ body.admin {
     white-space: nowrap;
 }
 .ap-tag--ativo    { color: #14804A; background: #E9F7EF; border-color: #B8E3C9; }
-.ap-tag--inativo  { color: #7A7A7A; background: #F2F2F2; border-color: #DDD; }
+.ap-tag--inativo  { color: #6B6B6B; background: #F2F2F2; border-color: #DDD; }
 .ap-tag--destaque { color: #1A1A1A; background: var(--ouro); border-color: var(--ouro); }
 .ap-tag--esgotado { color: #fff; background: var(--esgotado); border-color: var(--esgotado); }
 
 /* Esgotado: barra lateral vermelha para achar na lista de relance.
    Diferente de inativo (cinza e apagado) — aqui o produto está no ar. */
 .ap-item--esgotado { border-left-color: var(--esgotado); }
+
+/* ---- Troca rápida de status, direto na lista --------------------------
+   Trocar "chegou de novo" ou "tira do site" é a operação mais frequente do
+   painel; abrir o formulário inteiro só para isso era caro demais. */
+.ap-seg {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    padding: 3px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+}
+.ap-seg__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-height: 34px;
+    padding: 0.3rem 0.35rem;
+    border: 0;
+    border-radius: calc(var(--radius-sm) - 3px);
+    background: transparent;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    line-height: 1.15;
+    transition: background-color 0.18s var(--ease), color 0.18s var(--ease);
+}
+.ap-seg__btn .icon { width: 14px; height: 14px; flex: none; }
+.ap-seg__btn:hover:not(.is-on) { background: var(--surface); color: var(--ink); }
+.ap-seg__btn[disabled] { opacity: 0.5; pointer-events: none; }
+
+/* O selecionado usa as mesmas cores do badge do mesmo estado, para "onde
+   está" e "o que estou marcando" serem obviamente a mesma informação. */
+.ap-seg__btn.is-on { background: var(--surface); box-shadow: var(--shadow); }
+.ap-seg__btn--ativo.is-on    { color: #14804A; background: #E9F7EF; }
+.ap-seg__btn--esgotado.is-on { color: #fff; background: var(--esgotado); }
+.ap-seg__btn--inativo.is-on  { color: #4A4A4A; background: #E4E4E4; }
+
+/* Celular bem estreito: sobra o ícone, que já é o sinal de cada estado */
+@media (max-width: 349px) {
+    .ap-seg__rotulo { display: none; }
+}
 
 .ap-chip--alerta {
     color: var(--esgotado);
@@ -363,10 +407,10 @@ body.admin {
 .ap-chip--alerta .icon { color: var(--esgotado); }
 .ap-chip--alerta strong { color: var(--esgotado); }
 
-/* Ações: duas colunas fixas no celular — nada de quebra torta */
+/* Ações: três colunas fixas no celular — nada de quebra torta */
 .ap-item__acoes {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.4rem;
     padding-top: 0.65rem;
     border-top: 1px dashed var(--border);
@@ -702,6 +746,84 @@ body.admin {
 .switch input:checked + .switch__trilho { background: var(--brand); }
 .switch input:checked + .switch__trilho::after { transform: translateX(19px); }
 .switch input:focus-visible + .switch__trilho { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* ---- Status do produto (ativo / esgotado / inativo) ---------------------
+   Três opções empilhadas, cada uma com o que ela faz no site escrito ao lado.
+   Um <select> caberia em menos espaço, mas esconderia justamente a diferença
+   entre "esgotado" e "inativo" — que é onde a loja erra. */
+.status-campo {
+    display: grid;
+    gap: 0.4rem;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+}
+.status-campo__titulo {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink);
+    padding: 0;
+    margin-bottom: 0.1rem;
+}
+
+.status-op {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.7rem 0.85rem;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.18s var(--ease), background-color 0.18s var(--ease);
+}
+/* O radio de verdade fica invisível por cima da marca: continua sendo ele que
+   recebe o teclado, o clique e o estado de foco. */
+.status-op input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+}
+.status-op__marca {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin-top: 0.12rem;
+    border: 2px solid var(--muted-soft);
+    border-radius: 50%;
+    background: var(--surface);
+    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.status-op__texto { min-width: 0; }
+.status-op__nome { display: block; font-size: 0.89rem; font-weight: 600; }
+.status-op__dica { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
+/* Cor por estado: a mesma do badge que o produto vai ganhar na lista. */
+.status-op--ativo    { --status-cor: #14804A; --status-fundo: #E9F7EF; }
+.status-op--esgotado { --status-cor: var(--esgotado); --status-fundo: #FDECEA; }
+.status-op--inativo  { --status-cor: #6B6B6B; --status-fundo: #F2F2F2; }
+
+.status-op:has(input:checked) {
+    border-color: var(--status-cor);
+    background: var(--status-fundo);
+}
+.status-op:has(input:checked) .status-op__nome { color: var(--status-cor); }
+.status-op:has(input:checked) .status-op__marca {
+    border-color: var(--status-cor);
+    /* O "miolo" do radio é uma sombra interna — nada de pseudo-elemento extra */
+    box-shadow: inset 0 0 0 3.5px var(--status-fundo), inset 0 0 0 9px var(--status-cor);
+}
+.status-op:has(input:focus-visible) { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* Sem :has() (navegador antigo) a marca some e nada indica a escolha. Este
+   fallback mantém pelo menos o radio nativo visível. */
+@supports not selector(:has(*)) {
+    .status-op input { position: static; opacity: 1; width: 18px; height: 18px; }
+    .status-op__marca { display: none; }
+}
 
 /* ---------------------------------------------------------------
    10. Upload de fotos do produto

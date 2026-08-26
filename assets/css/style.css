@@ -835,16 +835,26 @@ h1, h2, h3, h4 {
 /* ---------------------------------------------------------------
    9. Cards de produto
    --------------------------------------------------------------- */
+/* O gap conversa com o ritmo interno do card (0.7rem entre blocos, 1.1rem de
+   respiro nas bordas). Numa coluna só, o que a pessoa enxerga entre dois
+   produtos não é o gap sozinho: é o gap MAIS o respiro de baixo do card, e a
+   borda clara quase não separa os dois. Somados precisam ficar um pouco acima
+   do maior passo interno — o suficiente para dizer "outro produto", não para
+   parecerem dois blocos soltos. */
 .product-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.1rem;
+    gap: 0.8rem;
     position: relative;
     z-index: 1;
 }
 
+/* Em duas ou três colunas só o gap HORIZONTAL cresce: lado a lado os cards
+   precisam de mais ar para não virarem um bloco só. Na vertical o raciocínio
+   é o mesmo da coluna única, então o row-gap de 0.8rem da regra base continua
+   valendo em toda largura. */
 @media (min-width: 620px) {
-    .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+    .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.25rem; }
 }
 @media (min-width: 1000px) {
     .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -967,11 +977,15 @@ h1, h2, h3, h4 {
 
 /* ---- Produto esgotado -------------------------------------------------
    O card continua no catálogo (a loja decide quando reativar), só fica
-   visivelmente marcado: opacidade reduzida, faixa sobre a foto e CTA
-   trocado por "Avise-me quando chegar". */
+   visivelmente marcado: foto em cinza, faixa "ESGOTADO" atravessando a
+   imagem, aviso de retorno e CTA trocado por "Avise-me quando chegar".
+
+   A opacidade do card é leve (0.88): quem tira o aparelho da disputa é o
+   cinza da foto, e preço e modelo precisam continuar legíveis para a pessoa
+   decidir se vale esperar a reposição. */
 .product-card--esgotado {
-    opacity: 0.7;
-    --reveal-opacidade: 0.7;
+    opacity: 0.88;
+    --reveal-opacidade: 0.88;
 }
 @media (hover: hover) {
     /* Sem o "levanta no hover": o card não é uma oferta ativa. */
@@ -980,13 +994,18 @@ h1, h2, h3, h4 {
     .product-card--esgotado:hover .product-card__media .product-card__img--front { opacity: 1; }
 }
 
-/* Véu sobre a foto, para o selo ter contraste em qualquer imagem */
+/* Foto em preto e branco: o aparelho continua reconhecível, mas nada nele
+   parece uma oferta ativa. É o sinal que se lê antes de qualquer texto. */
+.product-card__media--esgotado .product-card__img { filter: grayscale(100%); }
+
+/* Véu sobre a foto, para o selo ter contraste em qualquer imagem. Discreto:
+   o cinza já fez o trabalho pesado, e um véu forte apagaria a foto. */
 .product-card__media--esgotado::after {
     content: '';
     position: absolute;
     inset: 0;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.3);
     pointer-events: none;
 }
 
@@ -998,16 +1017,17 @@ h1, h2, h3, h4 {
     right: 0;
     z-index: 3;
     translate: 0 -50%;
-    padding: 0.45rem 0.5rem;
-    background: var(--esgotado);
+    padding: 0.5rem 0.5rem;
+    background: rgba(38, 38, 38, 0.92);
+    border-block: 1px solid rgba(255, 255, 255, 0.35);
     color: #fff;
     font-family: var(--font-title);
     font-weight: 700;
-    font-size: 0.82rem;
-    letter-spacing: 0.16em;
+    font-size: 0.86rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     text-align: center;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 /* "Avise-me quando chegar" é bem mais longo que "Tenho interesse" e não cabe
@@ -1031,7 +1051,11 @@ h1, h2, h3, h4 {
     flex-direction: column;
     flex: 1;
     gap: 0.7rem;
-    padding: 1.1rem 1.15rem 1.25rem;
+    /* Embaixo cabe menos que em cima: o último elemento é a fileira de botões,
+       que já carrega a própria altura de toque como respiro. Os 1.25rem de
+       antes empilhavam com o gap da grade e abriam um vão de 40px entre um
+       card e o outro. */
+    padding: 1.1rem 1.15rem 1rem;
 }
 
 .product-card__name {
@@ -1077,15 +1101,8 @@ h1, h2, h3, h4 {
 .spec .icon { width: 14px; height: 14px; color: var(--ouro-ink); flex: none; }
 .spec strong { color: var(--ink); font-weight: 600; }
 
-.product-card__desc {
-    font-size: 0.86rem;
-    color: var(--muted);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    line-clamp: 2;
-    overflow: hidden;
-}
+/* A descrição do produto não entra mais no card — ela vive só no modal de
+   detalhes (`.modal__desc`). Veja o comentário em produto-card.js. */
 
 /* Os dois botões só ficam lado a lado quando o CARD é largo o bastante — e
    isso não depende da largura da tela: numa grade de 3 colunas o card é
