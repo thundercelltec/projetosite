@@ -20,7 +20,7 @@ import {
 } from "./site-config.js";
 import { firebaseConfig, DB_PATHS, firebaseConfigurado } from "./firebase-config.js";
 import { otimizarUrl } from "./image-config.js";
-import { listarProdutos, formatarPrecoCurto, escapeHtml } from "./produtos-utils.js";
+import { listarProdutos, formatarBRL, escapeHtml } from "./produtos-utils.js";
 // O mesmo módulo que o build usa para pré-renderizar o catálogo — card do
 // navegador e card do HTML estático nunca saem diferentes.
 import { catalogoHtml, specRowHtml } from "./produto-card.js";
@@ -327,7 +327,7 @@ function abrirModal(produto) {
       <h2 class="modal__title" id="modalTitulo">${escapeHtml(produto.titulo)}</h2>
       ${specRowHtml(produto)}
       <div>
-        <p class="modal__price">${formatarPrecoCurto(produto.preco)}</p>
+        <p class="modal__price">${formatarBRL(produto.preco)}</p>
         ${esgotado
           ? `<p class="retorna-breve"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>Retorna em breve</p>`
           : parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}

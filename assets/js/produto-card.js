@@ -21,7 +21,7 @@ import {
 } from "./site-config.js";
 import {
   escapeHtml,
-  formatarPrecoCurto,
+  formatarBRL,
   fotoPrincipal,
   fotoVerso,
   seloDoProduto,
@@ -74,7 +74,13 @@ export function cardHtml(produto, indice = 0, { extra = false } = {}) {
     : mensagemInteresse(produto.titulo);
   const wa = linkWhatsapp(mensagem);
 
-  const classesMidia = ["product-card__media", esgotado ? "product-card__media--esgotado" : ""]
+  // O cross-fade frente/verso do hover só pode acontecer quando existe verso —
+  // sem essa marcação a frente sumiria e o card ficaria vazio.
+  const classesMidia = [
+    "product-card__media",
+    verso ? "product-card__media--com-verso" : "",
+    esgotado ? "product-card__media--esgotado" : "",
+  ]
     .filter(Boolean)
     .join(" ");
   const faixaEsgotado = esgotado ? `<span class="selo-esgotado">Esgotado</span>` : "";
@@ -103,7 +109,7 @@ export function cardHtml(produto, indice = 0, { extra = false } = {}) {
   <div class="product-card__body">
     <h3 class="product-card__name">${escapeHtml(produto.modelo)}${produto.capacidade ? ` <span>${escapeHtml(produto.capacidade)}</span>` : ""}</h3>
     <div>
-      <p class="product-card__price">${formatarPrecoCurto(produto.preco)}</p>
+      <p class="product-card__price">${formatarBRL(produto.preco)}</p>
       ${esgotado
         ? `<p class="retorna-breve">${icone("refresh")}Retorna em breve</p>`
         : parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}

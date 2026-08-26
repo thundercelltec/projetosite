@@ -28,19 +28,14 @@ const formatadorBRL = new Intl.NumberFormat("pt-BR", {
   minimumFractionDigits: 2,
 });
 
-/** R$ 3.599,00 */
+/**
+ * R$ 5.500,00 — formato único de preço no site e no painel.
+ * Os centavos aparecem sempre, inclusive em valor redondo: preço de loja é
+ * escrito assim, e alternar entre "R$ 5.500" e "R$ 5.500,90" na mesma vitrine
+ * deixava a grade desalinhada.
+ */
 export function formatarBRL(valor) {
   return formatadorBRL.format(Number(valor) || 0);
-}
-
-/** R$ 3.599 — versão curta usada no preço grande do card. */
-export function formatarPrecoCurto(valor) {
-  const n = Number(valor) || 0;
-  // Preços "redondos" ficam mais elegantes sem os centavos (R$ 3.599).
-  if (Number.isInteger(n)) {
-    return `R$ ${n.toLocaleString("pt-BR")}`;
-  }
-  return formatarBRL(n);
 }
 
 /** Escapa texto que vai para dentro de HTML gerado por template string. */
