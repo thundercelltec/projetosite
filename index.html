@@ -44,7 +44,14 @@
     <!-- Liga as animações de entrada. Fica inline e antes do CSS ser aplicado
          ao corpo para não haver "flash" — e, sem JavaScript, a classe nunca
          entra e todo o conteúdo aparece normalmente (ver `.js .reveal`). -->
-    <script>document.documentElement.classList.add('js');</script>
+    <script>
+        document.documentElement.classList.add('js');
+        // Barra de aviso do topo (boleto): só aparece com JS e se a pessoa
+        // não a dispensou antes. Decidido aqui, antes da pintura, para não
+        // piscar nem empurrar o layout depois.
+        try { if (localStorage.getItem('tc_promo_boleto_fechada') !== '1') document.documentElement.classList.add('has-promo'); }
+        catch (e) { document.documentElement.classList.add('has-promo'); }
+    </script>
 
     <!-- Dados estruturados (SEO local): as duas unidades da loja -->
     <script type="application/ld+json">
@@ -391,6 +398,18 @@
 <!-- =====================================================================
      CABEÇALHO
      ===================================================================== -->
+<!-- Barra fina fixa no topo: leva para #boleto; o X dispensa e lembra a escolha -->
+<div class="promo-bar" id="promoBar">
+    <a class="promo-bar__link" href="#boleto">
+        <svg class="icon" aria-hidden="true"><use href="#i-card"></use></svg>
+        <span>Boleto em até 24x · sem entrada</span>
+        <strong>Ver</strong>
+    </a>
+    <button class="promo-bar__close" id="promoFechar" type="button" aria-label="Dispensar aviso">
+        <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+    </button>
+</div>
+
 <header class="header" id="header">
     <div class="container header__inner">
         <a class="brand" href="#topo" aria-label="Thunder Cell — início">
@@ -401,6 +420,7 @@
         <nav class="nav" aria-label="Navegação principal">
             <ul class="nav__list">
                 <li><a class="nav__link" href="#topo">Início</a></li>
+                <li><a class="nav__link" href="#boleto">Boleto 24x</a></li>
                 <li><a class="nav__link" href="#catalogo">Catálogo</a></li>
                 <li><a class="nav__link" href="#garantia">Garantia</a></li>
                 <li><a class="nav__link" href="#sobre">Sobre</a></li>
@@ -422,6 +442,7 @@
 
     <div class="nav-mobile" id="navMobile">
         <a href="#topo">Início</a>
+        <a href="#boleto">Boleto 24x</a>
         <a href="#catalogo">Catálogo</a>
         <a href="#garantia">Garantia</a>
         <a href="#sobre">Sobre</a>
@@ -444,10 +465,16 @@
 
         <div class="container hero__inner">
             <div class="hero__text reveal">
-                <span class="hero__eyebrow">
-                    <svg class="icon" aria-hidden="true"><use href="#i-bolt"></use></svg>
-                    Thunder Cell · Tangará-SC
-                </span>
+                <div class="hero__tags">
+                    <span class="hero__eyebrow">
+                        <svg class="icon" aria-hidden="true"><use href="#i-bolt"></use></svg>
+                        Thunder Cell · Tangará-SC
+                    </span>
+                    <a class="hero__chip" href="#boleto">
+                        <svg class="icon" aria-hidden="true"><use href="#i-card"></use></svg>
+                        Boleto em até 24x · sem entrada
+                    </a>
+                </div>
 
                 <h1 class="hero__title">Aparelhos revisados, com <span>garantia</span> de verdade</h1>
 
@@ -494,6 +521,134 @@
 <img class="hero__phone" src="https://res.cloudinary.com/ecryyjxy/image/upload/e_background_removal/f_auto,q_auto,c_limit,w_600/v1787311604/thundercell-produtos/ovb4cufpdmfzzskljk3m.png" alt="" width="400" height="533" loading="lazy" decoding="async" />
 <!-- BUILD:HERO-END -->
             </div>
+        </div>
+    </section>
+
+    <!-- =================================================================
+         BOLETO EM ATÉ 24x
+         Estado final já está no HTML (cadeado aberto, R$ 0, datas
+         genéricas). O boleto.js preenche as datas reais, monta passos e
+         chips a partir do site-config.js e roda as animações.
+         ================================================================= -->
+    <section class="section boleto" id="boleto" aria-labelledby="boletoTitulo">
+        <span class="blob boleto__blob" aria-hidden="true"></span>
+
+        <div class="container boleto__inner">
+            <header class="boleto__head reveal">
+                <h2 class="boleto__title" id="boletoTitulo">Seu celular novo no boleto, em até <span>24x</span></h2>
+                <p class="boleto__sub">Sem bloqueio no aparelho, sem entrada e com a 1ª parcela só daqui a <span data-boleto-dias>60</span> dias.</p>
+            </header>
+
+            <div class="boleto__grid">
+                <!-- Cadeado: fecha e abre a cada 3 s (CSS), só com a seção na tela -->
+                <article class="b-card b-lock reveal">
+                    <svg class="lock" viewBox="0 0 48 48" aria-hidden="true">
+                        <g class="lock__haste"><path d="M15 22v-7a9 9 0 0 1 18 0v7"/></g>
+                        <rect class="lock__corpo" x="10" y="21" width="28" height="22" rx="5"/>
+                        <circle class="lock__furo" cx="24" cy="30" r="2.8"/>
+                        <rect class="lock__furo" x="22.8" y="31" width="2.4" height="6" rx="1.2"/>
+                    </svg>
+                    <div>
+                        <h3 class="b-card__title">Sem bloqueio no celular</h3>
+                        <p class="b-card__text">O aparelho é seu desde o primeiro dia.</p>
+                    </div>
+                </article>
+
+                <!-- Sem entrada: contador cai até R$ 0 e o selo pulsa -->
+                <article class="b-card b-entrada reveal" style="--delay: 80ms">
+                    <div class="b-entrada__linha">
+                        <div>
+                            <span class="b-entrada__rot">Entrada</span>
+                            <strong class="b-entrada__num" id="entradaNum" aria-label="Entrada: zero reais">R$ 0</strong>
+                        </div>
+                        <span class="b-entrada__selo" id="entradaSelo">Sem entrada</span>
+                    </div>
+                    <p class="b-entrada__text">Você leva o aparelho sem pagar nada na hora.</p>
+                </article>
+
+                <!-- 60 dias: datas calculadas no navegador, nada fixo no código -->
+                <article class="b-card b-cal reveal" id="boletoCal">
+                    <h3 class="b-card__title">1ª parcela só em <span><span data-boleto-dias>60</span> dias</span></h3>
+
+                    <div class="tl">
+                        <div class="tl__trilho">
+                            <span class="tl__linha"></span>
+                            <span class="tl__fill"></span>
+                            <span class="tl__tick is-hit" style="left:0"></span>
+                            <span class="tl__tick is-hit" style="left:50%"></span>
+                            <span class="tl__tick is-hit" style="left:100%"></span>
+                            <span class="tl__dot"><svg class="icon" aria-hidden="true"><use href="#i-phone"></use></svg></span>
+                        </div>
+                        <ol class="tl__marcos">
+                            <li><span data-marco-rotulo="0">Hoje</span><strong data-marco="0">--/--</strong></li>
+                            <li><span data-marco-rotulo="1">30 dias</span><strong data-marco="1">--/--</strong></li>
+                            <li><span data-marco-rotulo="2">60 dias</span><strong data-marco="2">--/--</strong></li>
+                        </ol>
+                    </div>
+
+                    <p class="tl__final" aria-live="polite">
+                        Sua 1ª parcela: <strong data-parcela-data>--/--</strong>
+                        <small data-parcela-extenso></small>
+                    </p>
+                </article>
+
+                <!-- Plano TIM: reaproveita a logo da seção de planos -->
+                <article class="b-card b-tim reveal" style="--delay: 80ms">
+                    <span class="b-tim__sinal" aria-hidden="true">
+                        <svg viewBox="0 0 56 48">
+                            <path class="sim" d="M10 6h13l7 7v26a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3Z"/>
+                            <rect class="sim" x="12" y="22" width="12" height="11" rx="2"/>
+                            <path class="onda onda--1" d="M38 19a7 7 0 0 1 0 10"/>
+                            <path class="onda onda--2" d="M43 14a14 14 0 0 1 0 20"/>
+                            <path class="onda onda--3" d="M48 9a21 21 0 0 1 0 30"/>
+                        </svg>
+                    </span>
+                    <div>
+                        <img class="b-tim__logo" src="assets/img/tim.png" alt="TIM" width="1200" height="630" loading="lazy" />
+                        <h3 class="b-card__title">Chance de ganhar <strong>1 ano de plano TIM</strong> incluso</h3>
+                        <p class="b-card__text">Condições da campanha com a loja.</p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="b-card b-passos reveal">
+                <h3 class="b-card__title">Como funciona</h3>
+                <ol class="passos" id="boletoPassos">
+                    <li class="passos__item">
+                        <span class="passos__ico"><svg class="icon" aria-hidden="true"><use href="#i-phone"></use></svg><b>1</b></span>
+                        <div><h4>Escolha seu aparelho</h4><p>Veja o catálogo ou diga o modelo no WhatsApp.</p></div>
+                    </li>
+                    <li class="passos__item">
+                        <span class="passos__ico"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><b>2</b></span>
+                        <div><h4>Faça a análise de crédito</h4><p>Rápida, pelo WhatsApp ou na loja.</p></div>
+                    </li>
+                    <li class="passos__item">
+                        <span class="passos__ico"><svg class="icon" aria-hidden="true"><use href="#i-box"></use></svg><b>3</b></span>
+                        <div><h4>Leve o celular e pague no boleto</h4><p>Retire na loja e pague as parcelas no boleto.</p></div>
+                    </li>
+                </ol>
+                <div class="passos__docs" id="boletoDocs" hidden>
+                    <h4>Documentos para a análise</h4>
+                    <ul></ul>
+                </div>
+            </div>
+
+            <div class="b-card b-cta reveal">
+                <p class="b-cta__rot" id="boletoChipsRot">Em quantas parcelas?</p>
+                <div class="chips" id="boletoChips" role="radiogroup" aria-labelledby="boletoChipsRot">
+                    <button class="chip" type="button" role="radio" aria-checked="false" data-parcelas="6">6x</button>
+                    <button class="chip" type="button" role="radio" aria-checked="false" data-parcelas="12">12x</button>
+                    <button class="chip" type="button" role="radio" aria-checked="false" data-parcelas="18">18x</button>
+                    <button class="chip" type="button" role="radio" aria-checked="true" data-parcelas="24">24x</button>
+                </div>
+                <a class="btn btn--whatsapp btn--lg btn--block" id="boletoCta" target="_blank" rel="noopener noreferrer"
+                   href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Quero%20comprar%20um%20celular%20no%20boleto%20em%2024x%2C%20sem%20entrada.%20Pode%20me%20ajudar%3F">
+                    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+                    Quero no boleto
+                </a>
+            </div>
+
+            <p class="boleto__legal">Sujeito à análise e aprovação de crédito. Condições, valores e taxas informados antes da contratação. Benefício do plano TIM sujeito às regras da campanha.</p>
         </div>
     </section>
 
@@ -1200,6 +1355,7 @@
             <h3 class="footer__title">Links rápidos</h3>
             <ul class="footer__links">
                 <li><a href="#topo">Início</a></li>
+                <li><a href="#boleto">Boleto em até 24x</a></li>
                 <li><a href="#catalogo">Catálogo</a></li>
                 <li><a href="#garantia">Garantia</a></li>
                 <li><a href="#sobre">Sobre a loja</a></li>

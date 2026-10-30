@@ -185,6 +185,9 @@ export function normalizarProduto(id, bruto) {
     status,
     categoria,
     destaque: bruto.destaque === true,
+    // Campo opcional `aceitaBoleto`: só `false` explícito tira o selo. Sem o
+    // campo, todo aparelho à venda mostra "Aceita boleto".
+    aceitaBoleto: bruto.aceitaBoleto !== false,
     statusEstoque,
     // Derivados do estado, para o resto do site continuar perguntando as duas
     // coisas simples que ele sempre perguntou: "aparece?" e "dá para comprar?".

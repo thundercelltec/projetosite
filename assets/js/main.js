@@ -24,6 +24,7 @@ import { listarProdutos, formatarBRL, escapeHtml } from "./produtos-utils.js";
 // O mesmo módulo que o build usa para pré-renderizar o catálogo — card do
 // navegador e card do HTML estático nunca saem diferentes.
 import { catalogoHtml, specRowHtml } from "./produto-card.js";
+import { iniciarBoleto } from "./boleto.js";
 
 // ---------------------------------------------------------------------------
 // Identidade da loja aplicada ao HTML estático
@@ -680,6 +681,7 @@ iniciarCabecalho();
 // vazio — assim o hero nunca fica com um buraco no lugar das imagens.
 if (heroGallery && heroGallery.children.length === 0) renderizarHero([]);
 iniciarReveal();
+iniciarBoleto();
 iniciarAbas();
 iniciarFiltros();
 iniciarModal();

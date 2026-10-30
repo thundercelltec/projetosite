@@ -18,6 +18,7 @@ import {
   mensagemInteresse,
   mensagemAvisoRetorno,
   garantiaDoStatus,
+  boletoParcelasMax,
 } from "./site-config.js";
 import {
   escapeHtml,
@@ -118,6 +119,7 @@ export function cardHtml(produto, indice = 0, { extra = false } = {}) {
       ${esgotado
         ? `<p class="retorna-breve">${icone("refresh")}Retorna em breve</p>`
         : parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}
+      ${!esgotado && produto.aceitaBoleto !== false ? `<a class="tag-boleto" href="#boleto">${icone("card")}Aceita boleto ${boletoParcelasMax()}x</a>` : ""}
     </div>
     ${specRowHtml(produto)}
     <div class="product-card__actions">
