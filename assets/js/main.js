@@ -20,11 +20,12 @@ import {
 } from "./site-config.js";
 import { firebaseConfig, DB_PATHS, firebaseConfigurado } from "./firebase-config.js";
 import { otimizarUrl } from "./image-config.js";
-import { listarProdutos, formatarBRL, escapeHtml } from "./produtos-utils.js";
+import { listarProdutos, escapeHtml } from "./produtos-utils.js";
 // O mesmo módulo que o build usa para pré-renderizar o catálogo — card do
 // navegador e card do HTML estático nunca saem diferentes.
-import { catalogoHtml, specRowHtml } from "./produto-card.js";
+import { catalogoHtml, specRowHtml, precosHtml, seloBoletoHtml } from "./produto-card.js";
 import { iniciarBoleto } from "./boleto.js";
+import { iniciarCabecalho } from "./cabecalho.js";
 
 // ---------------------------------------------------------------------------
 // Identidade da loja aplicada ao HTML estático
@@ -49,59 +50,8 @@ function aplicarConfig() {
 // ---------------------------------------------------------------------------
 // Cabeçalho: sombra ao rolar, menu mobile e link ativo
 // ---------------------------------------------------------------------------
-function iniciarCabecalho() {
-  const header = document.getElementById("header");
-  const toggle = document.getElementById("navToggle");
-  const menu = document.getElementById("navMobile");
-
-  const aoRolar = () => {
-    header.classList.toggle("is-scrolled", window.scrollY > 8);
-  };
-  aoRolar();
-  window.addEventListener("scroll", aoRolar, { passive: true });
-
-  const fecharMenu = () => {
-    menu.classList.remove("is-open");
-    toggle.setAttribute("aria-expanded", "false");
-    toggle.setAttribute("aria-label", "Abrir menu");
-  };
-
-  toggle.addEventListener("click", () => {
-    const aberto = menu.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", String(aberto));
-    toggle.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
-  });
-
-  menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", fecharMenu));
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") fecharMenu();
-  });
-
-  // Marca no menu a seção que está na tela. `rootMargin` puxa a linha de
-  // detecção para a altura do header, senão a seção "ativa" troca cedo demais.
-  const links = [...document.querySelectorAll(".nav__link")];
-  const secoes = links
-    .map((link) => document.querySelector(link.getAttribute("href")))
-    .filter(Boolean);
-
-  if (secoes.length) {
-    const observador = new IntersectionObserver(
-      (entradas) => {
-        entradas.forEach((entrada) => {
-          if (!entrada.isIntersecting) return;
-          links.forEach((link) => {
-            link.classList.toggle(
-              "is-active",
-              link.getAttribute("href") === `#${entrada.target.id}`
-            );
-          });
-        });
-      },
-      { rootMargin: "-45% 0px -50% 0px" }
-    );
-    secoes.forEach((s) => observador.observe(s));
-  }
-}
+// `iniciarCabecalho` vem de cabecalho.js — o mesmo código serve a home e as
+// páginas internas, que agora têm o mesmo header.
 
 // ---------------------------------------------------------------------------
 // Animação de entrada ao rolar
@@ -328,10 +278,11 @@ function abrirModal(produto) {
       <h2 class="modal__title" id="modalTitulo">${escapeHtml(produto.titulo)}</h2>
       ${specRowHtml(produto)}
       <div>
-        <p class="modal__price">${formatarBRL(produto.preco)}</p>
+        ${precosHtml(produto, "modal__price")}
         ${esgotado
           ? `<p class="retorna-breve"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>Retorna em breve</p>`
           : parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}
+        ${seloBoletoHtml(produto)}
       </div>
       ${produto.descricao ? `<p class="modal__desc">${escapeHtml(produto.descricao)}</p>` : ""}
       <hr class="dotted-rule" />

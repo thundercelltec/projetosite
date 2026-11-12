@@ -1,0 +1,1188 @@
+/* =========================================================================
+   THUNDER CELL — natal.css
+   Tema de Natal das páginas públicas. Carregado DEPOIS do style.css.
+
+   COMO LIGA / DESLIGA
+   Tudo aqui está preso à classe `tema-natal` no <body>. Sem ela, nenhuma
+   regra deste arquivo se aplica e os blocos marcados com `data-natal` no HTML
+   (faixa do topo, cordão de luzes, seção do sorteio…) somem — quem os esconde
+   é a seção 20 do style.css. Ou seja: apagar `class="tema-natal"` do <body>
+   devolve o site normal.
+
+   O QUE NÃO É TEMA
+   Preço à vista / a prazo, selo do boleto e a barra fixa do WhatsApp são
+   permanentes e moram no style.css.
+
+   DESEMPENHO (o acesso é quase todo por celular)
+   • Animação só com transform e opacity.
+   • Todo loop fica dentro de `prefers-reduced-motion: no-preference`.
+   • O natal.js põe `.natal-pausa` na seção que saiu da tela, e isso congela
+     os loops dela.
+
+   Sumário
+   1.  Tokens e base
+   2.  Faixa do sorteio (topo)
+   3.  Cabeçalho e cordão de luzes
+   4.  Neve (canvas) e camadas
+   5.  Hero
+   6.  Brilho dourado (shimmer) e enfeites
+   7.  Seção do sorteio
+   8.  Títulos de seção e divisores
+   9.  Catálogo e cards de produto
+   10. Garantia, sobre, serviços, painéis
+   11. Faixas escuras: boleto e troca
+   12. Instagram e FAQ
+   13. Rodapé e mapas
+   14. Barra do WhatsApp
+   15. Página de política
+   16. Entrada ao rolar e pausa fora da tela
+   ========================================================================= */
+
+/* ---------------------------------------------------------------
+   1. Tokens e base
+   --------------------------------------------------------------- */
+.tema-natal {
+    /* A marca continua azul + cinza + dourado. O Natal soma vermelho e
+       verde-pinheiro; o dourado segue sendo o destaque. */
+    --natal-vermelho: #B3202A;         /* 6,5:1 com texto branco */
+    --natal-vermelho-escuro: #7D0F17;
+    --natal-vermelho-vivo: #D92B38;
+    --natal-verde: #14573D;            /* 8,6:1 com texto branco */
+    --natal-verde-escuro: #0B3B29;
+    --natal-verde-claro: #1F7A4D;
+    --natal-ouro-claro: #F4DC86;       /* dourado como TEXTO sobre fundo escuro */
+    --natal-noite: #0B2B4A;
+    --natal-noite-2: #123E69;
+
+    /* Fundo "neve": um cinza levemente azulado no lugar do cinza neutro. */
+    --bg: #F1F5FA;
+    --border: #DFE6EE;
+
+    /* A faixa do sorteio ocupa o lugar da barra do boleto no topo. */
+    --promo-h: 44px;
+
+    background-color: var(--bg);
+    /* Flocos bem apagados no fundo das seções claras. Estático, custa nada. */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180' fill='none' stroke='%23DCE6F1' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M30 20v20M21.3 25l17.4 10M21.3 35l17.4-10'/%3E%3Cpath d='M130 96v28M117.9 103l24.2 14M117.9 117l24.2-14'/%3E%3Cpath d='M70 150v12M64.8 153l10.4 6M64.8 159l10.4-6'/%3E%3C/svg%3E");
+}
+/* O scroll-padding mora no <html>, que não enxerga a variável do <body>. */
+html:has(body.tema-natal) { --promo-h: 44px; }
+
+.tema-natal ::selection { background: var(--natal-vermelho); color: #fff; }
+
+/* ---------------------------------------------------------------
+   2. Faixa do sorteio (topo de todas as páginas)
+   --------------------------------------------------------------- */
+.tema-natal .promo-bar { display: none !important; }   /* cede o lugar à faixa */
+
+.tema-natal .natal-faixa {
+    position: sticky;
+    top: 0;
+    z-index: 101;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--promo-h);
+    padding-inline: 0.75rem;
+    overflow: hidden;
+    background: linear-gradient(90deg, var(--natal-vermelho-escuro), var(--natal-vermelho) 50%, var(--natal-vermelho-escuro));
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.25;
+    text-align: center;
+}
+.tema-natal .natal-faixa__txt { position: relative; z-index: 1; text-wrap: balance; }
+.tema-natal .natal-faixa strong { color: var(--natal-ouro-claro); font-weight: 700; }
+.tema-natal .natal-faixa:active { opacity: 0.9; }
+/* Reflexo que atravessa a faixa de tempos em tempos */
+.tema-natal .natal-faixa::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 40%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+    transform: translateX(-120%);
+}
+@media (min-width: 560px) {
+    .tema-natal .natal-faixa { font-size: 0.86rem; }
+}
+
+/* ---------------------------------------------------------------
+   3. Cabeçalho e cordão de luzes
+   --------------------------------------------------------------- */
+.tema-natal .header,
+.tema-natal .header.is-scrolled { border-bottom-color: transparent; }
+
+/* Enfeite AO LADO da marca — a logo em si não é tocada. */
+.tema-natal .brand__name { position: relative; }
+.tema-natal .header .brand__name::after {
+    content: '';
+    position: absolute;
+    top: -0.35em;
+    right: -0.95em;
+    width: 0.7em; height: 0.7em;
+    background: var(--ouro);
+    clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
+.tema-natal .nav__link::after { background: linear-gradient(90deg, var(--natal-vermelho), var(--ouro)); }
+
+/* Cordão pendurado logo abaixo do header. Quatro camadas (uma por cor), cada
+   uma um fundo que se repete: são só 4 elementos piscando, por mais larga
+   que seja a tela. */
+.tema-natal .natal-luzes {
+    position: absolute;
+    left: 0; right: 0;
+    top: 100%;
+    height: 24px;
+    overflow: hidden;
+    pointer-events: none;
+    /* o fio */
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='24' viewBox='0 0 28 24'%3E%3Cpath d='M0 2Q14 11 28 2' fill='none' stroke='%231D3B2A' stroke-width='1.4'/%3E%3C/svg%3E") repeat-x 0 0;
+}
+.tema-natal .natal-luzes i {
+    position: absolute;
+    inset: 0;
+    background-repeat: repeat-x;
+    background-size: 112px 24px;
+}
+.tema-natal .natal-luzes i:nth-child(1) {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='24' viewBox='0 0 112 24'%3E%3Ccircle cx='14' cy='14' r='9' fill='%23E5333F' opacity='.28'/%3E%3Crect x='12' y='5' width='4' height='3.4' rx='1' fill='%232A2A2A'/%3E%3Cellipse cx='14' cy='14' rx='4.2' ry='6' fill='%23E5333F'/%3E%3Cellipse cx='12.7' cy='12' rx='1.1' ry='2' fill='%23fff' opacity='.65'/%3E%3C/svg%3E");
+}
+.tema-natal .natal-luzes i:nth-child(2) {
+    background-position: 28px 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='24' viewBox='0 0 112 24'%3E%3Ccircle cx='14' cy='14' r='9' fill='%23F2C230' opacity='.32'/%3E%3Crect x='12' y='5' width='4' height='3.4' rx='1' fill='%232A2A2A'/%3E%3Cellipse cx='14' cy='14' rx='4.2' ry='6' fill='%23F2C230'/%3E%3Cellipse cx='12.7' cy='12' rx='1.1' ry='2' fill='%23fff' opacity='.7'/%3E%3C/svg%3E");
+}
+.tema-natal .natal-luzes i:nth-child(3) {
+    background-position: 56px 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='24' viewBox='0 0 112 24'%3E%3Ccircle cx='14' cy='14' r='9' fill='%2328A866' opacity='.28'/%3E%3Crect x='12' y='5' width='4' height='3.4' rx='1' fill='%232A2A2A'/%3E%3Cellipse cx='14' cy='14' rx='4.2' ry='6' fill='%2328A866'/%3E%3Cellipse cx='12.7' cy='12' rx='1.1' ry='2' fill='%23fff' opacity='.65'/%3E%3C/svg%3E");
+}
+.tema-natal .natal-luzes i:nth-child(4) {
+    background-position: 84px 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='24' viewBox='0 0 112 24'%3E%3Ccircle cx='14' cy='14' r='9' fill='%233D8FE0' opacity='.28'/%3E%3Crect x='12' y='5' width='4' height='3.4' rx='1' fill='%232A2A2A'/%3E%3Cellipse cx='14' cy='14' rx='4.2' ry='6' fill='%233D8FE0'/%3E%3Cellipse cx='12.7' cy='12' rx='1.1' ry='2' fill='%23fff' opacity='.65'/%3E%3C/svg%3E");
+}
+/* O menu mobile abre por baixo do cordão: um respiro para o 1º link. */
+.tema-natal .nav-mobile { padding-top: 1.6rem; }
+
+/* ---------------------------------------------------------------
+   4. Neve (canvas) e camadas
+   --------------------------------------------------------------- */
+/* O canvas é fixo e fica ENTRE o fundo das seções e o conteúdo: cai por trás
+   dos textos e dos cards, e `pointer-events: none` garante que nenhum toque
+   pare nele. */
+.tema-natal .natal-neve {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.tema-natal main .container,
+.tema-natal .footer .container { position: relative; z-index: 2; }
+
+/* ---------------------------------------------------------------
+   5. Hero
+   --------------------------------------------------------------- */
+.tema-natal .hero {
+    background:
+        radial-gradient(110% 70% at 85% 0%, rgba(61, 143, 224, 0.35), transparent 60%),
+        radial-gradient(70% 50% at 0% 100%, rgba(20, 87, 61, 0.55), transparent 70%),
+        linear-gradient(175deg, var(--natal-noite) 0%, var(--natal-noite-2) 60%, #0E3357 100%);
+    color: #fff;
+    padding-top: clamp(3.2rem, 8vw, 5rem);
+    padding-bottom: clamp(5rem, 12vw, 7rem);
+}
+.tema-natal .hero .blob { display: none; }
+
+/* Morros de neve no pé do hero: fecham na cor da seção seguinte. */
+.tema-natal .hero::before,
+.tema-natal .hero::after,
+.tema-natal .page-hero::before,
+.tema-natal .page-hero::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: clamp(40px, 9vw, 72px);
+    background: var(--natal-abaixo, var(--bg));
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0 60V30C140 6 300 2 450 24s300 28 450 8 200-26 300-8V60Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0 60V30C140 6 300 2 450 24s300 28 450 8 200-26 300-8V60Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    z-index: 1;
+    pointer-events: none;
+}
+.tema-natal .hero::before,
+.tema-natal .page-hero::before {
+    /* morro de trás, mais alto e translúcido: dá profundidade */
+    height: clamp(56px, 12vw, 96px);
+    opacity: 0.35;
+    transform: scaleX(-1);
+}
+
+.tema-natal .hero__eyebrow {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+.tema-natal .hero__chip {
+    background: rgba(212, 175, 55, 0.16);
+    border-color: rgba(244, 220, 134, 0.55);
+    color: var(--natal-ouro-claro);
+}
+.tema-natal .hero__title { color: #fff; }
+.tema-natal .hero__title > span { color: var(--natal-ouro-claro); }
+.tema-natal .hero__copy { color: rgba(255, 255, 255, 0.9); }
+
+/* Sobre o azul-noite o botão azul sumiria: o principal vira dourado. */
+.tema-natal .hero .btn--primary {
+    background: linear-gradient(135deg, #F0D36B, var(--ouro) 55%, #C69F27);
+    color: #1A1A1A;
+    box-shadow: 0 8px 22px rgba(212, 175, 55, 0.4);
+}
+.tema-natal .hero .btn--ghost {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #fff;
+}
+
+.tema-natal .hero__proof { border-top-color: rgba(255, 255, 255, 0.28); }
+.tema-natal .hero__proof-num { color: var(--natal-ouro-claro); }
+.tema-natal .hero__proof-label { color: rgba(255, 255, 255, 0.85); }
+
+.tema-natal .hero__gallery::before {
+    background: radial-gradient(ellipse at center, rgba(244, 220, 134, 0.38), transparent 68%);
+    inset: auto -6% 0;
+    height: 86%;
+}
+.tema-natal .hero__phone { filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.4)); }
+.tema-natal .hero__gallery-vazio {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* Linha "Especial de Natal" acima do título */
+.tema-natal .natal-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.7rem;
+    font-family: var(--font-title);
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+.tema-natal .natal-kicker::before,
+.tema-natal .natal-kicker::after {
+    content: '';
+    flex: none;
+    width: 0.8em; height: 0.8em;
+    background: var(--natal-ouro-claro);
+    clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
+/* Chamada do sorteio dentro do hero */
+.tema-natal .natal-chamada {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 72px;
+    margin-bottom: 1.5rem;
+    padding: 0.85rem 0.95rem;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(179, 32, 42, 0.92), rgba(125, 15, 23, 0.92));
+    border: 1.5px solid rgba(244, 220, 134, 0.7);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    transition: transform 0.16s var(--ease);
+}
+.tema-natal .natal-chamada:active { transform: scale(0.98); }
+.tema-natal .natal-chamada__ico {
+    flex: none;
+    width: 46px; height: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #F0D36B, var(--ouro));
+    color: var(--natal-vermelho-escuro);
+}
+.tema-natal .natal-chamada__ico .icon { width: 24px; height: 24px; }
+.tema-natal .natal-chamada__txt { flex: 1; min-width: 0; display: grid; gap: 0.12rem; }
+.tema-natal .natal-chamada__txt strong {
+    font-family: var(--font-title);
+    font-size: 1.02rem;
+    line-height: 1.2;
+    color: var(--natal-ouro-claro);
+}
+.tema-natal .natal-chamada__txt span { font-size: 0.9rem; line-height: 1.35; }
+.tema-natal .natal-chamada__txt small { font-size: 0.8rem; color: rgba(255, 255, 255, 0.85); }
+.tema-natal .natal-chamada__seta { flex: none; width: 20px; height: 20px; color: var(--natal-ouro-claro); transform: rotate(-90deg); }
+
+/* ---------------------------------------------------------------
+   6. Brilho dourado (shimmer) e enfeites
+   --------------------------------------------------------------- */
+/* Texto em degradê dourado. O reflexo que passa por cima é montado pelo
+   natal.js com duas camadas que andam em sentidos opostos — assim o brilho
+   corre só com `transform`, sem animar `background-position`. */
+.tema-natal [data-brilho] {
+    position: relative;
+    display: inline-block;
+    color: var(--natal-ouro-claro);
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .tema-natal [data-brilho] {
+        background: linear-gradient(100deg, #F9E9A8 0%, #E3C04D 35%, #F4DC86 60%, #D4AF37 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+.tema-natal .natal-brilho__janela {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(100deg, transparent 30%, #000 50%, transparent 70%);
+    mask-image: linear-gradient(100deg, transparent 30%, #000 50%, transparent 70%);
+    transform: translateX(-101%);
+}
+.tema-natal .natal-brilho__copia {
+    position: absolute;
+    inset: 0;
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+    background: none;
+    transform: translateX(101%);
+}
+
+/* Galho de pinheiro com bolas, estrelas e flocos — injetados pelo natal.js */
+.tema-natal .natal-enfeites {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.tema-natal .natal-galho {
+    position: absolute;
+    top: -4px;
+    right: -14px;
+    width: clamp(150px, 44vw, 250px);
+    height: auto;
+    overflow: visible;
+}
+.tema-natal .natal-galho--esq { display: none; right: auto; left: -14px; transform: scaleX(-1); }
+@media (min-width: 900px) {
+    .tema-natal .natal-galho--esq { display: block; }
+}
+.tema-natal .natal-faisca {
+    position: absolute;
+    width: var(--t, 14px);
+    height: var(--t, 14px);
+    color: var(--natal-ouro-claro);
+    opacity: 0.85;
+}
+.tema-natal .natal-faisca--floco { color: #fff; opacity: 0.55; }
+
+/* ---------------------------------------------------------------
+   7. Seção do sorteio
+   --------------------------------------------------------------- */
+.tema-natal .natal-sorteio {
+    padding-block: clamp(1.6rem, 5vw, 3rem) clamp(2.6rem, 7vw, 4.5rem);
+}
+
+/* O "cartão" vermelho que segura a seção inteira */
+.tema-natal .sorteio {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    gap: 1.4rem;
+    padding: 1.6rem 1rem 1.3rem;
+    border-radius: 26px;
+    background:
+        radial-gradient(90% 55% at 50% 0%, rgba(244, 220, 134, 0.2), transparent 70%),
+        linear-gradient(165deg, #C02330 0%, var(--natal-vermelho) 40%, var(--natal-vermelho-escuro) 100%);
+    border: 2px solid rgba(244, 220, 134, 0.75);
+    box-shadow: 0 18px 44px rgba(125, 15, 23, 0.32);
+    color: #fff;
+    text-align: center;
+}
+/* Flocos nos cantos do cartão */
+.tema-natal .sorteio::before,
+.tema-natal .sorteio::after {
+    content: '';
+    position: absolute;
+    width: 120px; height: 120px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.1' stroke-linecap='round'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17l17.4-10M12 5.5l-2-2M12 5.5l2-2M12 18.5l-2 2M12 18.5l2 2M6.4 8.8l-2.7-.7M6.4 8.8l-.7-2.7M17.6 15.2l2.7.7M17.6 15.2l.7 2.7M6.4 15.2l-2.7.7M6.4 15.2l-.7 2.7M17.6 8.8l2.7-.7M17.6 8.8l.7-2.7'/%3E%3C/svg%3E") center / contain no-repeat;
+    opacity: 0.12;
+    pointer-events: none;
+}
+.tema-natal .sorteio::before { top: -34px; left: -34px; }
+.tema-natal .sorteio::after { bottom: -30px; right: -34px; }
+.tema-natal .sorteio > * { position: relative; z-index: 1; }
+
+.tema-natal .sorteio__eyebrow {
+    display: inline-block;
+    margin-bottom: 0.55rem;
+    padding: 0.32rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(244, 220, 134, 0.5);
+    color: var(--natal-ouro-claro);
+    font-family: var(--font-title);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+.tema-natal .sorteio__title {
+    font-size: clamp(1.9rem, 8.4vw, 3rem);
+    line-height: 1.08;
+}
+.tema-natal .sorteio__title > span { display: block; }
+
+/* A regra, em destaque: um "bilhete" dourado */
+.tema-natal .sorteio__regra {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    padding: 0.7rem 1.1rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #F9E9A8, #E3C04D 55%, #D4AF37);
+    border: 1.5px dashed rgba(125, 15, 23, 0.55);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+    color: #2A1A05;
+    font-family: var(--font-title);
+    font-size: clamp(1rem, 4.4vw, 1.2rem);
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: left;
+}
+.tema-natal .sorteio__regra .icon { flex: none; width: 26px; height: 26px; color: var(--natal-vermelho-escuro); }
+.tema-natal .sorteio__regra strong { font-weight: 700; color: var(--natal-vermelho-escuro); white-space: nowrap; }
+
+/* ---- Os 3 prêmios ---- */
+.tema-natal .premios {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+.tema-natal .premio {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    padding: 2.3rem 0.6rem 0.9rem;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #FFFDF6, #FFF6DD);
+    border: 1.5px solid var(--ouro);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+    color: var(--ink);
+}
+.tema-natal .premio--1 { grid-column: 1 / -1; }
+
+.tema-natal .premio__ordem {
+    position: absolute;
+    top: 0.65rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.22rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: var(--natal-vermelho);
+    color: #fff;
+    font-family: var(--font-title);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.tema-natal .premio--1 .premio__ordem { background: linear-gradient(135deg, #F0D36B, var(--ouro)); color: #1A1A1A; }
+
+/* Palco: o prêmio sai de dentro da caixa de presente.
+   Camadas, de trás para a frente: brilho → foto → caixa → tampa. */
+.tema-natal .premio__palco {
+    position: relative;
+    /* Mesma largura nos três cards = as três fotos do mesmo tamanho. */
+    width: min(100%, clamp(100px, 32vw, 170px));
+    aspect-ratio: 10 / 13;
+    margin-inline: auto;
+}
+.tema-natal .premio__brilho {
+    position: absolute;
+    left: 50%; top: 4%;
+    width: 100%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(244, 220, 134, 0.9) 0%, rgba(244, 220, 134, 0.4) 38%, transparent 68%);
+    opacity: 0.75;
+}
+/* Moldura invisível do prêmio: a mesma caixa nos três cards, então as três
+   fotos ficam com a mesma altura e apoiadas na mesma linha (a boca da caixa
+   de presente). A foto é um PNG recortado — nada de fundo, borda, cantos
+   arredondados ou `overflow` aqui, senão o produto volta a ser cortado.
+   Os 7% livres em cima são a folga do "flutuar" (sobe 9px). */
+.tema-natal .premio__foto {
+    position: absolute;
+    left: 6%; right: 6%;
+    top: 7%; bottom: 27%;
+    transition: transform 0.9s cubic-bezier(0.2, 1.3, 0.4, 1) 0.45s, opacity 0.4s ease 0.45s;
+}
+.tema-natal .premio__foto-in {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.tema-natal .premio__foto img {
+    width: 100%;
+    height: 100%;
+    /* Inteira, na proporção original, apoiada na base. Nunca `cover`. */
+    object-fit: contain;
+    object-position: center bottom;
+    /* Sombra que acompanha o contorno do produto (box-shadow desenharia um
+       retângulo em volta do PNG). */
+    filter: drop-shadow(0 8px 10px rgba(60, 30, 0, 0.3));
+}
+/* Sem o arquivo da foto: um espaço desenhado, nunca imagem quebrada. */
+.tema-natal .premio__vazio {
+    position: absolute;
+    inset: 8% 10% 0;
+    border-radius: 16px;
+    border: 2px dashed var(--ouro);
+    display: none;
+    place-items: center;
+    align-content: center;
+    gap: 0.3rem;
+    padding: 0.4rem;
+    background:
+        repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.14) 0 8px, transparent 8px 16px),
+        #FFFBEE;
+    color: var(--ouro-ink);
+    font-family: var(--font-title);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+}
+.tema-natal .premio__vazio .icon { width: 34%; height: auto; aspect-ratio: 1; color: var(--natal-vermelho); }
+.tema-natal .premio__foto.sem-foto img { display: none; }
+.tema-natal .premio__foto.sem-foto .premio__vazio { display: grid; }
+
+.tema-natal .premio__caixa,
+.tema-natal .premio__tampa {
+    position: absolute;
+    left: 50%;
+    height: auto;
+    overflow: visible;
+}
+.tema-natal .premio__caixa {
+    bottom: 0;
+    width: 56%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.2));
+}
+/* Estado FINAL (aberto) é o padrão: sem JavaScript, o prêmio já aparece. */
+.tema-natal .premio__tampa {
+    bottom: 23.5%;
+    width: 61.6%;
+    transform: translate(-64%, -230%) rotate(-30deg);
+    opacity: 0;
+    transition: transform 0.9s cubic-bezier(0.3, 1.2, 0.5, 1) 0.2s, opacity 0.45s ease 0.7s;
+}
+/* Estado inicial (fechado): só existe com o natal.js rodando, e some quando
+   o card entra na tela — a diferença entre os dois é a animação de abrir. */
+.tema-natal.natal-js .premio:not(.natal-visivel) .premio__tampa {
+    transform: translate(-50%, 0) rotate(0deg);
+    opacity: 1;
+    transition: none;
+}
+.tema-natal.natal-js .premio:not(.natal-visivel) .premio__foto {
+    transform: translateY(62%) scale(0.3);
+    opacity: 0;
+    transition: none;
+}
+.tema-natal.natal-js .premio:not(.natal-visivel) .premio__brilho { opacity: 0; }
+.tema-natal .premio__brilho { transition: opacity 0.8s ease 0.7s; }
+
+.tema-natal .premio__nome {
+    font-size: clamp(0.98rem, 4.2vw, 1.15rem);
+    line-height: 1.2;
+    text-wrap: balance;
+}
+.tema-natal .premio--1 .premio__nome { font-size: clamp(1.3rem, 6vw, 1.6rem); }
+
+/* Celular: o 1º prêmio ocupa a linha inteira, mas a foto tem o mesmo tamanho
+   das outras duas — o destaque vem do card largo e do nome maior ao lado. */
+@media (max-width: 699px) {
+    .tema-natal .premio--1 {
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        column-gap: 1rem;
+        padding: 1rem 1rem 0.9rem;
+        text-align: left;
+    }
+    /* Largura explícita: numa coluna `auto` o "100%" da regra geral vale zero. */
+    .tema-natal .premio--1 .premio__palco {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        margin: 0;
+        width: clamp(100px, 32vw, 170px);
+    }
+    .tema-natal .premio--1 .premio__ordem {
+        position: static;
+        transform: none;
+        grid-column: 2;
+        align-self: end;
+        justify-self: start;
+    }
+    .tema-natal .premio--1 .premio__nome { grid-column: 2; align-self: start; }
+}
+@media (min-width: 700px) {
+    .tema-natal .sorteio { padding: 2.4rem 2rem 1.8rem; gap: 1.8rem; }
+    .tema-natal .premios { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+    .tema-natal .premio--1 { grid-column: auto; }
+    .tema-natal .premio { padding-inline: 1rem; }
+}
+
+/* ---- Contagem regressiva ---- */
+.tema-natal .contagem { display: grid; gap: 0.7rem; justify-items: center; }
+.tema-natal .contagem__rot {
+    font-family: var(--font-title);
+    font-size: 0.86rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--natal-ouro-claro);
+}
+.tema-natal .contagem__grade {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 26rem;
+}
+.tema-natal .contagem__item {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.7rem 0.2rem 0.55rem;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.26);
+    border: 1px solid rgba(244, 220, 134, 0.45);
+    overflow: hidden;
+}
+.tema-natal .contagem__item strong {
+    display: block;
+    font-family: var(--font-title);
+    font-size: clamp(1.7rem, 8.6vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--natal-ouro-claro);
+    font-variant-numeric: tabular-nums;
+}
+.tema-natal .contagem__item span {
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.88);
+}
+.tema-natal .contagem__data { font-size: 0.9rem; color: rgba(255, 255, 255, 0.92); }
+
+/* Depois do sorteio: a contagem dá lugar ao aviso */
+.tema-natal .sorteio__fim {
+    display: grid;
+    gap: 0.3rem;
+    padding: 1.1rem 1rem;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.26);
+    border: 1px solid rgba(244, 220, 134, 0.5);
+    font-size: 1rem;
+}
+.tema-natal .sorteio__fim strong {
+    font-family: var(--font-title);
+    font-size: clamp(1.3rem, 6vw, 1.7rem);
+    color: var(--natal-ouro-claro);
+}
+
+/* ---- Ações ---- */
+.tema-natal .sorteio__acoes { display: grid; gap: 0.8rem; justify-items: center; }
+.tema-natal .btn--ouro {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 26rem;
+    min-height: 56px;
+    background: linear-gradient(135deg, #F9E9A8, #E3C04D 45%, #D4AF37);
+    color: #1A1A1A;
+    font-size: 1.08rem;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3), inset 0 0 0 1.5px rgba(255, 255, 255, 0.5);
+}
+.tema-natal .btn--ouro .icon { width: 22px; height: 22px; }
+.tema-natal .btn--ouro:active { transform: scale(0.97); }
+.tema-natal .btn--ouro::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 45%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: translateX(-130%);
+}
+.tema-natal .sorteio__ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding-inline: 0.6rem;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: underline;
+    text-decoration-color: rgba(244, 220, 134, 0.7);
+    text-underline-offset: 4px;
+}
+.tema-natal .sorteio__ig .icon { width: 20px; height: 20px; color: var(--natal-ouro-claro); }
+
+.tema-natal .sorteio__legal {
+    padding-top: 0.9rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.3);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.88);
+}
+.tema-natal .sorteio__legal a {
+    display: inline-block;
+    padding-block: 0.7rem;
+    margin-block: -0.7rem;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.tema-natal .sorteio__legal span { white-space: nowrap; }
+
+/* ---------------------------------------------------------------
+   8. Títulos de seção e divisores
+   --------------------------------------------------------------- */
+.tema-natal .section-head__eyebrow { color: var(--natal-vermelho); }
+.tema-natal .section-head__eyebrow::before,
+.tema-natal .section-head__eyebrow::after {
+    content: '';
+    display: inline-block;
+    width: 0.75em; height: 0.75em;
+    margin-inline: 0.55em;
+    background: var(--ouro);
+    clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+    vertical-align: -0.05em;
+}
+
+/* O losango do divisor vira um floco de neve entre dois fios dourados */
+.tema-natal .rule-diamond { max-width: 16rem; }
+.tema-natal .rule-diamond::before,
+.tema-natal .rule-diamond::after {
+    background-image: linear-gradient(to right, var(--ouro-line) 45%, transparent 0%);
+}
+.tema-natal .rule-diamond span {
+    width: 22px; height: 22px;
+    rotate: none;
+    border-radius: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23184878' stroke-width='1.7' stroke-linecap='round'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17l17.4-10M12 5.5l-2-2M12 5.5l2-2M12 18.5l-2 2M12 18.5l2 2M6.4 8.8l-2.7-.7M6.4 8.8l-.7-2.7M17.6 15.2l2.7.7M17.6 15.2l.7 2.7M6.4 15.2l-2.7.7M6.4 15.2l-.7 2.7M17.6 8.8l2.7-.7M17.6 8.8l.7-2.7'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ---------------------------------------------------------------
+   9. Catálogo e cards de produto
+   --------------------------------------------------------------- */
+.tema-natal .tab.is-active { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); }
+.tema-natal .catalog-group__title .icon { color: var(--natal-vermelho); }
+.tema-natal .catalog-group__head { border-bottom-color: var(--ouro-line); }
+
+/* A barra lateral do card vira bengala de açúcar */
+.tema-natal .product-card { border-color: #E3E9F1; }
+.tema-natal .product-card::before {
+    width: 6px;
+    background: repeating-linear-gradient(-45deg, var(--natal-vermelho-vivo) 0 7px, #fff 7px 14px);
+    border-right: 1px solid #F0D5D7;
+}
+.tema-natal .product-card { padding-left: 6px; }
+/* Destaque: fita dourada e contorno dourado */
+.tema-natal .product-card--destaque {
+    border-color: var(--ouro);
+    box-shadow: 0 6px 24px rgba(212, 175, 55, 0.28);
+}
+.tema-natal .product-card--destaque::before {
+    background: linear-gradient(180deg, #F4DC86, var(--ouro), #C69F27);
+    border-right: 0;
+}
+.tema-natal .product-card--esgotado::before { background: #C9CED6; border-right: 0; }
+
+.tema-natal .product-card__media { background: linear-gradient(165deg, #FFFFFF 0%, #EDF3FA 100%); }
+/* Neve acumulada no pé da foto */
+.tema-natal .product-card__media::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 16px;
+    background: var(--surface);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 16' preserveAspectRatio='none'%3E%3Cpath d='M0 16V9c30-8 60-8 95-2s70 7 105 0 70-6 100 1v8Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 16' preserveAspectRatio='none'%3E%3Cpath d='M0 16V9c30-8 60-8 95-2s70 7 105 0 70-6 100 1v8Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    z-index: 1;
+    pointer-events: none;
+}
+.tema-natal .pill--novo { border-color: var(--natal-verde); color: var(--natal-verde); background: #EAF6EF; }
+.tema-natal .pill--novo .icon { color: var(--natal-verde); }
+
+/* Retorno do toque no card (não há hover no celular) */
+.tema-natal .product-card:active { box-shadow: var(--shadow-md); }
+
+.tema-natal .faixa-boleto { border-color: var(--ouro); }
+.tema-natal .empty-state { border-color: var(--ouro-line); }
+.tema-natal .empty-state .icon { color: var(--natal-vermelho); }
+
+/* ---------------------------------------------------------------
+   10. Garantia, sobre, serviços, painéis
+   --------------------------------------------------------------- */
+/* Os ícones redondos viram bolas de árvore: aro dourado e a "tampinha". */
+.tema-natal .icon-circle {
+    position: relative;
+    border: 2px solid var(--ouro);
+    background: radial-gradient(circle at 32% 28%, #FFFFFF 0%, #FFF6DD 70%);
+    color: var(--natal-vermelho);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+.tema-natal .icon-circle::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: -7px;
+    width: 12px; height: 7px;
+    transform: translateX(-50%);
+    border-radius: 3px 3px 0 0;
+    background: linear-gradient(180deg, #F4DC86, #C69F27);
+}
+.tema-natal .info-card:nth-child(even) .icon-circle,
+.tema-natal .feature:nth-child(even) .icon-circle,
+.tema-natal .service-card:nth-child(even) .icon-circle { color: var(--natal-verde); }
+.tema-natal .info-card:nth-child(3n) .icon-circle,
+.tema-natal .service-card:nth-child(3n) .icon-circle { color: var(--brand); }
+
+.tema-natal .info-card,
+.tema-natal .feature,
+.tema-natal .service-card,
+.tema-natal .panel { border-color: #E3E9F1; }
+.tema-natal .info-card { border-top: 3px solid var(--natal-vermelho); padding-top: 1.7rem; }
+.tema-natal .info-card:nth-child(even) { border-top-color: var(--natal-verde); }
+.tema-natal .info-card:nth-child(3) { border-top-color: var(--ouro); }
+.tema-natal .info-card:active,
+.tema-natal .feature:active { transform: scale(0.985); }
+.tema-natal .feature { transition: transform 0.16s var(--ease); }
+.tema-natal .feature .icon-circle { margin-top: 5px; }
+.tema-natal .service-card .icon-circle { margin-top: 5px; }
+
+.tema-natal .service-card--cta {
+    background: linear-gradient(150deg, #C02330, var(--natal-vermelho-escuro));
+    border-color: var(--natal-vermelho);
+    color: #fff;
+}
+.tema-natal .service-card--cta .icon-circle {
+    border-color: var(--natal-ouro-claro);
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    box-shadow: none;
+}
+
+.tema-natal .about__brandline span { color: var(--natal-vermelho); }
+.tema-natal .about .blob--a { background: radial-gradient(circle, rgba(20, 87, 61, 0.1), transparent 68%); }
+
+.tema-natal .panel { border-top: 3px solid var(--natal-vermelho); }
+.tema-natal .panel:nth-child(even) { border-top-color: var(--natal-verde); }
+.tema-natal .panel .icon-circle { margin-top: 7px !important; }
+.tema-natal .check-list .icon { color: var(--natal-verde); }
+
+/* ---------------------------------------------------------------
+   11. Faixas escuras: boleto e troca
+   --------------------------------------------------------------- */
+/* Neve "escorrendo" da seção de cima, no topo de cada faixa escura. */
+.tema-natal .boleto::before,
+.tema-natal .troca::before,
+.tema-natal .footer::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: -1px;
+    height: 18px;
+    background: var(--natal-acima, var(--surface));
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='18' viewBox='0 0 160 18'%3E%3Cpath d='M0 0h160v6c-8 9-18 9-26 3s-16-5-24 2-20 9-30 2-16-8-26-1-18 8-28 1S10 2 0 8Z'/%3E%3C/svg%3E") left top / 160px 18px repeat-x;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='18' viewBox='0 0 160 18'%3E%3Cpath d='M0 0h160v6c-8 9-18 9-26 3s-16-5-24 2-20 9-30 2-16-8-26-1-18 8-28 1S10 2 0 8Z'/%3E%3C/svg%3E") left top / 160px 18px repeat-x;
+    z-index: 1;
+    pointer-events: none;
+}
+.tema-natal .boleto { --natal-acima: var(--bg); padding-top: clamp(2.6rem, 7vw, 3.6rem); }
+.tema-natal .troca { --natal-acima: var(--surface); }
+
+/* O boleto continua azul (é a cor da marca); a troca vira verde-pinheiro. */
+.tema-natal .troca {
+    background:
+        radial-gradient(80% 60% at 100% 0%, rgba(31, 122, 77, 0.6), transparent 70%),
+        linear-gradient(165deg, var(--natal-verde) 0%, var(--natal-verde-escuro) 100%);
+}
+.tema-natal .troca__titulo span { color: var(--natal-ouro-claro); }
+.tema-natal .btn--troca { color: var(--natal-verde-escuro); }
+.tema-natal .btn--troca:active { background: var(--ouro); color: #1A1A1A; }
+.tema-natal .troca__passos li { transition: transform 0.16s var(--ease); }
+.tema-natal .troca__passos li:active { transform: scale(0.985); }
+
+.tema-natal .b-card { box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24); }
+.tema-natal .boleto__title span { color: var(--natal-ouro-claro); }
+
+/* ---------------------------------------------------------------
+   12. Instagram e FAQ
+   --------------------------------------------------------------- */
+.tema-natal .ig-convite {
+    border: 1.5px solid var(--ouro-line);
+    background: linear-gradient(135deg, #FFFFFF, #FFF9E8);
+}
+.tema-natal .ig-convite__icone {
+    border: 0;
+    background: linear-gradient(135deg, var(--natal-vermelho-vivo), var(--natal-vermelho-escuro));
+    color: #fff;
+    box-shadow: 0 0 0 3px var(--ouro-line);
+}
+.tema-natal .ig-foto { border: 2px solid #fff; box-shadow: 0 0 0 1.5px var(--ouro-line), var(--shadow); }
+
+.tema-natal .faq__item { background: var(--surface); border-color: #E3E9F1; }
+.tema-natal .section--tint .faq__item { background: var(--bg); }
+.tema-natal .faq__item[open] {
+    border-color: var(--ouro);
+    background: #FFFDF6;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
+}
+/* Floco antes de cada pergunta */
+.tema-natal .faq__item summary::before {
+    content: '';
+    flex: none;
+    width: 18px; height: 18px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B3202A' stroke-width='1.9' stroke-linecap='round'%3E%3Cpath d='M12 2v20M3.3 7l17.4 10M3.3 17l17.4-10M12 5.5l-2-2M12 5.5l2-2M12 18.5l-2 2M12 18.5l2 2'/%3E%3C/svg%3E") center / contain no-repeat;
+    transition: transform 0.4s var(--ease);
+}
+.tema-natal .faq__item[open] summary::before { transform: rotate(60deg); }
+.tema-natal .faq__seta { color: var(--ouro-ink); }
+.tema-natal .faq__resposta { padding-left: calc(1.1rem + 18px + 0.9rem); }
+
+/* ---------------------------------------------------------------
+   13. Rodapé e mapas
+   --------------------------------------------------------------- */
+.tema-natal .footer {
+    position: relative;
+    margin-top: 0;
+    border-top: 0;
+    padding-top: clamp(3.2rem, 8vw, 4.6rem);
+    background:
+        radial-gradient(70% 40% at 15% 0%, rgba(20, 87, 61, 0.55), transparent 70%),
+        radial-gradient(60% 40% at 100% 100%, rgba(179, 32, 42, 0.3), transparent 70%),
+        linear-gradient(180deg, #0E3357 0%, #081F36 100%);
+    color: rgba(255, 255, 255, 0.86);
+}
+.tema-natal .footer .brand__name { color: #fff; }
+.tema-natal .footer .brand__name em { color: var(--natal-ouro-claro); }
+.tema-natal .footer__title,
+.tema-natal .mapas__titulo { color: var(--natal-ouro-claro); }
+.tema-natal .footer__tagline,
+.tema-natal .footer__links a,
+.tema-natal .footer__line { color: rgba(255, 255, 255, 0.86); }
+.tema-natal .footer__links a:active,
+.tema-natal .footer__line a:active { color: var(--natal-ouro-claro); }
+.tema-natal .footer__line strong { color: #fff; }
+.tema-natal .footer__line .icon { color: var(--natal-ouro-claro); }
+.tema-natal .footer__line a { text-decoration: underline; text-decoration-color: rgba(244, 220, 134, 0.6); text-underline-offset: 3px; }
+.tema-natal .footer__map { color: var(--natal-ouro-claro); }
+.tema-natal .footer__dica { color: rgba(255, 255, 255, 0.7); }
+.tema-natal .social a { border-color: rgba(244, 220, 134, 0.6); color: #fff; }
+.tema-natal .social a:hover { background: rgba(255, 255, 255, 0.12); color: #fff; border-color: var(--natal-ouro-claro); }
+@media (hover: hover) {
+    .tema-natal .footer__links a:hover,
+    .tema-natal .footer__line a:hover { color: var(--natal-ouro-claro); }
+}
+
+/* Cartão do mapa: continua claro (texto escuro), com fita de bengala no topo */
+.tema-natal .mapa { position: relative; border-color: rgba(244, 220, 134, 0.6); }
+.tema-natal .mapa::before {
+    content: '';
+    display: block;
+    height: 6px;
+    background: repeating-linear-gradient(-45deg, var(--natal-vermelho-vivo) 0 9px, #fff 9px 18px);
+}
+.tema-natal .mapa iframe { filter: none; }
+
+.tema-natal .footer__bottom { border-top-color: rgba(255, 255, 255, 0.16); color: rgba(255, 255, 255, 0.78); }
+.tema-natal .footer__bottom a { color: #fff; }
+
+/* ---------------------------------------------------------------
+   14. Barra do WhatsApp
+   --------------------------------------------------------------- */
+.tema-natal .barra-wa { border-top: 2px solid var(--ouro); }
+/* Atalho para o sorteio ao lado do botão do WhatsApp */
+.tema-natal .barra-wa__sorteio {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 48px;
+    padding-inline: 0.95rem;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(135deg, #C02330, var(--natal-vermelho-escuro));
+    border: 1.5px solid var(--ouro);
+    color: #fff;
+    font-family: var(--font-title);
+    font-weight: 600;
+    font-size: 0.92rem;
+    transition: transform 0.16s var(--ease);
+}
+.tema-natal .barra-wa__sorteio .icon { width: 20px; height: 20px; color: var(--natal-ouro-claro); }
+.tema-natal .barra-wa__sorteio:active { transform: scale(0.95); }
+/* Tela estreita: o atalho fica só com o ícone (o nome vem do aria-label),
+   para "Chamar no WhatsApp" caber inteiro no botão ao lado. */
+@media (max-width: 379px) {
+    .tema-natal .barra-wa__sorteio { width: 48px; padding-inline: 0; justify-content: center; font-size: 0; gap: 0; }
+    .tema-natal .barra-wa__sorteio .icon { width: 22px; height: 22px; }
+}
+@media (min-width: 900px) {
+    .tema-natal .barra-wa { border-top: 0; }
+    .tema-natal .barra-wa__sorteio { min-height: 54px; box-shadow: 0 10px 24px rgba(125, 15, 23, 0.35); }
+}
+
+/* ---------------------------------------------------------------
+   15. Página de política
+   --------------------------------------------------------------- */
+.tema-natal .page-hero {
+    --natal-abaixo: var(--surface);
+    border-bottom: 0;
+    background:
+        radial-gradient(110% 80% at 85% 0%, rgba(61, 143, 224, 0.35), transparent 60%),
+        linear-gradient(175deg, var(--natal-noite) 0%, var(--natal-noite-2) 100%);
+    color: #fff;
+    padding-top: clamp(2.8rem, 7vw, 4rem);
+    padding-bottom: clamp(4.2rem, 11vw, 6.5rem);
+}
+.tema-natal .page-hero h1 { color: #fff; }
+.tema-natal .page-hero .policy__intro { color: rgba(255, 255, 255, 0.9); }
+.tema-natal .page-hero .policy__back { color: var(--natal-ouro-claro); }
+
+.tema-natal .policy h2 .icon { color: var(--natal-vermelho); }
+.tema-natal .policy li::marker { color: var(--natal-vermelho); }
+.tema-natal .policy__resumo > div { border-left-color: var(--natal-vermelho); background: #FFFDF6; border-color: var(--ouro-line); border-left-width: 4px; }
+.tema-natal .policy__resumo > div:nth-child(even) { border-left-color: var(--natal-verde); }
+.tema-natal .policy__resumo strong { color: var(--ouro-ink); }
+.tema-natal .policy__note { border-left-color: var(--ouro); background: #FFFDF6; }
+
+/* ---------------------------------------------------------------
+   16. Entrada ao rolar, loops e pausa fora da tela
+   --------------------------------------------------------------- */
+/* Blocos do tema entram quando aparecem na tela (o natal.js marca
+   `.natal-visivel`). O estado escondido só existe com `natal-js` no <body>:
+   se o script não rodar, tudo aparece normalmente. */
+.tema-natal.natal-js [data-natal-anim] {
+    opacity: 0;
+    transform: translateY(26px) scale(0.97);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    transition-delay: var(--delay, 0ms);
+}
+.tema-natal.natal-js [data-natal-anim].natal-visivel { opacity: 1; transform: none; }
+
+/* A entrada padrão do site (`.reveal`) ganha um leve "cresce" nos cards. */
+.js .tema-natal .product-card.reveal,
+.js .tema-natal .info-card.reveal,
+.js .tema-natal .panel.reveal { transform: translateY(28px) scale(0.95); }
+.js .tema-natal .product-card.reveal.is-visible,
+.js .tema-natal .info-card.reveal.is-visible,
+.js .tema-natal .panel.reveal.is-visible { transform: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+    /* Cordão de luzes: cada cor pisca num tempo */
+    .tema-natal .natal-luzes i { animation: natal-pisca 1.8s ease-in-out infinite alternate; }
+    .tema-natal .natal-luzes i:nth-child(2) { animation-delay: -0.45s; }
+    .tema-natal .natal-luzes i:nth-child(3) { animation-delay: -0.9s; }
+    .tema-natal .natal-luzes i:nth-child(4) { animation-delay: -1.35s; }
+
+    .tema-natal .natal-faixa::after { animation: natal-reflexo 6s ease-in-out infinite; }
+    .tema-natal .btn--ouro::after { animation: natal-reflexo 3.4s ease-in-out infinite; }
+    .tema-natal .header .brand__name::after { animation: natal-cintila 2.4s ease-in-out infinite; }
+
+    /* Brilho correndo pelos títulos dourados */
+    .tema-natal .natal-brilho__janela { animation: natal-janela 4.2s linear infinite; }
+    .tema-natal .natal-brilho__copia { animation: natal-janela-contra 4.2s linear infinite; }
+
+    /* Hero */
+    .tema-natal .hero__phone { animation: natal-flutua 4.6s ease-in-out infinite alternate; }
+    .tema-natal .hero__phone:nth-child(2) { animation-delay: -1.5s; }
+    .tema-natal .hero__phone:nth-child(3) { animation-delay: -3s; }
+    .tema-natal .natal-pendente { animation: natal-balanca 3.6s ease-in-out infinite alternate; }
+    .tema-natal .natal-pendente:nth-of-type(2) { animation-duration: 4.4s; animation-delay: -1.2s; }
+    .tema-natal .natal-pendente:nth-of-type(3) { animation-duration: 3s; animation-delay: -0.6s; }
+    .tema-natal .natal-faisca { animation: natal-cintila var(--d, 2.6s) ease-in-out var(--a, 0s) infinite; }
+    .tema-natal .natal-chamada__ico .icon { animation: natal-chacoalha 3.2s ease-in-out infinite; }
+
+    /* Sorteio */
+    .tema-natal .premio.natal-visivel .premio__foto-in,
+    .tema-natal:not(.natal-js) .premio__foto-in { animation: natal-flutua 3.8s ease-in-out 1.4s infinite alternate; }
+    .tema-natal .premio:nth-child(2) .premio__foto-in { animation-duration: 4.4s; }
+    .tema-natal .premio:nth-child(3) .premio__foto-in { animation-duration: 3.4s; }
+    .tema-natal .premio.natal-visivel .premio__brilho { animation: natal-pulsa 2.8s ease-in-out 1.6s infinite alternate; }
+    .tema-natal .contagem__item strong.natal-troca { animation: natal-troca 0.35s var(--ease); }
+    .tema-natal .barra-wa__sorteio .icon { animation: natal-chacoalha 3.6s ease-in-out infinite; }
+
+    .tema-natal .rule-diamond span { animation: natal-gira 14s linear infinite; }
+
+    /* Fora da tela, nada anima: o natal.js marca a seção com `.natal-pausa`. */
+    .tema-natal .natal-pausa,
+    .tema-natal .natal-pausa *,
+    .tema-natal .natal-pausa *::before,
+    .tema-natal .natal-pausa *::after { animation-play-state: paused !important; }
+}
+
+@keyframes natal-pisca {
+    0%, 25% { opacity: 0.28; }
+    75%, 100% { opacity: 1; }
+}
+@keyframes natal-reflexo {
+    0%, 55% { transform: translateX(-130%); }
+    100% { transform: translateX(330%); }
+}
+@keyframes natal-cintila {
+    0%, 100% { opacity: 0.25; transform: scale(0.7) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.15) rotate(20deg); }
+}
+@keyframes natal-janela {
+    0%, 35% { transform: translateX(-101%); }
+    100% { transform: translateX(101%); }
+}
+@keyframes natal-janela-contra {
+    0%, 35% { transform: translateX(101%); }
+    100% { transform: translateX(-101%); }
+}
+@keyframes natal-flutua {
+    from { transform: translateY(0); }
+    to { transform: translateY(-9px); }
+}
+@keyframes natal-balanca {
+    from { transform: rotate(-6deg); }
+    to { transform: rotate(6deg); }
+}
+@keyframes natal-pulsa {
+    from { opacity: 0.45; transform: translateX(-50%) scale(0.94); }
+    to { opacity: 0.95; transform: translateX(-50%) scale(1.06); }
+}
+@keyframes natal-chacoalha {
+    0%, 70%, 100% { transform: rotate(0deg); }
+    76% { transform: rotate(-12deg); }
+    82% { transform: rotate(10deg); }
+    88% { transform: rotate(-7deg); }
+    94% { transform: rotate(4deg); }
+}
+@keyframes natal-troca {
+    from { opacity: 0; transform: translateY(-40%); }
+    to { opacity: 1; transform: none; }
+}
+@keyframes natal-gira {
+    to { transform: rotate(360deg); }
+}

@@ -1957,48 +1957,61 @@ h1, h2, h3, h4 {
 .footer__bottom a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
 .footer__bottom a:hover { color: var(--brand); }
 
-/* Espaço extra no mobile para o botão flutuante não cobrir o rodapé */
-@media (max-width: 700px) { .footer__bottom { padding-bottom: 5.5rem; } }
+/* Espaço no fim da página para a barra fixa do WhatsApp não cobrir o rodapé
+   (a altura da barra + a safe-area do iPhone). */
+@media (max-width: 899px) {
+    .footer__bottom { padding-bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px)); }
+}
 
 /* ---------------------------------------------------------------
-   16. WhatsApp flutuante
+   16. Barra fixa do WhatsApp
    --------------------------------------------------------------- */
-.wa-float {
+/* No celular (99% dos acessos) o contato é uma barra colada no pé da tela:
+   botão largo, na altura do polegar, sempre visível. O `env(safe-area-…)`
+   empurra o conteúdo para cima da barrinha de gestos do iPhone — precisa do
+   `viewport-fit=cover` no <meta viewport> para valer.
+   No desktop a mesma marcação vira um botão flutuante no canto. */
+.barra-wa {
     position: fixed;
-    right: 1rem;
-    bottom: 1rem;
+    left: 0; right: 0; bottom: 0;
     z-index: 150;
-    width: 56px; height: 56px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--whatsapp);
-    /* Glifo escuro em vez de branco: sobre o verde vivo, branco dá 1,98:1 e
-       reprova o mínimo de 3:1 exigido para ícone que carrega significado. */
-    color: var(--whatsapp-ink);
-    box-shadow: 0 10px 26px rgba(37, 211, 102, 0.42);
-    transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem var(--gutter) calc(0.6rem + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
 }
-.wa-float .icon { width: 30px; height: 30px; }
-.wa-float:hover { transform: scale(1.08); box-shadow: 0 14px 32px rgba(37, 211, 102, 0.5); }
+.barra-wa__btn {
+    flex: 1;
+    min-width: 0;
+    min-height: 48px;
+    padding-inline: 0.8rem;
+    font-size: 0.95rem;
+}
+.barra-wa__btn .icon { width: 22px; height: 22px; }
 
-/* Pulso sutil chamando atenção, sem ser barulhento */
-.wa-float::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 2px solid var(--whatsapp);
-    animation: wa-pulse 2.6s var(--ease) infinite;
-}
-@keyframes wa-pulse {
-    0%   { transform: scale(1);    opacity: 0.7; }
-    70%  { transform: scale(1.45); opacity: 0; }
-    100% { transform: scale(1.45); opacity: 0; }
-}
-
-@media (min-width: 700px) {
-    .wa-float { right: 1.6rem; bottom: 1.6rem; width: 60px; height: 60px; }
+@media (min-width: 900px) {
+    .barra-wa {
+        left: auto;
+        right: 1.6rem;
+        bottom: 1.6rem;
+        padding: 0;
+        background: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border: 0;
+        box-shadow: none;
+    }
+    .barra-wa__btn {
+        flex: none;
+        min-height: 54px;
+        padding-inline: 1.5rem;
+        box-shadow: 0 10px 26px rgba(37, 211, 102, 0.42);
+    }
 }
 
 /* ---------------------------------------------------------------
@@ -2030,7 +2043,7 @@ h1, h2, h3, h4 {
 
 /* ---- Barra fina fixa no topo ---- */
 .promo-bar { display: none; }
-.has-promo { --promo-h: 36px; }
+.has-promo { --promo-h: 44px; }   /* 44px: altura mínima de toque */
 .has-promo .promo-bar {
     display: flex;
     position: sticky;
@@ -2082,22 +2095,90 @@ h1, h2, h3, h4 {
 .hero__chip .icon { width: 15px; height: 15px; flex: none; }
 .hero__chip:hover { border-color: var(--ouro-ink); }
 
-/* ---- Selo "Aceita boleto" nos cards ---- */
+/* ---- Preço à vista e preço a prazo (cards e modal) ----
+   "À vista" é o preço em destaque; "A prazo no boleto" vem logo abaixo e só
+   existe no HTML quando a loja cadastrou o valor — sem linha vazia. */
+.preco-rot {
+    display: inline-block;
+    margin-right: 0.2rem;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    vertical-align: 0.22em;
+}
+.preco-prazo {
+    margin-top: 0.3rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.3;
+}
+.preco-prazo strong {
+    font-family: var(--font-title);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+}
+
+/* ---- Selo "Parcelamos no boleto em até 24x" nos cards com preço a prazo ---- */
 .tag-boleto {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    margin-top: 0.45rem;
-    padding: 0.2rem 0.55rem;
+    gap: 0.35rem;
+    margin-top: 0.55rem;
+    padding: 0.32rem 0.7rem;
     border-radius: var(--radius-pill);
     background: var(--ouro-tint);
     border: 1px solid var(--ouro-line);
     color: var(--ouro-ink);
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     font-weight: 600;
     line-height: 1.3;
 }
-.tag-boleto .icon { width: 12px; height: 12px; }
+.tag-boleto .icon { width: 14px; height: 14px; flex: none; }
+/* O selo é baixo demais para o dedo: a área de toque cresce para 44px sem
+   mudar o desenho. */
+.tag-boleto::after { content: ''; position: absolute; inset: -9px -4px; }
+
+/* ---- Chamada do boleto acima do catálogo ---- */
+.faixa-boleto {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 64px;
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--ouro-tint), #FFFBEE);
+    border: 1.5px solid var(--ouro-line);
+    box-shadow: var(--shadow);
+    color: var(--ink);
+}
+.faixa-boleto__ico {
+    flex: none;
+    width: 44px; height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--ouro);
+    color: #1A1A1A;
+}
+.faixa-boleto__ico .icon { width: 22px; height: 22px; }
+.faixa-boleto__txt { flex: 1; min-width: 0; display: grid; gap: 0.1rem; }
+.faixa-boleto__txt strong {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    line-height: 1.25;
+}
+.faixa-boleto__txt small { font-size: 0.84rem; color: var(--muted); line-height: 1.35; }
+.faixa-boleto__seta { flex: none; width: 20px; height: 20px; color: var(--ouro-ink); transform: rotate(-90deg); }
 
 /* ---- Seção ---- */
 .boleto {
@@ -2447,3 +2528,71 @@ h1, h2, h3, h4 {
     box-shadow: var(--shadow);
     font-size: 0.88rem;
 }
+
+/* Cabeçalho da página interna (título + introdução numa faixa própria) */
+.page-hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding-block: clamp(1.6rem, 5vw, 2.8rem);
+}
+.page-hero .policy__back { margin-bottom: 1.1rem; min-height: 44px; }
+.page-hero .policy__intro { margin-bottom: 0; }
+
+/* ---------------------------------------------------------------
+   19. Toque (celular em primeiro lugar)
+   --------------------------------------------------------------- */
+/* Quase todo acesso é pelo celular: nada aqui depende de hover. Toda área
+   clicável tem pelo menos 44px, e o retorno do toque é o `:active`. */
+.btn { min-height: 44px; }
+.nav-toggle { width: 44px; height: 44px; }
+.tab { min-height: 44px; }
+.btn-clear { min-height: 44px; }
+.modal__close { width: 44px; height: 44px; }
+.social a { width: 44px; height: 44px; }
+.footer__links { gap: 0; }
+.footer__links a { display: flex; align-items: center; min-height: 44px; }
+.footer__map { min-height: 44px; margin-top: -0.6rem; margin-bottom: 0.6rem; }
+.mapa figcaption a { min-height: 44px; margin-top: 0; }
+.footer__line a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -0.7rem; }
+.faq__resposta a { display: inline-flex; align-items: center; min-height: 44px; }
+.hero__chip { position: relative; }
+.hero__chip::after { content: ''; position: absolute; inset: -7px 0; }
+
+.tab:active,
+.chip:active,
+.hero__chip:active,
+.tag-boleto:active,
+.faixa-boleto:active,
+.service-card:active,
+.social a:active,
+.ig-foto:active,
+.faq__item summary:active { transform: scale(0.97); }
+.faixa-boleto,
+.tag-boleto,
+.hero__chip,
+.ig-foto { transition: transform 0.16s var(--ease), border-color 0.18s var(--ease); }
+.faq__item summary { transition: transform 0.16s var(--ease), color 0.18s var(--ease); }
+
+/* Textos de apoio um ponto maiores no celular: 12px some na rua, no sol. */
+@media (max-width: 699px) {
+    .spec { font-size: 0.8rem; }
+    .hero__proof-label { font-size: 0.8rem; }
+    .product-card__parcelamento { font-size: 0.86rem; }
+    .catalog-group__sub { font-size: 0.9rem; }
+    .info-card__text { font-size: 0.88rem; }
+    .feature__text { font-size: 0.88rem; }
+    .footer__line { font-size: 0.92rem; }
+    .footer__links a { font-size: 0.95rem; }
+    .footer__bottom { font-size: 0.84rem; }
+}
+
+/* ---------------------------------------------------------------
+   20. Interruptor dos temas sazonais
+   --------------------------------------------------------------- */
+/* Tudo o que só existe por causa de um tema (faixa do sorteio, seção do
+   sorteio, cordão de luzes…) leva `data-natal` no HTML. Sem a classe
+   `tema-natal` no <body>, esses blocos somem — é o que faz "tirar a classe"
+   devolver o site normal, mesmo com o natal.css e o natal.js ainda no ar. */
+body:not(.tema-natal) [data-natal] { display: none !important; }

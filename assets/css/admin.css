@@ -332,6 +332,20 @@ body.admin {
     color: var(--ouro-ink);
     font-size: 1rem;
 }
+/* Dois valores por produto: à vista em destaque, a prazo logo abaixo.
+   Cada um na sua linha — lado a lado não cabe num celular de 360px. */
+.ap-item__preco { display: grid; gap: 0.05rem; line-height: 1.25; }
+.ap-item__preco-linha { white-space: nowrap; }
+.ap-item__preco-linha small {
+    font-family: var(--font-body);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+    margin-right: 0.15rem;
+}
+.ap-item__preco-linha--prazo { font-size: 0.86rem; font-weight: 600; color: var(--muted); }
 .ap-item__tags { display: flex; flex-wrap: wrap; gap: 0.28rem; }
 
 .ap-tag {

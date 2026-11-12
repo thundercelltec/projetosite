@@ -51,6 +51,32 @@ export function specRowHtml(produto) {
   return `<div class="spec-row">${badges.join("")}</div>`;
 }
 
+/** O aparelho mostra a chamada do boleto? Só quem tem preço a prazo cadastrado. */
+function temPrazo(produto) {
+  return produto.statusEstoque !== "esgotado" && Boolean(produto.precoAPrazo) && produto.aceitaBoleto !== false;
+}
+
+/**
+ * Bloco de preços, igual no card e no modal.
+ *   À vista  R$ X          ← destaque
+ *   A prazo no boleto R$ Y ← só quando cadastrado (sem linha vazia)
+ *   [Parcelamos no boleto em até 24x]
+ * Esgotado mostra só o à vista: não há oferta a prazo para anunciar.
+ *
+ * @param {string} classePreco  classe do valor em destaque (card ou modal)
+ */
+export function precosHtml(produto, classePreco = "product-card__price") {
+  const prazo = temPrazo(produto);
+  return `<p class="${classePreco}"><span class="preco-rot">À vista</span> ${formatarBRL(produto.precoAVista)}</p>
+      ${prazo ? `<p class="preco-prazo">A prazo no boleto <strong>${formatarBRL(produto.precoAPrazo)}</strong></p>` : ""}`;
+}
+
+/** Selo "Parcelamos no boleto em até 24x" — leva para a seção #boleto. */
+export function seloBoletoHtml(produto) {
+  if (!temPrazo(produto)) return "";
+  return `<a class="tag-boleto" href="#boleto">${icone("card")}Parcelamos no boleto em até ${boletoParcelasMax()}x</a>`;
+}
+
 /**
  * @param {object} produto
  * @param {number} indice   posição no grupo (usada no atraso da animação)
@@ -105,8 +131,8 @@ export function cardHtml(produto, indice = 0, { extra = false } = {}) {
     .filter(Boolean)
     .join(" ");
 
-  // O card mostra só o essencial de comparação: foto, selo, modelo, preço,
-  // parcelamento e os badges. A `descricao` fica de fora de propósito — na
+  // O card mostra só o essencial de comparação: foto, selo, modelo, preços
+  // (à vista e, se houver, a prazo no boleto), parcelamento e os badges. A `descricao` fica de fora de propósito — na
   // prática ela repetia, produto a produto e com texto diferente em cada um,
   // o que as seções de garantia e de troca de usado já dizem uma vez só logo
   // abaixo. Ela continua inteira no banco e aparece em "Ver detalhes".
@@ -115,11 +141,11 @@ export function cardHtml(produto, indice = 0, { extra = false } = {}) {
   <div class="product-card__body">
     <h3 class="product-card__name">${escapeHtml(produto.modelo)}${produto.capacidade ? ` <span>${escapeHtml(produto.capacidade)}</span>` : ""}</h3>
     <div>
-      <p class="product-card__price">${formatarBRL(produto.preco)}</p>
+      ${precosHtml(produto)}
       ${esgotado
         ? `<p class="retorna-breve">${icone("refresh")}Retorna em breve</p>`
         : parcelamento ? `<p class="product-card__parcelamento">${escapeHtml(parcelamento)}</p>` : ""}
-      ${!esgotado && produto.aceitaBoleto !== false ? `<a class="tag-boleto" href="#boleto">${icone("card")}Aceita boleto ${boletoParcelasMax()}x</a>` : ""}
+      ${seloBoletoHtml(produto)}
     </div>
     ${specRowHtml(produto)}
     <div class="product-card__actions">

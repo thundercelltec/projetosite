@@ -2,7 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- `viewport-fit=cover` libera o env(safe-area-inset-bottom) usado pela
+         barra fixa do WhatsApp no iPhone. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- Google tag (gtag.js) — Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RCVMPJS6LT"></script>
@@ -27,34 +29,92 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Tema de Natal: só vale enquanto o <body> tiver a classe `tema-natal`. -->
+    <link rel="stylesheet" href="assets/css/natal.css" />
 </head>
-<body>
+<!-- TEMA DE NATAL — interruptor: para voltar ao visual normal, troque por
+     <body> (sem a classe). Faça o mesmo no index.html. -->
+<body class="tema-natal">
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
 <!-- Subconjunto de ícones usado nesta página (mesmo padrão do index.html) -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
     <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
     <symbol id="i-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/><path d="m9 12 2 2 4-4"/></symbol>
     <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.7-6L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.7 6L3 16M3 21v-5h5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-5.5 10.2-7.4 11.8a1 1 0 0 1-1.2 0C9.5 20.2 4 15 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 22 2l-9 19-2-8-8-2Z"/></symbol>
+    <symbol id="i-presente" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
     <symbol id="i-whatsapp" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.47s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35Z"/><path d="M12.04 2C6.6 2 2.18 6.42 2.18 11.86c0 1.74.46 3.44 1.32 4.94L2 22l5.34-1.4a9.83 9.83 0 0 0 4.7 1.2h.01c5.44 0 9.86-4.42 9.86-9.86A9.8 9.8 0 0 0 19 4.86 9.8 9.8 0 0 0 12.04 2Zm0 18.05c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.17.83.85-3.09-.2-.32a8.18 8.18 0 0 1-1.25-4.37c0-4.52 3.68-8.2 8.2-8.2 2.19 0 4.25.86 5.8 2.41a8.15 8.15 0 0 1 2.4 5.8c0 4.52-3.68 8.28-8.08 8.28Z"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
 </svg>
 
-<header class="header is-scrolled">
+<!-- =====================================================================
+     CABEÇALHO — o mesmo do index.html (os links voltam para a home)
+     ===================================================================== -->
+<!-- Faixa do sorteio de Natal (só com o tema ligado): leva até a seção do
+     sorteio na home. Depois da data, o natal.js troca o texto sozinho. -->
+<a class="natal-faixa" data-natal href="index.html#sorteio">
+    <span class="natal-faixa__txt" data-natal-faixa>🎄 Compras acima de <strong>R$ 50</strong> concorrem a <strong>3 prêmios</strong> — sorteio 24/12 às 18h</span>
+</a>
+
+<header class="header" id="header">
     <div class="container header__inner">
-        <a class="brand" href="index.html">
+        <a class="brand" href="index.html" aria-label="Thunder Cell — início">
             <img class="brand__logo" src="assets/img/logo.png" alt="" width="331" height="400" />
             <span class="brand__name">Thunder <em>Cell</em></span>
         </a>
-        <a class="btn btn--primary btn--sm" data-wa href="https://wa.me/5549998404821" style="margin-left:auto">
+
+        <nav class="nav" aria-label="Navegação principal">
+            <ul class="nav__list">
+                <li><a class="nav__link" href="index.html">Início</a></li>
+                <li data-natal><a class="nav__link" href="index.html#sorteio">Sorteio</a></li>
+                <li><a class="nav__link" href="index.html#boleto">Boleto 24x</a></li>
+                <li><a class="nav__link" href="index.html#catalogo">Catálogo</a></li>
+                <li><a class="nav__link is-active" href="garantia.html" aria-current="page">Garantia</a></li>
+                <li><a class="nav__link" href="index.html#sobre">Sobre</a></li>
+                <li><a class="nav__link" href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+
+        <a class="btn btn--primary btn--sm header__cta" data-wa href="https://wa.me/5549998404821">
+            <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+            Fale no WhatsApp
+        </a>
+
+        <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navMobile" aria-label="Abrir menu">
+            <svg class="icon icon--menu" aria-hidden="true"><use href="#i-menu"></use></svg>
+            <svg class="icon icon--close" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+    </div>
+
+    <div class="nav-mobile" id="navMobile">
+        <a href="index.html">Início</a>
+        <a data-natal href="index.html#sorteio">Sorteio de Natal</a>
+        <a href="index.html#boleto">Boleto 24x</a>
+        <a href="index.html#catalogo">Catálogo</a>
+        <a href="index.html#garantia">Garantia</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+        <a class="btn btn--primary btn--block" data-wa href="https://wa.me/5549998404821">
             <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
             Fale no WhatsApp
         </a>
     </div>
+
+    <!-- Cordão de luzes pisca-pisca (tema de Natal): uma camada por cor -->
+    <div class="natal-luzes" data-natal aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 </header>
 
-<main>
-    <section class="section">
+<main id="conteudo">
+    <!-- Título da página numa faixa própria -->
+    <section class="page-hero">
         <div class="container policy">
             <a class="policy__back" href="index.html">
                 <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"></use></svg>
@@ -66,8 +126,12 @@
                 Transparência faz parte do nosso atendimento. Aqui estão as regras de
                 garantia e troca praticadas pela Thunder Cell.
             </p>
+        </div>
+    </section>
 
-            <div class="policy__resumo">
+    <section class="section section--tint">
+        <div class="container policy">
+            <div class="policy__resumo" data-natal-anim>
                 <div>
                     <span class="policy__resumo-tag">Aparelhos novos</span>
                     <strong data-garantia="Novo">1 ano</strong>
@@ -80,62 +144,164 @@
                 </div>
             </div>
 
-            <h2><svg class="icon" aria-hidden="true"><use href="#i-phone"></use></svg> Aparelhos novos — <span data-garantia="Novo">1 ano</span></h2>
-            <ul>
-                <li>Aparelhos novos têm <strong>garantia de <span data-garantia="Novo">1 ano</span></strong> contra defeitos de fabricação, contada a partir da data da compra.</li>
-                <li>A garantia do fabricante é acionada pela rede autorizada da marca; a Thunder Cell orienta e acompanha o processo.</li>
-                <li>Defeitos identificados no prazo devem ser comunicados pelo WhatsApp ou em loja assim que aparecerem.</li>
-            </ul>
+            <div data-natal-anim>
+                <h2><svg class="icon" aria-hidden="true"><use href="#i-phone"></use></svg> Aparelhos novos — <span data-garantia="Novo">1 ano</span></h2>
+                <ul>
+                    <li>Aparelhos novos têm <strong>garantia de <span data-garantia="Novo">1 ano</span></strong> contra defeitos de fabricação, contada a partir da data da compra.</li>
+                    <li>A garantia do fabricante é acionada pela rede autorizada da marca; a Thunder Cell orienta e acompanha o processo.</li>
+                    <li>Defeitos identificados no prazo devem ser comunicados pelo WhatsApp ou em loja assim que aparecerem.</li>
+                </ul>
+            </div>
 
-            <h2><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg> Aparelhos seminovos — <span data-garantia="Seminovo">90 dias</span></h2>
-            <ul>
-                <li>Todo aparelho seminovo é testado antes da venda (bateria, tela, câmeras, alto-falantes e conectividade) e tem o <strong>IMEI verificado</strong>, para garantir que não está bloqueado nem com restrição.</li>
-                <li>A garantia de <strong><span data-garantia="Seminovo">90 dias</span></strong> cobre defeitos de funcionamento do aparelho. Não cobre marcas de uso já informadas na venda, nem danos por queda, líquidos ou mau uso.</li>
-                <li>A porcentagem de bateria e o estado de conservação informados no anúncio são os medidos no momento do cadastro.</li>
-            </ul>
+            <div data-natal-anim>
+                <h2><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg> Aparelhos seminovos — <span data-garantia="Seminovo">90 dias</span></h2>
+                <ul>
+                    <li>Todo aparelho seminovo é testado antes da venda (bateria, tela, câmeras, alto-falantes e conectividade) e tem o <strong>IMEI verificado</strong>, para garantir que não está bloqueado nem com restrição.</li>
+                    <li>A garantia de <strong><span data-garantia="Seminovo">90 dias</span></strong> cobre defeitos de funcionamento do aparelho. Não cobre marcas de uso já informadas na venda, nem danos por queda, líquidos ou mau uso.</li>
+                    <li>A porcentagem de bateria e o estado de conservação informados no anúncio são os medidos no momento do cadastro.</li>
+                </ul>
+            </div>
 
-            <h2><svg class="icon" aria-hidden="true"><use href="#i-wrench"></use></svg> Garantia dos serviços de assistência técnica</h2>
-            <ul>
-                <li>Todos os reparos realizados pela Thunder Cell possuem <strong>garantia de 90 dias</strong> sobre o serviço executado e a peça substituída, conforme o Código de Defesa do Consumidor (art. 26).</li>
-                <li>A garantia cobre defeitos relacionados ao serviço realizado. Não cobre danos posteriores por queda, líquidos, mau uso ou intervenção de terceiros.</li>
-                <li>Para acionar a garantia, apresente o comprovante do serviço em uma de nossas unidades.</li>
-            </ul>
+            <div data-natal-anim>
+                <h2><svg class="icon" aria-hidden="true"><use href="#i-wrench"></use></svg> Garantia dos serviços de assistência técnica</h2>
+                <ul>
+                    <li>Todos os reparos realizados pela Thunder Cell possuem <strong>garantia de 90 dias</strong> sobre o serviço executado e a peça substituída, conforme o Código de Defesa do Consumidor (art. 26).</li>
+                    <li>A garantia cobre defeitos relacionados ao serviço realizado. Não cobre danos posteriores por queda, líquidos, mau uso ou intervenção de terceiros.</li>
+                    <li>Para acionar a garantia, apresente o comprovante do serviço em uma de nossas unidades.</li>
+                </ul>
+            </div>
 
-            <h2><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg> Trocas</h2>
-            <ul>
-                <li>Troca por defeito: dentro do prazo de garantia, o produto é analisado e, constatado o defeito, é reparado, trocado ou reembolsado conforme o CDC.</li>
-                <li>Compras realizadas a distância (pelo WhatsApp, com entrega) têm <strong>direito de arrependimento de 7 dias</strong> a partir do recebimento, com o produto sem sinais de uso.</li>
-                <li>Para trocas, é necessário apresentar o comprovante de compra e o termo de garantia entregue na venda.</li>
-            </ul>
+            <div data-natal-anim>
+                <h2><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg> Trocas</h2>
+                <ul>
+                    <li>Troca por defeito: dentro do prazo de garantia, o produto é analisado e, constatado o defeito, é reparado, trocado ou reembolsado conforme o CDC.</li>
+                    <li>Compras realizadas a distância (pelo WhatsApp, com entrega) têm <strong>direito de arrependimento de 7 dias</strong> a partir do recebimento, com o produto sem sinais de uso.</li>
+                    <li>Para trocas, é necessário apresentar o comprovante de compra e o termo de garantia entregue na venda.</li>
+                </ul>
+            </div>
 
-            <h2><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg> Como acionar</h2>
-            <p>
-                Fale com a nossa equipe pelo WhatsApp
-                <a data-wa data-wa-message="Olá! Preciso de ajuda com garantia ou troca." href="https://wa.me/5549998404821"><strong data-whatsapp-exibicao>(49) 99840-4821</strong></a>
-                ou visite uma de nossas unidades no centro de Tangará-SC.
-            </p>
+            <div data-natal-anim>
+                <h2><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg> Como acionar</h2>
+                <p>
+                    Fale com a nossa equipe pelo WhatsApp
+                    <a data-wa data-wa-message="Olá! Preciso de ajuda com garantia ou troca." href="https://wa.me/5549998404821"><strong data-whatsapp-exibicao>(49) 99840-4821</strong></a>
+                    ou visite uma de nossas unidades no centro de Tangará-SC.
+                </p>
 
-            <div class="policy__note">
-                <strong>Nota:</strong> este texto resume a política praticada pela loja e pode ser
-                ajustado. Em caso de divergência, prevalecem o Código de Defesa do Consumidor e os
-                termos do comprovante de compra e do termo de garantia entregues na venda.
+                <div class="policy__note">
+                    <strong>Nota:</strong> este texto resume a política praticada pela loja e pode ser
+                    ajustado. Em caso de divergência, prevalecem o Código de Defesa do Consumidor e os
+                    termos do comprovante de compra e do termo de garantia entregues na venda.
+                </div>
             </div>
         </div>
     </section>
 </main>
 
-<footer class="footer">
+<!-- =====================================================================
+     RODAPÉ — o mesmo do index.html (sem os mapas, que ficam só na home)
+     ===================================================================== -->
+<footer class="footer" id="contato">
+    <div class="container footer__grid">
+        <div>
+            <a class="brand" href="index.html">
+                <img class="brand__logo" src="assets/img/logo.png" alt="" width="331" height="400" loading="lazy" />
+                <span class="brand__name">Thunder <em>Cell</em></span>
+            </a>
+            <p class="footer__tagline">
+                Celulares novos e seminovos revisados, testados e com garantia.
+                Venda e assistência técnica em Tangará-SC.
+            </p>
+            <div class="social">
+                <a data-wa href="https://wa.me/5549998404821" aria-label="WhatsApp">
+                    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+                </a>
+                <a href="https://www.instagram.com/thundercelltec" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <svg class="icon" aria-hidden="true"><use href="#i-instagram"></use></svg>
+                </a>
+            </div>
+        </div>
+
+        <nav aria-label="Links rápidos">
+            <h3 class="footer__title">Links rápidos</h3>
+            <ul class="footer__links">
+                <li><a href="index.html">Início</a></li>
+                <li data-natal><a href="index.html#sorteio">Sorteio de Natal</a></li>
+                <li><a href="index.html#boleto">Boleto em até 24x</a></li>
+                <li><a href="index.html#catalogo">Catálogo</a></li>
+                <li><a href="index.html#garantia">Garantia</a></li>
+                <li><a href="index.html#sobre">Sobre a loja</a></li>
+                <li><a href="index.html#troca">Troca do seu usado</a></li>
+                <li><a href="index.html#assistencia">Assistência técnica</a></li>
+                <li><a href="index.html#faq">Perguntas frequentes</a></li>
+                <li><a href="garantia.html">Política de garantia e trocas</a></li>
+            </ul>
+        </nav>
+
+        <div>
+            <h3 class="footer__title">Nossas unidades</h3>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg>
+                <span><strong>Matriz:</strong> Rua Francisco Nardi, 10, Sala 3, Centro - Tangará-SC, CEP 89642-000</span>
+            </p>
+            <a class="footer__map" href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Francisco+Nardi+10+Centro+Tangar%C3%A1+SC+89642-000" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" aria-hidden="true"><use href="#i-route"></use></svg> Como chegar
+            </a>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg>
+                <span><strong>Filial:</strong> Rua Irmãos Picolli, 280, Centro - Tangará-SC, CEP 89642-000</span>
+            </p>
+            <a class="footer__map" href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Irm%C3%A3os+Picolli+280+Centro+Tangar%C3%A1+SC+89642-000" target="_blank" rel="noopener noreferrer">
+                <svg class="icon" aria-hidden="true"><use href="#i-route"></use></svg> Como chegar
+            </a>
+        </div>
+
+        <div>
+            <h3 class="footer__title">Atendimento</h3>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg>
+                <span>Segunda a sexta: 8h às 12h · 13h às 18h</span>
+            </p>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg>
+                <span>Sábados: 8h30 às 12h</span>
+            </p>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+                <span><a data-wa href="https://wa.me/5549998404821">(49) 99840-4821</a></span>
+            </p>
+            <p class="footer__line">
+                <svg class="icon" aria-hidden="true"><use href="#i-instagram"></use></svg>
+                <span><a href="https://www.instagram.com/thundercelltec" target="_blank" rel="noopener noreferrer">@thundercelltec</a></span>
+            </p>
+        </div>
+    </div>
+
     <div class="container footer__bottom">
         <p>&copy; 2026 Thunder Cell. Todos os direitos reservados.</p>
-        <p>THUNDERCELL COMÉRCIO DE CELULARES LTDA. &bull; CNPJ: 52.315.101/0001-55</p>
+        <p>
+            THUNDERCELL COMÉRCIO DE CELULARES LTDA. &bull; CNPJ: 52.315.101/0001-55 &bull;
+            <a href="garantia.html">Política de Garantia e Trocas</a>
+        </p>
     </div>
 </footer>
 
-<a class="wa-float" data-wa href="https://wa.me/5549998404821" aria-label="Falar no WhatsApp">
-    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
-</a>
+<!-- Barra fixa do WhatsApp, presente em todas as páginas. O atalho do
+     sorteio só existe com o tema de Natal. -->
+<div class="barra-wa">
+    <a class="barra-wa__sorteio" data-natal href="index.html#sorteio" aria-label="Ver o sorteio de Natal">
+        <svg class="icon" aria-hidden="true"><use href="#i-presente"></use></svg>
+        Sorteio
+    </a>
+    <a class="btn btn--whatsapp barra-wa__btn" data-wa href="https://wa.me/5549998404821">
+        <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+        Chamar no WhatsApp
+    </a>
+</div>
 
 <script type="module" src="assets/js/pagina-simples.js"></script>
+<!-- Tema de Natal: sai sozinho se o <body> não tiver a classe `tema-natal` -->
+<script type="module" src="assets/js/natal.js"></script>
 
 </body>
 </html>

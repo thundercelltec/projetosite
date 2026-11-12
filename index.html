@@ -2,7 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- `viewport-fit=cover` libera o env(safe-area-inset-bottom) usado pela
+         barra fixa do WhatsApp no iPhone. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- Google tag (gtag.js) — Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RCVMPJS6LT"></script>
@@ -40,6 +42,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Tema de Natal: só vale enquanto o <body> tiver a classe `tema-natal`. -->
+    <link rel="stylesheet" href="assets/css/natal.css" />
 
     <!-- Liga as animações de entrada. Fica inline e antes do CSS ser aplicado
          ao corpo para não haver "flash" — e, sem JavaScript, a classe nunca
@@ -335,7 +339,14 @@
     </script>
 <!-- BUILD:JSONLD-END -->
 </head>
-<body>
+<!-- =====================================================================
+     TEMA DE NATAL — interruptor
+     A classe `tema-natal` liga o tema (natal.css + natal.js) e mostra os
+     blocos marcados com `data-natal` (faixa do topo, luzes, sorteio).
+     Para voltar ao visual normal: troque por <body> (sem a classe).
+     Faça o mesmo no garantia.html.
+     ===================================================================== -->
+<body class="tema-natal">
 
 <a class="skip-link" href="#catalogo">Pular para o catálogo</a>
 
@@ -393,12 +404,25 @@
     <!-- Marcas: preenchidas, porque o traço descaracterizaria o logotipo -->
     <symbol id="i-whatsapp" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.47s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35Z"/><path d="M12.04 2C6.6 2 2.18 6.42 2.18 11.86c0 1.74.46 3.44 1.32 4.94L2 22l5.34-1.4a9.83 9.83 0 0 0 4.7 1.2h.01c5.44 0 9.86-4.42 9.86-9.86A9.8 9.8 0 0 0 19 4.86 9.8 9.8 0 0 0 12.04 2Zm0 18.05c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.17.83.85-3.09-.2-.32a8.18 8.18 0 0 1-1.25-4.37c0-4.52 3.68-8.2 8.2-8.2 2.19 0 4.25.86 5.8 2.41a8.15 8.15 0 0 1 2.4 5.8c0 4.52-3.68 8.28-8.08 8.28Z"/></symbol>
     <symbol id="i-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
+    <!-- Sorteio de Natal: presente (ícone), bilhete e a caixa em duas peças
+         (corpo + tampa) para a animação de abrir. -->
+    <symbol id="i-presente" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
+    <symbol id="i-bilhete" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2M13 17v2M13 11v2"/></symbol>
+    <symbol id="natal-caixa" viewBox="0 0 120 70"><rect x="6" width="108" height="70" rx="6" fill="#C3202C"/><rect x="6" width="108" height="11" fill="#7D0F17" opacity=".5"/><rect x="50" width="20" height="70" fill="#E3C04D"/><rect x="50" width="5" height="70" fill="#F4DC86"/></symbol>
+    <symbol id="natal-tampa" viewBox="0 0 132 46"><path d="M66 23C52 2 33 3 39 16c4 9 19 9 27 7Z" fill="#E3C04D"/><path d="M66 23c14-21 33-20 27-7-4 9-19 9-27 7Z" fill="#D4AF37"/><circle cx="66" cy="21" r="5.5" fill="#F4DC86"/><rect y="22" width="132" height="24" rx="5" fill="#D92B38"/><rect x="55" y="22" width="22" height="24" fill="#E3C04D"/><rect x="55" y="22" width="5.5" height="24" fill="#F4DC86"/></symbol>
 </svg>
 
 <!-- =====================================================================
      CABEÇALHO
      ===================================================================== -->
-<!-- Barra fina fixa no topo: leva para #boleto; o X dispensa e lembra a escolha -->
+<!-- Faixa do sorteio de Natal (só com o tema ligado): leva até #sorteio.
+     Depois da data do sorteio o natal.js troca o texto sozinho. -->
+<a class="natal-faixa" data-natal href="#sorteio">
+    <span class="natal-faixa__txt" data-natal-faixa>🎄 Compras acima de <strong>R$ 50</strong> concorrem a <strong>3 prêmios</strong> — sorteio 24/12 às 18h</span>
+</a>
+
+<!-- Barra fina fixa no topo: leva para #boleto; o X dispensa e lembra a escolha.
+     Com o tema de Natal ligado ela cede o lugar à faixa do sorteio. -->
 <div class="promo-bar" id="promoBar">
     <a class="promo-bar__link" href="#boleto">
         <svg class="icon" aria-hidden="true"><use href="#i-card"></use></svg>
@@ -420,6 +444,7 @@
         <nav class="nav" aria-label="Navegação principal">
             <ul class="nav__list">
                 <li><a class="nav__link" href="#topo">Início</a></li>
+                <li data-natal><a class="nav__link" href="#sorteio">Sorteio</a></li>
                 <li><a class="nav__link" href="#boleto">Boleto 24x</a></li>
                 <li><a class="nav__link" href="#catalogo">Catálogo</a></li>
                 <li><a class="nav__link" href="#garantia">Garantia</a></li>
@@ -442,6 +467,7 @@
 
     <div class="nav-mobile" id="navMobile">
         <a href="#topo">Início</a>
+        <a data-natal href="#sorteio">Sorteio de Natal</a>
         <a href="#boleto">Boleto 24x</a>
         <a href="#catalogo">Catálogo</a>
         <a href="#garantia">Garantia</a>
@@ -452,6 +478,9 @@
             Fale no WhatsApp
         </a>
     </div>
+
+    <!-- Cordão de luzes pisca-pisca (tema de Natal): uma camada por cor -->
+    <div class="natal-luzes" data-natal aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 </header>
 
 <main id="topo">
@@ -476,13 +505,27 @@
                     </a>
                 </div>
 
-                <h1 class="hero__title">Aparelhos revisados, com <span>garantia</span> de verdade</h1>
+                <p class="natal-kicker" data-natal><span data-brilho>Especial de Natal</span></p>
+
+                <!-- `data-brilho` só tem efeito com o tema de Natal ligado -->
+                <h1 class="hero__title">Aparelhos revisados, com <span data-brilho>garantia</span> de verdade</h1>
 
                 <p class="hero__copy">
                     Cada aparelho passa por testes de bateria, tela, câmeras e conectividade,
                     e tem o IMEI verificado antes de entrar no catálogo. Novos com 1 ano de
                     garantia, seminovos com 90 dias.
                 </p>
+
+                <!-- Chamada do sorteio no hero (tema de Natal) -->
+                <a class="natal-chamada" data-natal href="#sorteio">
+                    <span class="natal-chamada__ico"><svg class="icon" aria-hidden="true"><use href="#i-presente"></use></svg></span>
+                    <span class="natal-chamada__txt">
+                        <strong>Natal Premiado Thunder Cell</strong>
+                        <span data-natal-chamada>Compras acima de R$ 50 concorrem a 3 prêmios</span>
+                        <small data-natal-falta>Sorteio dia 24/12, às 18h</small>
+                    </span>
+                    <svg class="icon natal-chamada__seta" aria-hidden="true"><use href="#i-chevron"></use></svg>
+                </a>
 
                 <div class="hero__actions">
                     <a class="btn btn--primary btn--lg" href="#catalogo">
@@ -520,6 +563,127 @@
 <img class="hero__phone" src="https://res.cloudinary.com/ecryyjxy/image/upload/e_background_removal/f_auto,q_auto,c_limit,w_600/v1787311566/thundercell-produtos/ifsctdtklo9w2rpkiztg.png" alt="" width="400" height="533" loading="lazy" decoding="async" />
 <img class="hero__phone" src="https://res.cloudinary.com/ecryyjxy/image/upload/e_background_removal/f_auto,q_auto,c_limit,w_600/v1787311604/thundercell-produtos/ovb4cufpdmfzzskljk3m.png" alt="" width="400" height="533" loading="lazy" decoding="async" />
 <!-- BUILD:HERO-END -->
+            </div>
+        </div>
+    </section>
+
+    <!-- =================================================================
+         SORTEIO DE NATAL — "Natal Premiado Thunder Cell"
+         Só aparece com o tema de Natal ligado (`data-natal`).
+
+         • Data do sorteio: atributo `data-sorteio` (ISO, com o fuso de
+           Brasília). O natal.js faz a contagem regressiva a partir dele e,
+           passada a data, troca tudo por "Sorteio realizado!".
+         • Fotos dos prêmios: assets/img/natal/ (iphone-15, redmi-a7-pro e
+           jbl-tune-770), em PNG com fundo transparente e já aparado.
+           Se o arquivo não existir, o `onerror` mostra um espaço desenhado
+           no lugar — nunca imagem quebrada.
+         • PREENCHER DEPOIS: o link do regulamento e o número do Certificado
+           de Autorização, no fim da seção (procure por "PREENCHER").
+         ================================================================= -->
+    <section class="section natal-sorteio" id="sorteio" data-natal data-sorteio="2026-12-24T18:00:00-03:00" aria-labelledby="sorteioTitulo">
+        <div class="container">
+            <div class="sorteio">
+                <header class="sorteio__head" data-natal-anim>
+                    <span class="sorteio__eyebrow">Sorteio de Natal</span>
+                    <h2 class="sorteio__title" id="sorteioTitulo"><span data-brilho>Natal Premiado</span> Thunder Cell</h2>
+                    <p class="sorteio__regra" data-antes-do-sorteio>
+                        <svg class="icon" aria-hidden="true"><use href="#i-bilhete"></use></svg>
+                        <span>Compras acima de <strong>R$ 50</strong> concorrem</span>
+                    </p>
+                </header>
+
+                <ol class="premios">
+                    <li class="premio premio--1" data-natal-anim>
+                        <span class="premio__ordem">1º prêmio</span>
+                        <div class="premio__palco" aria-hidden="true">
+                            <span class="premio__brilho"></span>
+                            <div class="premio__foto">
+                                <span class="premio__foto-in">
+                                    <img src="assets/img/natal/iphone-15.png" alt="" width="832" height="1120" loading="lazy" decoding="async"
+                                         onerror="this.closest('.premio__foto').classList.add('sem-foto')" />
+                                    <span class="premio__vazio"><svg class="icon"><use href="#i-presente"></use></svg>Foto em breve</span>
+                                </span>
+                            </div>
+                            <svg class="premio__caixa" viewBox="0 0 120 70"><use href="#natal-caixa"></use></svg>
+                            <svg class="premio__tampa" viewBox="0 0 132 46"><use href="#natal-tampa"></use></svg>
+                        </div>
+                        <h3 class="premio__nome">iPhone 15</h3>
+                    </li>
+
+                    <li class="premio premio--2" data-natal-anim style="--delay: 120ms">
+                        <span class="premio__ordem">2º prêmio</span>
+                        <div class="premio__palco" aria-hidden="true">
+                            <span class="premio__brilho"></span>
+                            <div class="premio__foto">
+                                <span class="premio__foto-in">
+                                    <img src="assets/img/natal/redmi-a7-pro.png" alt="" width="379" height="456" loading="lazy" decoding="async"
+                                         onerror="this.closest('.premio__foto').classList.add('sem-foto')" />
+                                    <span class="premio__vazio"><svg class="icon"><use href="#i-presente"></use></svg>Foto em breve</span>
+                                </span>
+                            </div>
+                            <svg class="premio__caixa" viewBox="0 0 120 70"><use href="#natal-caixa"></use></svg>
+                            <svg class="premio__tampa" viewBox="0 0 132 46"><use href="#natal-tampa"></use></svg>
+                        </div>
+                        <h3 class="premio__nome">Redmi A7 Pro</h3>
+                    </li>
+
+                    <li class="premio premio--3" data-natal-anim style="--delay: 240ms">
+                        <span class="premio__ordem">3º prêmio</span>
+                        <div class="premio__palco" aria-hidden="true">
+                            <span class="premio__brilho"></span>
+                            <div class="premio__foto">
+                                <span class="premio__foto-in">
+                                    <img src="assets/img/natal/jbl-tune-770.png" alt="" width="618" height="719" loading="lazy" decoding="async"
+                                         onerror="this.closest('.premio__foto').classList.add('sem-foto')" />
+                                    <span class="premio__vazio"><svg class="icon"><use href="#i-presente"></use></svg>Foto em breve</span>
+                                </span>
+                            </div>
+                            <svg class="premio__caixa" viewBox="0 0 120 70"><use href="#natal-caixa"></use></svg>
+                            <svg class="premio__tampa" viewBox="0 0 132 46"><use href="#natal-tampa"></use></svg>
+                        </div>
+                        <h3 class="premio__nome">Fone JBL Tune 770</h3>
+                    </li>
+                </ol>
+
+                <!-- Contagem regressiva ao vivo (preenchida pelo natal.js) -->
+                <div class="contagem" data-natal-anim data-antes-do-sorteio>
+                    <p class="contagem__rot">O sorteio acontece em</p>
+                    <div class="contagem__grade" role="timer" aria-label="Tempo até o sorteio">
+                        <div class="contagem__item"><strong data-cd="dias">--</strong><span>dias</span></div>
+                        <div class="contagem__item"><strong data-cd="horas">--</strong><span>horas</span></div>
+                        <div class="contagem__item"><strong data-cd="min">--</strong><span>min</span></div>
+                        <div class="contagem__item"><strong data-cd="seg">--</strong><span>seg</span></div>
+                    </div>
+                    <p class="contagem__data">Dia <strong>24/12/2026</strong>, às <strong>18h</strong> (horário de Brasília)</p>
+                </div>
+
+                <!-- Entra no lugar da contagem depois da data do sorteio -->
+                <div class="sorteio__fim" data-depois-do-sorteio hidden>
+                    <strong>Sorteio realizado!</strong>
+                    <span>Confira o resultado no nosso Instagram</span>
+                </div>
+
+                <div class="sorteio__acoes" data-natal-anim>
+                    <a class="btn btn--lg btn--ouro" data-wa data-sorteio-cta data-antes-do-sorteio
+                       data-wa-message="Olá! Quero participar do Natal Premiado Thunder Cell. Como faço para concorrer?"
+                       href="https://wa.me/5549998404821?text=Ol%C3%A1!%20Quero%20participar%20do%20Natal%20Premiado%20Thunder%20Cell.%20Como%20fa%C3%A7o%20para%20concorrer%3F"
+                       target="_blank" rel="noopener noreferrer">
+                        <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+                        Quero participar
+                    </a>
+                    <a class="sorteio__ig" href="https://www.instagram.com/thundercelltec" target="_blank" rel="noopener noreferrer">
+                        <svg class="icon" aria-hidden="true"><use href="#i-instagram"></use></svg>
+                        Acompanhe em @thundercelltec
+                    </a>
+                </div>
+
+                <!-- PREENCHER: troque o href pelo link do regulamento e os
+                     tracinhos pelo número do certificado. -->
+                <p class="sorteio__legal">
+                    <a href="#sorteio">Consulte o regulamento</a> ·
+                    <span>Certificado de Autorização</span> <span>SPA/MF nº ________</span>
+                </p>
             </div>
         </div>
     </section>
@@ -667,6 +831,17 @@
                 </p>
             </div>
 
+            <!-- Chamada do boleto: cada aparelho mostra o preço à vista e, quando
+                 cadastrado no painel, o preço a prazo. -->
+            <a class="faixa-boleto reveal" href="#boleto">
+                <span class="faixa-boleto__ico"><svg class="icon" aria-hidden="true"><use href="#i-card"></use></svg></span>
+                <span class="faixa-boleto__txt">
+                    <strong>Parcelamos no boleto em até 24x</strong>
+                    <small>Veja em cada aparelho o preço à vista e o preço a prazo.</small>
+                </span>
+                <svg class="icon faixa-boleto__seta" aria-hidden="true"><use href="#i-chevron"></use></svg>
+            </a>
+
             <!-- Abas: separam o catálogo por tipo de aparelho. Em "Todos", a
                  grade sai dividida em dois grupos com título próprio. -->
             <div class="tabs reveal" id="tabs" role="tablist" aria-label="Tipo de aparelho">
@@ -749,7 +924,7 @@
   <div class="product-card__body">
     <h3 class="product-card__name">Motorola G06 Power <span>256Gb</span></h3>
     <div>
-      <p class="product-card__price">R$ 1.500,00</p>
+      <p class="product-card__price"><span class="preco-rot">À vista</span> R$ 1.500,00</p>
       <p class="product-card__parcelamento">Em até 12x com juros da máquina</p>
     </div>
     <div class="spec-row"><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-battery"></use></svg>Bateria <strong>100%</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><strong>Excelente</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg><strong>Novo</strong></span></div>
@@ -768,7 +943,7 @@
   <div class="product-card__body">
     <h3 class="product-card__name">Samsung A07 <span>128Gb</span></h3>
     <div>
-      <p class="product-card__price">R$ 1.250,00</p>
+      <p class="product-card__price"><span class="preco-rot">À vista</span> R$ 1.250,00</p>
       <p class="product-card__parcelamento">Em até 12x com juros da máquina</p>
     </div>
     <div class="spec-row"><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-battery"></use></svg>Bateria <strong>100%</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><strong>Excelente</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg><strong>Novo</strong></span></div>
@@ -787,7 +962,7 @@
   <div class="product-card__body">
     <h3 class="product-card__name">Samsung A17 <span>128Gb</span></h3>
     <div>
-      <p class="product-card__price">R$ 1.500,00</p>
+      <p class="product-card__price"><span class="preco-rot">À vista</span> R$ 1.500,00</p>
       <p class="product-card__parcelamento">Em até 12x com juros da máquina</p>
     </div>
     <div class="spec-row"><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-battery"></use></svg>Bateria <strong>100%</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><strong>Excelente</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg><strong>Novo</strong></span></div>
@@ -806,7 +981,7 @@
   <div class="product-card__body">
     <h3 class="product-card__name">Redmi A7 Pro <span>128Gb</span></h3>
     <div>
-      <p class="product-card__price">R$ 1.450,00</p>
+      <p class="product-card__price"><span class="preco-rot">À vista</span> R$ 1.450,00</p>
       <p class="product-card__parcelamento">Em até 12x com juros da máquina</p>
     </div>
     <div class="spec-row"><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-battery"></use></svg>Bateria <strong>100%</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><strong>Excelente</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg><strong>Novo</strong></span></div>
@@ -825,7 +1000,7 @@
   <div class="product-card__body">
     <h3 class="product-card__name">Redmi 15 <span>256Gb</span></h3>
     <div>
-      <p class="product-card__price">R$ 2.000,00</p>
+      <p class="product-card__price"><span class="preco-rot">À vista</span> R$ 2.000,00</p>
       <p class="product-card__parcelamento">Em até 12x com juros da máquina</p>
     </div>
     <div class="spec-row"><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-battery"></use></svg>Bateria <strong>100%</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><strong>Excelente</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg><strong>Novo</strong></span></div>
@@ -862,7 +1037,7 @@
   <div class="product-card__body">
     <h3 class="product-card__name">iPhone 16 Pro <span>128Gb</span></h3>
     <div>
-      <p class="product-card__price">R$ 5.500,00</p>
+      <p class="product-card__price"><span class="preco-rot">À vista</span> R$ 5.500,00</p>
       <p class="product-card__parcelamento">Em até 12x com o juros da máquina</p>
     </div>
     <div class="spec-row"><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-battery"></use></svg>Bateria <strong>97%</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><strong>Muito boa</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg><strong>Seminovo</strong></span></div>
@@ -881,7 +1056,7 @@
   <div class="product-card__body">
     <h3 class="product-card__name">Samsung A04 <span>32Gb</span></h3>
     <div>
-      <p class="product-card__price">R$ 450,00</p>
+      <p class="product-card__price"><span class="preco-rot">À vista</span> R$ 450,00</p>
       <p class="product-card__parcelamento">Em até 12x com juros da máquina</p>
     </div>
     <div class="spec-row"><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-battery"></use></svg>Bateria <strong>100%</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><strong>Boa</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg><strong>Seminovo</strong></span></div>
@@ -900,7 +1075,7 @@
   <div class="product-card__body">
     <h3 class="product-card__name">Motorola One Fusion <span>128</span></h3>
     <div>
-      <p class="product-card__price">R$ 700,00</p>
+      <p class="product-card__price"><span class="preco-rot">À vista</span> R$ 700,00</p>
       <p class="product-card__parcelamento">Em até 12x com juros da máquina</p>
     </div>
     <div class="spec-row"><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-battery"></use></svg>Bateria <strong>100%</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><strong>Boa</strong></span><span class="spec"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg><strong>Seminovo</strong></span></div>
@@ -1355,6 +1530,7 @@
             <h3 class="footer__title">Links rápidos</h3>
             <ul class="footer__links">
                 <li><a href="#topo">Início</a></li>
+                <li data-natal><a href="#sorteio">Sorteio de Natal</a></li>
                 <li><a href="#boleto">Boleto em até 24x</a></li>
                 <li><a href="#catalogo">Catálogo</a></li>
                 <li><a href="#garantia">Garantia</a></li>
@@ -1461,10 +1637,19 @@
     </div>
 </footer>
 
-<!-- Botão flutuante de WhatsApp, presente em todas as páginas -->
-<a class="wa-float" data-wa href="https://wa.me/5549998404821" aria-label="Falar no WhatsApp">
-    <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
-</a>
+<!-- Barra fixa do WhatsApp, presente em todas as páginas. No celular fica
+     colada no pé da tela (respeitando a safe-area do iPhone); no desktop vira
+     um botão flutuante. O atalho do sorteio só existe com o tema de Natal. -->
+<div class="barra-wa">
+    <a class="barra-wa__sorteio" data-natal href="#sorteio" aria-label="Ver o sorteio de Natal">
+        <svg class="icon" aria-hidden="true"><use href="#i-presente"></use></svg>
+        Sorteio
+    </a>
+    <a class="btn btn--whatsapp barra-wa__btn" data-wa href="https://wa.me/5549998404821">
+        <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+        Chamar no WhatsApp
+    </a>
+</div>
 
 <!-- Modal de detalhes do produto (preenchido pelo main.js) -->
 <div class="modal" id="modalProduto" role="dialog" aria-modal="true" aria-labelledby="modalTitulo" hidden>
@@ -1484,6 +1669,8 @@
 <!-- BUILD:DATA-END -->
 
 <script type="module" src="assets/js/main.js"></script>
+<!-- Tema de Natal: sai sozinho se o <body> não tiver a classe `tema-natal` -->
+<script type="module" src="assets/js/natal.js"></script>
 
 </body>
 </html>

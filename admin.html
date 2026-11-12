@@ -262,27 +262,39 @@
                     <p class="campo__erro" hidden></p>
                 </div>
 
+                <div class="campo">
+                    <label for="fCapacidade">Capacidade</label>
+                    <!-- Input com datalist: aceita os valores comuns em um toque,
+                         mas não trava quem precisa digitar algo diferente. -->
+                    <input class="input" type="text" id="fCapacidade" list="capacidades" placeholder="Ex.: 256GB" autocomplete="off" />
+                    <datalist id="capacidades">
+                        <option value="32GB"></option>
+                        <option value="64GB"></option>
+                        <option value="128GB"></option>
+                        <option value="256GB"></option>
+                        <option value="512GB"></option>
+                        <option value="1TB"></option>
+                    </datalist>
+                </div>
+
+                <!-- Os dois preços: empilhados no celular, lado a lado a partir
+                     de 520px (form-grid--2). À vista é obrigatório; a prazo é
+                     opcional — em branco, o site mostra só o à vista. -->
                 <div class="form-grid form-grid--2">
-                    <div class="campo">
-                        <label for="fCapacidade">Capacidade</label>
-                        <!-- Input com datalist: aceita os valores comuns em um toque,
-                             mas não trava quem precisa digitar algo diferente. -->
-                        <input class="input" type="text" id="fCapacidade" list="capacidades" placeholder="Ex.: 256GB" autocomplete="off" />
-                        <datalist id="capacidades">
-                            <option value="32GB"></option>
-                            <option value="64GB"></option>
-                            <option value="128GB"></option>
-                            <option value="256GB"></option>
-                            <option value="512GB"></option>
-                            <option value="1TB"></option>
-                        </datalist>
+                    <div class="campo" id="campoPreco">
+                        <label for="fPreco">Preço à vista (R$) <span class="campo__obrig">*</span></label>
+                        <div class="input-prefixo">
+                            <input class="input" type="text" id="fPreco" inputmode="decimal" placeholder="0,00" autocomplete="off" required />
+                        </div>
+                        <p class="campo__erro" hidden></p>
                     </div>
 
-                    <div class="campo" id="campoPreco">
-                        <label for="fPreco">Preço <span class="campo__obrig">*</span></label>
+                    <div class="campo" id="campoPrecoPrazo">
+                        <label for="fPrecoPrazo">Preço a prazo no boleto (R$)</label>
                         <div class="input-prefixo">
-                            <input class="input" type="text" id="fPreco" inputmode="decimal" placeholder="0,00" required />
+                            <input class="input" type="text" id="fPrecoPrazo" inputmode="decimal" placeholder="0,00" autocomplete="off" />
                         </div>
+                        <p class="campo__dica">Opcional. Em branco, o site mostra só o preço à vista.</p>
                         <p class="campo__erro" hidden></p>
                     </div>
                 </div>
