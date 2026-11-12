@@ -47,6 +47,7 @@ import {
   ordenarProdutos,
   categoriaDoStatus,
   camposLegadosDeStatus,
+  camposDePreco,
   STATUS_ESTOQUE,
   ROTULO_STATUS_ESTOQUE,
 } from "./produtos-utils.js";
@@ -75,18 +76,44 @@ function icone(nome) {
 }
 
 /**
- * Aceita "1234", "1234,50", "1.234,50" e "1234.50".
- * O ponto só conta como decimal quando não há vírgula na string (senão em
- * "1.234,50" o ponto é separador de milhar).
+ * Aceita "1234", "1234,50", "1.234,50", "1.234" e "1234.50".
+ * Formato brasileiro: vírgula é o decimal e ponto é o milhar. O ponto só conta
+ * como decimal quando não há vírgula E ele não está na posição de milhar
+ * ("1234.50" → 1234,50; já "1.500" → mil e quinhentos, que é o que a loja quer
+ * dizer quando digita assim).
  */
 function parsePreco(texto) {
   const limpo = String(texto ?? "").trim().replace(/[^\d.,-]/g, "");
   if (!limpo) return NaN;
   const temVirgula = limpo.includes(",");
+  const soMilhar = /^\d{1,3}(\.\d{3})+$/.test(limpo);
   const normalizado = temVirgula
     ? limpo.replace(/\./g, "").replace(",", ".")
-    : limpo;
+    : soMilhar
+      ? limpo.replace(/\./g, "")
+      : limpo;
   return Number(normalizado);
+}
+
+/** 1500 → "1.500,00" — o valor como aparece dentro do campo (o "R$" é o prefixo). */
+function precoParaCampo(valor) {
+  const n = Number(valor);
+  if (!Number.isFinite(n) || n <= 0) return "";
+  return n.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+/**
+ * Formata o campo de preço ao sair dele: digitou "1500", vira "1.500,00".
+ * Formatar só no blur (e não a cada tecla) deixa a pessoa digitar do jeito que
+ * quiser, sem o cursor pular. Texto que não é número fica como está, para a
+ * validação do envio apontar o erro.
+ */
+function ligarCampoDePreco(id) {
+  const campo = $(id);
+  campo.addEventListener("blur", () => {
+    const n = parsePreco(campo.value);
+    if (Number.isFinite(n) && n > 0) campo.value = precoParaCampo(n);
+  });
 }
 
 function marcarErro(campoId, mensagem) {
@@ -103,7 +130,7 @@ function marcarErro(campoId, mensagem) {
 }
 
 function limparErros() {
-  ["campoModelo", "campoPreco", "campoFotos"].forEach((id) => marcarErro(id, ""));
+  ["campoModelo", "campoPreco", "campoPrecoPrazo", "campoFotos"].forEach((id) => marcarErro(id, ""));
 }
 
 // ---------------------------------------------------------------------------
@@ -217,6 +244,7 @@ function iniciarPainel() {
       );
       renderizarLista();
       migrarStatusEstoque();
+      migrarPrecos();
     },
     (erro) => {
       console.error("Erro ao ler produtos:", erro);
@@ -315,6 +343,53 @@ async function migrarStatusEstoque() {
 }
 
 // ---------------------------------------------------------------------------
+// Migração para `precoAVista`
+// ---------------------------------------------------------------------------
+// Mesma ideia da migração do status: antes desta versão o aparelho tinha um
+// preço só, no campo `preco`. Agora são dois — `precoAVista` e `precoAPrazo`.
+// Ler o campo antigo continua funcionando (`precosDe`, no produtos-utils.js,
+// cai nele quando o novo não existe), mas um banco meio convertido não seria
+// confiável para consultar direto no console do Firebase.
+//
+// Na primeira vez que alguém abre o painel depois do deploy, todo registro sem
+// `precoAVista` recebe nele o valor que já estava em `preco`. Nada é apagado:
+// o `preco` antigo fica onde está (segue como espelho do à vista), nenhum
+// produto é criado, removido ou reordenado, e o `atualizadoEm` não é tocado.
+// O `precoAPrazo` não é inventado — fica vazio até a loja cadastrar.
+let migracaoPrecosFeita = false;
+
+async function migrarPrecos() {
+  if (migracaoPrecosFeita || !db) return;
+
+  const pendentes = produtos.filter(
+    (p) => p.precoAVista > 0 && !(Number(brutos[p.id]?.precoAVista) > 0)
+  );
+
+  migracaoPrecosFeita = true;
+  if (pendentes.length === 0) return;
+
+  // Uma escrita só: ou o catálogo inteiro ganha o campo, ou nada muda.
+  const alteracoes = {};
+  pendentes.forEach((p) => {
+    alteracoes[`${p.id}/precoAVista`] = p.precoAVista;
+  });
+
+  try {
+    await update(ref(db, DB_PATHS.produtos), alteracoes);
+    console.info(`precoAVista preenchido em ${pendentes.length} produto(s).`);
+    toast(
+      `Preço de ${pendentes.length} produto(s) migrado para "à vista". Já dá para cadastrar o preço a prazo.`,
+      "ok"
+    );
+  } catch (erro) {
+    console.error("Não foi possível migrar os preços:", erro);
+    // Sem alarde: o painel e o site continuam corretos pela derivação em
+    // `precosDe`. Só o campo no banco é que fica para a próxima.
+    migracaoPrecosFeita = false;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Lista
 // ---------------------------------------------------------------------------
 const elLista = $("lista");
@@ -383,7 +458,10 @@ function itemHtml(p) {
         ${foto}
         <div class="ap-item__info">
           <h3 class="ap-item__nome">${escapeHtml(p.titulo)}</h3>
-          <p class="ap-item__preco">${formatarBRL(p.preco)}</p>
+          <p class="ap-item__preco">
+            <span class="ap-item__preco-linha"><small>À vista</small> ${formatarBRL(p.precoAVista)}</span>
+            <span class="ap-item__preco-linha ap-item__preco-linha--prazo"><small>A prazo</small> ${p.precoAPrazo ? formatarBRL(p.precoAPrazo) : "—"}</span>
+          </p>
           <div class="ap-item__tags">
             <span class="ap-tag ap-tag--${p.statusEstoque}">${ROTULO_STATUS_ESTOQUE[p.statusEstoque]}</span>
             ${p.destaque ? `<span class="ap-tag ap-tag--destaque">Destaque</span>` : ""}
@@ -779,7 +857,8 @@ function abrirFormulario(id = null) {
   $("formTitulo").textContent = id ? "Editar produto" : "Novo produto";
   $("fModelo").value = p?.modelo ?? "";
   $("fCapacidade").value = p?.capacidade ?? "";
-  $("fPreco").value = p ? String(p.preco).replace(".", ",") : "";
+  $("fPreco").value = p ? precoParaCampo(p.precoAVista) : "";
+  $("fPrecoPrazo").value = p ? precoParaCampo(p.precoAPrazo) : "";
   $("fParcelamento").value = p?.parcelamento ?? "";
   $("fBateria").value = p?.bateria ?? "";
   $("fCondicao").value = p?.condicao ?? "";
@@ -834,16 +913,30 @@ $("formProduto").addEventListener("submit", async (e) => {
 
   const modelo = $("fModelo").value.trim();
   const preco = parsePreco($("fPreco").value);
+  // Preço a prazo é opcional: campo em branco = sem preço a prazo.
+  const prazoTexto = $("fPrecoPrazo").value.trim();
+  const precoPrazo = prazoTexto === "" ? null : parsePreco(prazoTexto);
 
-  // Validação: modelo, preço e ao menos uma foto são obrigatórios.
+  // Validação: modelo, preço à vista e ao menos uma foto são obrigatórios.
   let valido = true;
   if (!modelo) {
     marcarErro("campoModelo", "Informe o modelo do aparelho.");
     valido = false;
   }
   if (!Number.isFinite(preco) || preco <= 0) {
-    marcarErro("campoPreco", "Informe um preço válido.");
+    marcarErro("campoPreco", "Informe o preço à vista.");
     valido = false;
+  }
+  if (precoPrazo !== null) {
+    if (!Number.isFinite(precoPrazo) || precoPrazo <= 0) {
+      marcarErro("campoPrecoPrazo", "Valor inválido. Deixe em branco se não vende a prazo.");
+      valido = false;
+    } else if (Number.isFinite(preco) && precoPrazo < preco) {
+      // Quase sempre é erro de digitação (faltou um zero) — e publicar um
+      // "a prazo" mais barato que o à vista confundiria o cliente.
+      marcarErro("campoPrecoPrazo", "O preço a prazo não pode ser menor que o à vista.");
+      valido = false;
+    }
   }
   if (fotos.length === 0) {
     marcarErro("campoFotos", "Envie ao menos uma foto.");
@@ -864,7 +957,8 @@ $("formProduto").addEventListener("submit", async (e) => {
   const dados = {
     modelo,
     capacidade: $("fCapacidade").value.trim(),
-    preco,
+    // precoAVista + precoAPrazo (null apaga o campo) + `preco` como espelho.
+    ...camposDePreco(preco, precoPrazo),
     parcelamento: $("fParcelamento").value.trim(),
     bateria: Number.isFinite(bateria) ? bateria : null,
     condicao: $("fCondicao").value,
@@ -914,6 +1008,9 @@ $("formProduto").addEventListener("submit", async (e) => {
 // Feedback imediato: limpa o erro do campo assim que a pessoa corrige.
 $("fModelo").addEventListener("input", () => marcarErro("campoModelo", ""));
 $("fPreco").addEventListener("input", () => marcarErro("campoPreco", ""));
+$("fPrecoPrazo").addEventListener("input", () => marcarErro("campoPrecoPrazo", ""));
+ligarCampoDePreco("fPreco");
+ligarCampoDePreco("fPrecoPrazo");
 
 // ---------------------------------------------------------------------------
 // Navegação: Produtos × Banner inicial

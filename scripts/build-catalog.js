@@ -131,7 +131,8 @@ function jsonLdDosProdutos(produtos, garantiaDoStatus) {
         image: p.fotos.map((url) => (url.startsWith('http') ? url : `${SITE_URL}/${url.replace(/^\//, '')}`)),
         offers: {
             '@type': 'Offer',
-            price: p.preco.toFixed(2),
+            // SEO usa sempre o preço à vista.
+            price: p.precoAVista.toFixed(2),
             priceCurrency: 'BRL',
             availability:
                 p.statusEstoque === 'esgotado'
@@ -158,7 +159,11 @@ function dadosDeReserva(produtos) {
         id: p.id,
         modelo: p.modelo,
         capacidade: p.capacidade,
-        preco: p.preco,
+        // Os dois preços. `preco` (o campo antigo) segue junto como espelho do
+        // à vista; `precoAPrazo` é null quando a loja não cadastrou.
+        precoAVista: p.precoAVista,
+        precoAPrazo: p.precoAPrazo,
+        preco: p.precoAVista,
         parcelamento: p.parcelamento,
         bateria: p.bateria,
         condicao: p.condicao,

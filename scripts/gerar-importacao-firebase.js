@@ -42,7 +42,10 @@ async function principal() {
         produtos[`legado-${antigo.id}`] = {
             modelo: p.modelo,
             capacidade: p.capacidade,
-            preco: p.preco,
+            // Preço à vista no campo novo; `preco` vai junto como espelho.
+            // O catálogo antigo não tinha preço a prazo.
+            precoAVista: p.precoAVista,
+            preco: p.precoAVista,
             parcelamento: p.parcelamento,
             // O catálogo antigo não registrava bateria nem condição: fica em
             // branco para a loja preencher ao revisar cada aparelho.

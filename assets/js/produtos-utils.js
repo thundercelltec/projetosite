@@ -77,6 +77,51 @@ export function camposLegadosDeStatus(statusEstoque) {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Preços (precoAVista + precoAPrazo)
+// ---------------------------------------------------------------------------
+// A loja passou a vender a prazo no boleto, então cada aparelho tem dois
+// preços. No Firebase:
+//   • `precoAVista` — obrigatório. É "o preço" do aparelho.
+//   • `precoAPrazo` — opcional. Total a prazo no boleto. Ausente = o site
+//     mostra só o à vista.
+//   • `preco`       — o campo antigo. Continua sendo gravado, sempre igual ao
+//     `precoAVista`, **apenas como espelho** (regras publicadas, exports e o
+//     catálogo de reserva ainda o conhecem). Quem lê passa por `precosDe()`.
+
+/** Número positivo e finito, ou null. */
+function precoValido(valor) {
+  const n = Number(valor);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/**
+ * Os dois preços de um registro cru.
+ *
+ * `precoAVista` manda. Sem ele, cai no `preco` antigo — é isso que faz todo
+ * produto cadastrado antes desta mudança continuar com o preço certo mesmo
+ * que a migração do painel ainda não tenha rodado.
+ */
+export function precosDe(bruto) {
+  return {
+    precoAVista: precoValido(bruto?.precoAVista) ?? precoValido(bruto?.preco) ?? 0,
+    precoAPrazo: precoValido(bruto?.precoAPrazo),
+  };
+}
+
+/**
+ * O que vai para o banco quando o preço é gravado: os dois campos novos e o
+ * espelho antigo, sempre na MESMA escrita. `precoAPrazo: null` apaga o campo
+ * no Realtime Database — é assim que "sem preço a prazo" fica registrado.
+ */
+export function camposDePreco(precoAVista, precoAPrazo = null) {
+  return {
+    precoAVista,
+    precoAPrazo: precoValido(precoAPrazo),
+    preco: precoAVista,
+  };
+}
+
 const formatadorBRL = new Intl.NumberFormat("pt-BR", {
   style: "currency",
   currency: "BRL",
@@ -172,13 +217,20 @@ export function normalizarProduto(id, bruto) {
   // Estado de publicação: "ativo" | "esgotado" | "inativo".
   const statusEstoque = statusEstoqueDe(bruto);
 
+  const { precoAVista, precoAPrazo } = precosDe(bruto);
+
   return {
     id: String(id),
     modelo,
     capacidade,
     // Título completo usado em cards, modal, WhatsApp e SEO.
     titulo: capacidade ? `${modelo} ${capacidade}` : modelo,
-    preco: Number(bruto.preco) || 0,
+    // Preço à vista e preço a prazo no boleto (null = não cadastrado).
+    precoAVista,
+    precoAPrazo,
+    // `preco` continua existindo e é sempre o à vista: filtro de faixa de
+    // preço, JSON-LD e qualquer código antigo seguem funcionando sem mudar.
+    preco: precoAVista,
     parcelamento: String(bruto.parcelamento ?? "").trim(),
     bateria: bateriaPorcentagem(bruto.bateria),
     condicao,

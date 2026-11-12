@@ -1,12 +1,16 @@
 // ============================================================================
 // pagina-simples.js — páginas internas (ex.: garantia.html)
 // ----------------------------------------------------------------------------
-// Faz só o mínimo que toda página precisa: montar os links de WhatsApp a
-// partir do site-config.js e preencher o prazo de garantia. Sem catálogo,
-// sem Firebase — por isso não vale a pena carregar o main.js aqui.
+// Faz só o mínimo que toda página precisa: o cabeçalho (menu mobile, sombra
+// ao rolar), os links de WhatsApp montados a partir do site-config.js e o
+// prazo de garantia. Sem catálogo, sem Firebase — por isso não vale a pena
+// carregar o main.js aqui.
 // ============================================================================
 
 import { siteConfig, linkWhatsapp, garantiaDoStatus } from "./site-config.js";
+import { iniciarCabecalho } from "./cabecalho.js";
+
+iniciarCabecalho();
 
 document.querySelectorAll("[data-wa]").forEach((el) => {
   el.href = linkWhatsapp(el.dataset.waMessage || siteConfig.mensagemPadrao);
